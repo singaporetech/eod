@@ -5,11 +5,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by mrboliao on 16/1/17.
@@ -34,6 +38,10 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private TmxMapLoader mapLoader;
     private OrthogonalTiledMapRenderer mapRenderer;
+    private Human girl;
+
+    // game objects list
+    List<GameObject> gameObjects;
 
     /**
      * Ctor.
@@ -46,12 +54,18 @@ public class PlayScreen implements Screen {
         // init hud
         hud = new com.boliao.eod.Hud();
 
+        // init game objects list
+        gameObjects = new LinkedList<GameObject>();
+
         // init map
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("level0.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
 
+        // init human
+        girl = new Human(100, 100, 30, "sprites/girl1.png");
+        gameObjects.add(girl);
     }
 
     /**
@@ -65,7 +79,7 @@ public class PlayScreen implements Screen {
 
         // process game state updates
         if (!paused) {
-            update();
+            update(delta);
         }
 
         // render
@@ -73,16 +87,16 @@ public class PlayScreen implements Screen {
     }
 
     private void processInputs(float delta) {
-        if (Gdx.input.isTouched()) {
-            cam.position.x += CAMSPEED*delta;
-            Gdx.app.log("PlayScreen", "touched");
-        }
+
     }
 
-    private void update () {
+    private void update (float delta) {
         hud.update();
         cam.update();
         mapRenderer.setView(cam);
+        for (GameObject go: gameObjects) {
+            go.update(delta);
+        }
     }
 
     private void draw () {
@@ -93,10 +107,16 @@ public class PlayScreen implements Screen {
         // draw map
         mapRenderer.render();
 
-        // sprite spriteBatch draw
+        // draw hud
         //game.spriteBatch.setProjectionMatrix(cam.combined);
         hud.draw();
 
+        // draw all game objects
+        game.spriteBatch.begin();
+        for (GameObject go: gameObjects) {
+            go.draw();
+        }
+        game.spriteBatch.end();
     }
 
     @Override
