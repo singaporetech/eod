@@ -4,13 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.boliao.eod.components.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +22,6 @@ public class PlayScreen implements Screen {
     private final int CAMSPEED = 100;
 
     private boolean paused = false;
-    private Texture img;
 
     // viewport
     private OrthographicCamera cam;
@@ -38,10 +36,12 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private TmxMapLoader mapLoader;
     private OrthogonalTiledMapRenderer mapRenderer;
-    private Human girl;
 
     // game objects list
     List<GameObject> gameObjects;
+
+    // Renderables list
+    List<com.boliao.eod.components.Renderable> renderables;
 
     /**
      * Ctor.
@@ -64,8 +64,12 @@ public class PlayScreen implements Screen {
         cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
 
         // init human
-        girl = new Human(100, 100, 30, "sprites/girl1.png");
+        GameObject girl = new GameObject("girl");
         gameObjects.add(girl);
+        girl.addComponent(new Transform(100, 100, 30));
+        girl.addComponent(new Sprite("sprites/girl1.png"));
+        girl.addComponent(new Controller());
+        girl.init();
     }
 
     /**
@@ -74,9 +78,6 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        // process inputs
-        processInputs(delta);
-
         // process game state updates
         if (!paused) {
             update(delta);
@@ -84,10 +85,6 @@ public class PlayScreen implements Screen {
 
         // render
         draw();
-    }
-
-    private void processInputs(float delta) {
-
     }
 
     private void update (float delta) {
@@ -113,9 +110,7 @@ public class PlayScreen implements Screen {
 
         // draw all game objects
         game.spriteBatch.begin();
-        for (GameObject go: gameObjects) {
-            go.draw();
-        }
+            RenderEngine.i().tick();
         game.spriteBatch.end();
     }
 

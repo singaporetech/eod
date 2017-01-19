@@ -21,7 +21,6 @@ public class Game extends com.badlogic.gdx.Game {
 	public void create () {
         spriteBatch = new SpriteBatch();
         setScreen(new PlayScreen());
-        //gameState = GameState.i();
 
         // decrease timer every sec
         Timer timer = new Timer();

@@ -10,9 +10,6 @@ public class GameState {
     int steps = 0;
     int timer = 100;
 
-    // game params
-    public final int HUMAN_SPEED = 30;
-
     private GameState() {}
 
     public static GameState i() {

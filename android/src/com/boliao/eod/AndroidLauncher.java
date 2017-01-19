@@ -6,11 +6,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 public class AndroidLauncher extends AndroidApplication implements SensorEventListener {
+    private static final String TAG = "AndroidLauncher";
+
     // init gameState singleton
     GameState gameState = GameState.i();
 
@@ -41,7 +44,7 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 
             // print sensor vals
             if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-                System.out.println("Step counter:" + val);
+                Log.d(TAG, "Step counter:" + val);
             }
             else if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
                 gameState.steps += val;
