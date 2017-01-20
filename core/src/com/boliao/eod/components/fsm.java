@@ -19,6 +19,8 @@ public class Fsm extends Component {
     private Transform transform;
     private Movement movement;
 
+    private Vector3 touchPos = new Vector3();
+
     public Fsm () {
         super("Fsm");
     }
@@ -39,13 +41,13 @@ public class Fsm extends Component {
 
                 // do transitions
                 if (Gdx.input.isTouched()) {
-                    Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+                    touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                     RenderEngine.i().getCam().unproject(touchPos);
                     movement.setDestPos(touchPos.x, touchPos.y);
 
                     currState = StateType.SEEK;
 
-                    Gdx.app.log(TAG, "Transit to SEEK");
+                    Gdx.app.log(TAG, "TOUCHED condition; Transit to SEEK destPos=" + movement.getDestPos());
                 }
 
                 break;
@@ -57,11 +59,13 @@ public class Fsm extends Component {
 
                     Gdx.app.log(TAG, "Transit to IDLE");
                 }
-//                if (Gdx.input.isTouched()) {
-//                    movement.setDestPos(Gdx.input.getX(), Gdx.input.getY());
-//
-//                    Gdx.app.log(TAG, "reset destPos x=" + Gdx.input.getX() + " y=" + Gdx.input.getY());
-//                }
+                if (Gdx.input.justTouched()) {
+                    touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                    RenderEngine.i().getCam().unproject(touchPos);
+                    movement.setDestPos(touchPos.x, touchPos.y);
+
+                    Gdx.app.log(TAG, "TOUCHED condition; Stay in SEEK destPos=" + movement.getDestPos());
+                }
 
                 // do actions
                 movement.moveInDir(delta);

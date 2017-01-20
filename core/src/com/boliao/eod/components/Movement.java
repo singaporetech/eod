@@ -34,15 +34,13 @@ public class Movement extends Component {
     }
 
     public void setDestPos(float x, float y) {
-        Gdx.app.log(TAG,"BEFORE destPos="+destPos+" dir="+dir+" pos="+transform.pos+" x="+x+" y="+y);
-
         // todo: steering
         destPos.set(x, y);
-
-
         dir.set(destPos).sub(transform.pos).nor();
+    }
 
-        Gdx.app.log(TAG,"AFTER destPos="+destPos+" dir="+dir+" pos="+transform.pos);
+    public Vector2 getDestPos() {
+        return destPos;
     }
 
     public boolean reachedDestPos() {
