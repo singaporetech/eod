@@ -49,6 +49,7 @@ public class PlayScreen implements Screen {
     public PlayScreen () {
         // camera
         cam = new OrthographicCamera();
+        RenderEngine.i().setCam(cam);
         viewport = new FitViewport(game.VIEWPORT_WIDTH, game.VIEWPORT_HEIGHT, cam);
 
         // init hud
@@ -68,7 +69,8 @@ public class PlayScreen implements Screen {
         gameObjects.add(girl);
         girl.addComponent(new Transform(100, 100, 30));
         girl.addComponent(new Sprite("sprites/girl1.png"));
-        girl.addComponent(new Controller());
+        girl.addComponent(new Movement());
+        girl.addComponent(new Fsm());
         girl.init();
     }
 

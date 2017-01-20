@@ -17,6 +17,14 @@ public class Transform extends Component {
         rot = r;
     }
 
+    public void setPos(Vector2 pos) {
+        this.pos.set(pos);
+    }
+
+    public Vector2 getPos() {
+        return pos;
+    }
+
     public float getX() {
         return pos.x;
     }
@@ -29,15 +37,13 @@ public class Transform extends Component {
         return rot;
     }
 
-    public Vector2 getPos() {
-        return pos;
-    }
-
-    @Override
-    public void update(float delta) {}
 
     public void translate(float x, float y) {
         pos.add(x, y);
+    }
+
+    public void translate(Vector2 vec) {
+        pos.add(vec);
     }
 
     public void rotate(int r) {

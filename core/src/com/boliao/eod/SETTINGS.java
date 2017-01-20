@@ -5,5 +5,6 @@ package com.boliao.eod;
  */
 
 public final class SETTINGS {
-    public static final int HUMAN_SPEED = 30;
+    public static final float HUMAN_SPEED = 50f;
+    public static final float DIST_THRES = 2.0f; // this is squared value
 }
