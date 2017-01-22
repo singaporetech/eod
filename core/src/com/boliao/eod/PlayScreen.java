@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+//import com.badlogic.gdx.maps.tiled.TiledMap;
+//import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+//import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.boliao.eod.components.*;
@@ -33,9 +33,9 @@ public class PlayScreen implements Screen {
 
     // game objects
     private com.boliao.eod.Hud hud;
-    private TiledMap map;
-    private TmxMapLoader mapLoader;
-    private OrthogonalTiledMapRenderer mapRenderer;
+//    private TiledMap map;
+//    private TmxMapLoader mapLoader;
+//    private OrthogonalTiledMapRenderer mapRenderer;
 
     // game objects list
     List<GameObject> gameObjects;
@@ -50,7 +50,8 @@ public class PlayScreen implements Screen {
         // camera
         cam = new OrthographicCamera();
         RenderEngine.i().setCam(cam);
-        viewport = new FitViewport(game.VIEWPORT_WIDTH, game.VIEWPORT_HEIGHT, cam);
+        viewport = new FitViewport(SETTINGS.VIEWPORT_WIDTH, SETTINGS.VIEWPORT_HEIGHT, cam);
+        cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
 
         // init hud
         hud = new com.boliao.eod.Hud();
@@ -58,20 +59,33 @@ public class PlayScreen implements Screen {
         // init game objects list
         gameObjects = new LinkedList<GameObject>();
 
-        // init map
-        mapLoader = new TmxMapLoader();
-        map = mapLoader.load("level0.tmx");
-        mapRenderer = new OrthogonalTiledMapRenderer(map);
-        cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
+        // init house
+        GameObject house = new GameObject("house");
+        gameObjects.add(house);
+        house.addComponent(new Transform(SETTINGS.HOUSE_POS_X, SETTINGS.HOUSE_POS_Y, 0));
+        house.addComponent(new Sprite("sprites/house.png", SETTINGS.HOUSE_SIZE));
+        house.init();
+//        mapLoader = new TmxMapLoader();
+//        map = mapLoader.load("level0.tmx");
+//        mapRenderer = new OrthogonalTiledMapRenderer(map);
 
         // init human
-        GameObject girl = new GameObject("girl");
-        gameObjects.add(girl);
-        girl.addComponent(new Transform(100, 100, 30));
-        girl.addComponent(new Sprite("sprites/girl1.png"));
-        girl.addComponent(new Movement());
-        girl.addComponent(new Fsm());
-        girl.init();
+        GameObject player = new GameObject("girl");
+        gameObjects.add(player);
+        player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
+        player.addComponent(new Sprite("sprites/player.png"));
+        player.addComponent(new Movement());
+        player.addComponent(new SteeringSeek());
+        player.addComponent(new Fsm());
+        player.addComponent(new Input(Input.InputType.TOUCH));
+        player.init();
+
+        // test init bug
+        GameObject bug = new GameObject("bug");
+        gameObjects.add(bug);
+        bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
+        bug.addComponent(new Sprite("sprites/bug1.png"));
+        bug.init();
     }
 
     /**
@@ -92,7 +106,7 @@ public class PlayScreen implements Screen {
     private void update (float delta) {
         hud.update();
         cam.update();
-        mapRenderer.setView(cam);
+        //mapRenderer.setView(cam);
         for (GameObject go: gameObjects) {
             go.update(delta);
         }
@@ -100,11 +114,11 @@ public class PlayScreen implements Screen {
 
     private void draw () {
         // clear screen
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0.08f, 0.08f, 0.08f, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // draw map
-        mapRenderer.render();
+        //mapRenderer.render();
 
         // draw hud
         //game.spriteBatch.setProjectionMatrix(cam.combined);
@@ -143,6 +157,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        for (GameObject go: gameObjects) {
+            go.finalize();
+        }
     }
 }

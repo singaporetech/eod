@@ -56,4 +56,10 @@ public class GameObject {
             c.update(delta);
         }
     }
+
+    public void finalize() {
+        for (Component c: components) {
+            c.finalize();
+        }
+    }
 }

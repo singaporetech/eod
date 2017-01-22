@@ -43,7 +43,7 @@ public class Hud {
     public Hud () {
         // init cam, viewport and stage
         cam = new OrthographicCamera();
-        viewport = new FitViewport(game.VIEWPORT_WIDTH, game.VIEWPORT_HEIGHT, cam);
+        viewport = new FitViewport(SETTINGS.VIEWPORT_WIDTH, SETTINGS.VIEWPORT_HEIGHT, cam);
         stage = new Stage(viewport, game.spriteBatch);
 
         // create table

@@ -1,9 +1,7 @@
 package com.boliao.eod.components;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
 import com.boliao.eod.GameObject;
-import com.boliao.eod.RenderEngine;
 
 /**
  * Created by mrboliao on 19/1/17.
@@ -18,8 +16,8 @@ public class Fsm extends Component {
 
     private Transform transform;
     private Movement movement;
-
-    private Vector3 touchPos = new Vector3();
+    private Steering steering;
+    private Input input;
 
     public Fsm () {
         super("Fsm");
@@ -31,6 +29,10 @@ public class Fsm extends Component {
 
         transform = (Transform) owner.getComponent("Transform");
         movement = (Movement) owner.getComponent("Movement");
+        steering = (Steering) owner.getComponent("SteeringSeek");
+        input = (Input) owner.getComponent("Input");
+
+        //todo: need to assert all components not null
     }
 
     @Override
@@ -40,35 +42,35 @@ public class Fsm extends Component {
                 // if health=0, go to DESTRUCT
 
                 // do transitions
-                if (Gdx.input.isTouched()) {
-                    touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                    RenderEngine.i().getCam().unproject(touchPos);
-                    movement.setDestPos(touchPos.x, touchPos.y);
+                if (input.isTriggered()) {
 
+                    steering.setDestPos(input.getWorldPos2D());
+
+                    // transit
                     currState = StateType.SEEK;
-
-                    Gdx.app.log(TAG, "TOUCHED condition; Transit to SEEK destPos=" + movement.getDestPos());
+                    Gdx.app.log(TAG, "TOUCHED condition; Transit to SEEK destPos=" + steering.getDestPos());
                 }
 
                 break;
 
             case SEEK:
                 // do transitions
-                if (movement.reachedDestPos()) {
+                if (steering.reachedDestPos()) {
+                    // transit
                     currState = StateType.IDLE;
-
                     Gdx.app.log(TAG, "Transit to IDLE");
                 }
-                if (Gdx.input.justTouched()) {
-                    touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                    RenderEngine.i().getCam().unproject(touchPos);
-                    movement.setDestPos(touchPos.x, touchPos.y);
+                if (input.isJustTriggered()) {
+                    steering.setDestPos(input.getWorldPos2D());
 
-                    Gdx.app.log(TAG, "TOUCHED condition; Stay in SEEK destPos=" + movement.getDestPos());
+                    Gdx.app.log(TAG, "TOUCHED condition; Stay in SEEK destPos=" + steering.getDestPos());
                 }
 
                 // do actions
-                movement.moveInDir(delta);
+                movement.move(delta, steering.getForce());
+                break;
+
+            case BUILD:
                 break;
 
             case DESTRUCT:

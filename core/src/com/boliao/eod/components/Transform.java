@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Transform extends Component {
     protected Vector2 pos;
-    protected int rot;
+    protected float rot;
 
     public Transform(int x, int y, int r) {
         super("Transform");

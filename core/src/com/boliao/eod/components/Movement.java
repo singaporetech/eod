@@ -1,6 +1,5 @@
 package com.boliao.eod.components;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
@@ -14,8 +13,9 @@ public class Movement extends Component {
 
     private Transform transform;
 
-    private Vector2 destPos;
-    private Vector2 dir;
+    private Vector2 vel = new Vector2();
+    private float mass = SETTINGS.MASS;
+    private float speed = SETTINGS.HUMAN_SPEED;
 
     public Movement() {
         super("Movement");
@@ -28,36 +28,39 @@ public class Movement extends Component {
         // setup links
         transform = (Transform) owner.getComponent("Transform");
 
-        // init vectors
-        destPos = new Vector2(transform.getX(), transform.getY());
-        dir = new Vector2();
+        // init vel
+        vel.setZero();
     }
 
-    public void setDestPos(float x, float y) {
-        // todo: steering
-        destPos.set(x, y);
-        dir.set(destPos).sub(transform.pos).nor();
+    public void setVel(Vector2 vel) {
+        this.vel = vel;
     }
 
-    public Vector2 getDestPos() {
-        return destPos;
+    public Vector2 getVel() {
+        return vel;
     }
 
-    public boolean reachedDestPos() {
-        if (transform.pos.dst2(destPos) < SETTINGS.DIST_THRES) {
-            transform.setPos(destPos);
-            return true;
+    public void move(float delta, Vector2 force) {
+        // calc acc
+        Vector2 acc = new Vector2(force);
+        acc.scl(1/mass);
+
+        // update vel
+        if (acc.len2() > 0) {
+            vel.add(acc.scl(delta));
+
+            // clip to maxSpeed
+            // todo: is this needed?
+            if (vel.len2() > speed*speed)
+                vel.nor().scl(speed);
         }
         else {
-            return false;
+            vel.setZero();
         }
-    }
 
-    public void moveInDir(float delta) {
-        //Gdx.app.log(TAG, "transform.pos=" + transform.pos + "delta=" + delta + "dir=" + dir);
-        float mul = SETTINGS.HUMAN_SPEED * delta;
-        transform.translate(dir.x*mul, dir.y*mul);
-        //Gdx.app.log(TAG, "distanceLeftSq=" + transform.pos.dst2(destPos));
-        //Gdx.app.log(TAG, "transform.pos=" + transform.pos + "delta=" + delta + "dir=" + dir);
+        // update position
+        Vector2 displacement = new Vector2(vel);
+        displacement.scl(delta);
+        transform.translate(displacement);
     }
 }

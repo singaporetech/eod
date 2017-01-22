@@ -6,8 +6,6 @@ import com.badlogic.gdx.utils.Timer;
 public class Game extends com.badlogic.gdx.Game {
     private static Game instance = new Game();
 
-    public static final int VIEWPORT_WIDTH = 720;
-    public static final int VIEWPORT_HEIGHT = 1280;
 	public SpriteBatch spriteBatch;
     //public GameState gameState;
 
