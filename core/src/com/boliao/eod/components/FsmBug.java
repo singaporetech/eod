@@ -27,6 +27,7 @@ public class FsmBug extends Fsm {
         switch (currState) {
             case IDLE:
                 currState = StateType.PURSUE;
+                spriteSheet.enter();
                 Gdx.app.log(TAG, "Transit to PURSUE");
                 break;
 
@@ -35,6 +36,7 @@ public class FsmBug extends Fsm {
                 if (steering.reachedDestPos()) {
                     // transit
                     currState = StateType.ATTACK;
+                    spriteSheet.exit();
                     Gdx.app.log(TAG, "Transit to ATTACK");
                 }
 
@@ -46,6 +48,7 @@ public class FsmBug extends Fsm {
                 // do transitions
                 if (((SteeringPursue)steering).targetGotAway()) {
                     currState = StateType.PURSUE;
+                    spriteSheet.enter();
                     Gdx.app.log(TAG, "Transit to PURSUE");
                 }
 

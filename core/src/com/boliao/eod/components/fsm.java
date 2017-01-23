@@ -18,6 +18,7 @@ public abstract class Fsm extends Component {
     protected Transform transform;
     protected Movement movement;
     protected Steering steering;
+    protected SpriteSheet spriteSheet;
 
     public Fsm () {
         super("Fsm");
@@ -32,6 +33,7 @@ public abstract class Fsm extends Component {
         super.init(owner);
 
         transform = (Transform) owner.getComponent("Transform");
+        spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
         movement = (Movement) owner.getComponent("Movement");
 
         //todo: need to assert all components not null

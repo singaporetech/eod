@@ -65,6 +65,14 @@ public class PlayScreen implements Screen {
         house.addComponent(new Transform(SETTINGS.HOUSE_POS_X, SETTINGS.HOUSE_POS_Y, 0));
         house.addComponent(new Sprite("sprites/house.png", SETTINGS.HOUSE_SIZE));
         house.init();
+
+        // init block
+        GameObject block = new GameObject("block");
+        gameObjects.add(block);
+        block.addComponent(new Transform(SETTINGS.BLOCK_POS_X, SETTINGS.BLOCK_POS_Y, 0));
+        block.addComponent(new Sprite("sprites/block.png", SETTINGS.BLOCK_SIZE));
+        block.addComponent(new Collider());
+        block.init();
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("level0.tmx");
 //        mapRenderer = new OrthogonalTiledMapRenderer(map);
@@ -73,7 +81,7 @@ public class PlayScreen implements Screen {
         GameObject player = new GameObject("girl");
         gameObjects.add(player);
         player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
-        player.addComponent(new Sprite("sprites/player.png"));
+        player.addComponent(new SpriteSheet("sprites/player.txt"));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
         player.addComponent(new FsmPlayer());
@@ -84,9 +92,10 @@ public class PlayScreen implements Screen {
         GameObject bug = new GameObject("bug");
         gameObjects.add(bug);
         bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
-        bug.addComponent(new Sprite("sprites/bug1.png"));
+        bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
         bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
-        bug.addComponent(new SteeringPursue(player)); // todo: anyway to auto extract name into init
+        //bug.addComponent(new SteeringPursue(player)); //
+        bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
         bug.addComponent(new FsmBug());
         bug.init();
     }

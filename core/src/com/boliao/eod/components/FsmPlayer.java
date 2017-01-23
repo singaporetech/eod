@@ -38,6 +38,7 @@ public class FsmPlayer extends Fsm {
 
                     // transit
                     currState = StateType.SEEK;
+                    spriteSheet.enter(); // todo: this should be currState.enter() when State class setup
                     Gdx.app.log(TAG, "TOUCHED condition; Transit to SEEK destPos=" + steering.getDestPos());
                 }
 
@@ -47,6 +48,7 @@ public class FsmPlayer extends Fsm {
                 // do transitions
                 if (steering.reachedDestPos()) {
                     // transit
+                    spriteSheet.exit();
                     currState = StateType.IDLE;
                     Gdx.app.log(TAG, "Transit to IDLE");
                 }

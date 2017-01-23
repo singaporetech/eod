@@ -1,6 +1,8 @@
 package com.boliao.eod;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.boliao.eod.components.Engine;
+import com.boliao.eod.components.Renderable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,9 +11,9 @@ import java.util.List;
  * Created by mrboliao on 19/1/17.
  */
 
-public class RenderEngine {
+public class RenderEngine implements Engine{
 
-    private List<com.boliao.eod.components.Renderable> renderables = new LinkedList<com.boliao.eod.components.Renderable>();
+    private List<Renderable> renderables = new LinkedList<Renderable>();
 
     private static RenderEngine instance = new RenderEngine();
     public static RenderEngine i(){
@@ -21,12 +23,12 @@ public class RenderEngine {
     private Camera cam;
 
     public void tick() {
-        for (com.boliao.eod.components.Renderable r: renderables) {
+        for (Renderable r: renderables) {
             r.draw();
         }
     }
 
-    public void addRenderable(com.boliao.eod.components.Renderable r) {
+    public void addRenderable(Renderable r) {
         renderables.add(r);
     }
 

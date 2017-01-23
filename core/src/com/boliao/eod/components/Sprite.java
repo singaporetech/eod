@@ -1,6 +1,7 @@
 package com.boliao.eod.components;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
@@ -11,20 +12,26 @@ import com.boliao.eod.SETTINGS;
  */
 
 public class Sprite extends Component implements Renderable {
-    protected com.badlogic.gdx.graphics.g2d.Sprite sprite;
     private Transform transform;
+    private com.badlogic.gdx.graphics.g2d.Sprite sprite;
 
-    public Sprite(String spritePath, int size) {
+    public Sprite(String spritePath, int sizeX, int sizeY) {
         super("Sprite");
 
+        // init spritesheet
         sprite = new com.badlogic.gdx.graphics.g2d.Sprite(new Texture(spritePath));
+
         //sprite.setOriginCenter();
-        sprite.setSize(size, size);
+        sprite.setSize(sizeX, sizeY);
         //sprite.setScale(0.1f);
         sprite.setOriginCenter();
 
         // add to Render Engine
         RenderEngine.i().addRenderable(this);
+    }
+
+    public Sprite(String spritePath, int size) {
+        this(spritePath, size, size);
     }
 
     public Sprite(String spritePath) {
@@ -37,6 +44,11 @@ public class Sprite extends Component implements Renderable {
 
         // setup links
         transform = (Transform) owner.getComponent("Transform");
+    }
+
+    @Override
+    public Rectangle getBoundingBox() {
+        return sprite.getBoundingRectangle();
     }
 
     @Override

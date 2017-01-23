@@ -8,11 +8,14 @@ public final class SETTINGS {
     public static final int VIEWPORT_WIDTH = 720;
     public static final int VIEWPORT_HEIGHT = 1280;
 
-    public static final int SPRITE_SIZE = 150;
+    public static final int SPRITE_SIZE = 120;
     public static final int HOUSE_SIZE = 380;
+    public static final int BLOCK_SIZE = 300;
 
     public static final int HOUSE_POS_X = 380;
     public static final int HOUSE_POS_Y = 1000;
+    public static final int BLOCK_POS_X = 380;
+    public static final int BLOCK_POS_Y = 300;
     public static final int PLAYER_POS_X = 400;
     public static final int PLAYER_POS_Y = 900;
     public static final int BUG_POS_X = 100;
@@ -31,4 +34,9 @@ public final class SETTINGS {
     public static final float MASS = 1.0f;
     public static final float PROXIMITY = STOP_RADIUS; // this is squared value
     public static final float MELEE_RANGE = 100.0f;
+
+    public static final float COLLISION_FORWARD_LEN = 50.0f;
+    public static final float COLLISION_FORCE = 20.0f;
+
+    public static final float ANIM_FRAME_TIME = 0.1f;
 }
