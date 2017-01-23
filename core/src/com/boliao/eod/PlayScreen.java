@@ -75,8 +75,8 @@ public class PlayScreen implements Screen {
         player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
         player.addComponent(new Sprite("sprites/player.png"));
         player.addComponent(new Movement());
-        player.addComponent(new SteeringSeek());
-        player.addComponent(new Fsm());
+        player.addComponent(new SteeringArrive());
+        player.addComponent(new FsmPlayer());
         player.addComponent(new Input(Input.InputType.TOUCH));
         player.init();
 
@@ -85,6 +85,9 @@ public class PlayScreen implements Screen {
         gameObjects.add(bug);
         bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
         bug.addComponent(new Sprite("sprites/bug1.png"));
+        bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
+        bug.addComponent(new SteeringPursue(player)); // todo: anyway to auto extract name into init
+        bug.addComponent(new FsmBug());
         bug.init();
     }
 

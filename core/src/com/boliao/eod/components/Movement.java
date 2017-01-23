@@ -1,5 +1,7 @@
 package com.boliao.eod.components;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
@@ -15,10 +17,14 @@ public class Movement extends Component {
 
     private Vector2 vel = new Vector2();
     private float mass = SETTINGS.MASS;
-    private float speed = SETTINGS.HUMAN_SPEED;
+    private float speed = SETTINGS.SPEED_PLAYER; //todo: need to match the speed of steering
 
     public Movement() {
         super("Movement");
+    }
+    public Movement(float speed) {
+        super("Movement");
+        this.speed = speed;
     }
 
     @Override
@@ -51,16 +57,21 @@ public class Movement extends Component {
 
             // clip to maxSpeed
             // todo: is this needed?
-            if (vel.len2() > speed*speed)
-                vel.nor().scl(speed);
+//            if (vel.len2() > speed*speed)
+//                vel.nor().scl(speed);
+
+            // update position
+            Vector2 displacement = new Vector2(vel);
+            displacement.scl(delta);
+            transform.translate(displacement);
+
+            // update rotation
+            transform.rot = MathUtils.radiansToDegrees * (float) Math.atan2(vel.y, vel.x);
+
+            //Gdx.app.log(TAG, "vel=" + vel + " acc=" + acc + " disp=" + displacement);
         }
         else {
             vel.setZero();
         }
-
-        // update position
-        Vector2 displacement = new Vector2(vel);
-        displacement.scl(delta);
-        transform.translate(displacement);
     }
 }

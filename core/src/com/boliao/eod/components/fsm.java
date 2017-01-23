@@ -8,19 +8,23 @@ import com.boliao.eod.GameObject;
  * Finite State Machine class.
  */
 
-public class Fsm extends Component {
-    public static final String TAG = "FSM_COMPONENT";
+public abstract class Fsm extends Component {
+    public static final String TAG = "FSM:C";
 
-    public enum StateType {IDLE, SEEK, BUILD, DESTRUCT};
+    // todo: change SEEK to ARRIVE
+    public enum StateType {IDLE, SEEK, PURSUE, ATTACK, BUILD, DESTRUCT};
     protected StateType currState = StateType.IDLE;
 
-    private Transform transform;
-    private Movement movement;
-    private Steering steering;
-    private Input input;
+    protected Transform transform;
+    protected Movement movement;
+    protected Steering steering;
 
     public Fsm () {
         super("Fsm");
+    }
+
+    public Fsm (String name) {
+        super(name);
     }
 
     @Override
@@ -29,56 +33,10 @@ public class Fsm extends Component {
 
         transform = (Transform) owner.getComponent("Transform");
         movement = (Movement) owner.getComponent("Movement");
-        steering = (Steering) owner.getComponent("SteeringSeek");
-        input = (Input) owner.getComponent("Input");
 
         //todo: need to assert all components not null
     }
 
     @Override
-    public void update(float delta) {
-        switch (currState) {
-            case IDLE:
-                // if health=0, go to DESTRUCT
-
-                // do transitions
-                if (input.isTriggered()) {
-
-                    steering.setDestPos(input.getWorldPos2D());
-
-                    // transit
-                    currState = StateType.SEEK;
-                    Gdx.app.log(TAG, "TOUCHED condition; Transit to SEEK destPos=" + steering.getDestPos());
-                }
-
-                break;
-
-            case SEEK:
-                // do transitions
-                if (steering.reachedDestPos()) {
-                    // transit
-                    currState = StateType.IDLE;
-                    Gdx.app.log(TAG, "Transit to IDLE");
-                }
-                if (input.isJustTriggered()) {
-                    steering.setDestPos(input.getWorldPos2D());
-
-                    Gdx.app.log(TAG, "TOUCHED condition; Stay in SEEK destPos=" + steering.getDestPos());
-                }
-
-                // do actions
-                movement.move(delta, steering.getForce());
-                break;
-
-            case BUILD:
-                break;
-
-            case DESTRUCT:
-                Gdx.app.log(TAG, "Destroying");
-                break;
-
-            default:
-                break;
-        }
-    }
+    public abstract void update(float delta);
 }

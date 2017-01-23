@@ -1,5 +1,6 @@
 package com.boliao.eod.components;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
@@ -10,11 +11,14 @@ import com.boliao.eod.SETTINGS;
  */
 
 public abstract class Steering extends Component {
+    private static final String TAG ="Steering:C";
+
     protected Transform transform;
     protected Movement movement;
 
     protected Vector2 destPos;
-    protected Vector2 dir;
+    protected Vector2 dir = new Vector2();
+    protected float dist;
 
     public Steering(String name) {
         super(name);
@@ -30,7 +34,6 @@ public abstract class Steering extends Component {
 
         // init vectors
         destPos = new Vector2(transform.getX(), transform.getY());
-        dir = new Vector2();
     }
 
     @Override
@@ -41,13 +44,13 @@ public abstract class Steering extends Component {
     public void setDestPos(float x, float y) {
         // todo: steering
         destPos.set(x, y);
-        dir.set(destPos).sub(transform.pos).nor();
+
+        // calc dir and dist
+        updateDirAndDist();
     }
 
     public void setDestPos(Vector2 v) {
-        destPos.set(v);
-        dir.set(destPos).sub(transform.pos).nor();
-        transform.rot = MathUtils.radiansToDegrees * (float) Math.atan2(dir.y, dir.x);
+        setDestPos(v.x, v.y);
     }
 
     public Vector2 getDestPos() {
@@ -55,13 +58,28 @@ public abstract class Steering extends Component {
     }
 
     public boolean reachedDestPos() {
-        if (transform.pos.dst2(destPos) < SETTINGS.PROXIMITY2) {
-            transform.setPos(destPos);
+        //Gdx.app.log(TAG, "dist=" + dist + " pos=" + transform.pos + " destPos=" + destPos);
+
+        if (dist < SETTINGS.PROXIMITY) {
+            //todo: see whether got more elegant way to accurately stop near touch point
+            //transform.setPos(destPos);
+            // face the destPos
+
+            // face the destination
+            // todo: need to gradually turn to face destPos (now simply increase STOP_RAD
+            //transform.rot = MathUtils.radiansToDegrees * (float) Math.atan2(dir.y, dir.x);
+
             return true;
         }
         else {
             return false;
         }
+    }
+
+    protected void updateDirAndDist() {
+        dir.set(destPos).sub(transform.pos);
+        dist = dir.len();
+        dir.nor();
     }
 
     public abstract Vector2 getForce();
