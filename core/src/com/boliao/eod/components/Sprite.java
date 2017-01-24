@@ -60,7 +60,7 @@ public class Sprite extends Component implements Renderable {
     }
 
     public void draw() {
-        sprite.draw(Game.i().spriteBatch);
+        sprite.draw(RenderEngine.i().getSpriteBatch());
     }
 
     @Override

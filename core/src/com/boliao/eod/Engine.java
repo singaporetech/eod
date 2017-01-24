@@ -1,4 +1,4 @@
-package com.boliao.eod.components;
+package com.boliao.eod;
 
 /**
  * Created by mrboliao on 24/1/17.
@@ -6,4 +6,6 @@ package com.boliao.eod.components;
 
 public interface Engine {
     void tick();
+    void init();
+    void finalize();
 }

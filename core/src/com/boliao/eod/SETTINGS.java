@@ -10,7 +10,7 @@ public final class SETTINGS {
 
     public static final int SPRITE_SIZE = 120;
     public static final int HOUSE_SIZE = 380;
-    public static final int BLOCK_SIZE = 300;
+    public static final int BLOCK_SIZE = 150;
 
     public static final int HOUSE_POS_X = 380;
     public static final int HOUSE_POS_Y = 1000;
@@ -18,7 +18,7 @@ public final class SETTINGS {
     public static final int BLOCK_POS_Y = 300;
     public static final int PLAYER_POS_X = 400;
     public static final int PLAYER_POS_Y = 900;
-    public static final int BUG_POS_X = 100;
+    public static final int BUG_POS_X = 400;
     public static final int BUG_POS_Y = 100;
 
 

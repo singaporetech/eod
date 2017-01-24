@@ -1,23 +1,26 @@
 package com.boliao.eod;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.boliao.eod.components.Renderable;
 
 /**
  * Created by mrboliao on 16/1/17.
  */
 
-public class Hud {
+public class Hud implements Renderable {
 
     private Texture img;
     private BitmapFont font;
@@ -44,7 +47,7 @@ public class Hud {
         // init cam, viewport and stage
         cam = new OrthographicCamera();
         viewport = new FitViewport(SETTINGS.VIEWPORT_WIDTH, SETTINGS.VIEWPORT_HEIGHT, cam);
-        stage = new Stage(viewport, game.spriteBatch);
+        stage = new Stage(viewport, RenderEngine.i().getSpriteBatch());
 
         // create table
         Table table = new Table();
@@ -81,8 +84,17 @@ public class Hud {
         stepsLabel.setText(String.format("%d steps", gameState.steps));
     }
 
+    public Camera getStageCam() {
+        return stage.getCamera();
+    }
+
+    @Override
     public void draw () {
-        game.spriteBatch.setProjectionMatrix(stage.getCamera().combined);
         stage.draw();
+    }
+
+    @Override
+    public Rectangle getBoundingBox() {
+        return null;
     }
 }

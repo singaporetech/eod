@@ -5,19 +5,13 @@ import com.badlogic.gdx.utils.Timer;
 
 public class Game extends com.badlogic.gdx.Game {
     private static Game instance = new Game();
-
-	public SpriteBatch spriteBatch;
-    //public GameState gameState;
-
     private Game() {}
-
     public static Game i(){
         return instance;
     }
 
 	@Override
 	public void create () {
-        spriteBatch = new SpriteBatch();
         setScreen(new PlayScreen());
 
         // decrease timer every sec
@@ -37,6 +31,6 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void dispose () {
-		spriteBatch.dispose();
+
 	}
 }

@@ -88,7 +88,7 @@ public class SpriteSheet extends Component implements Renderable, FsmState {
     }
 
     public void draw() {
-        currSprite.draw(Game.i().spriteBatch);
+        currSprite.draw(RenderEngine.i().getSpriteBatch());
     }
 
     @Override

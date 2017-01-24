@@ -23,16 +23,11 @@ public class PlayScreen implements Screen {
 
     private boolean paused = false;
 
-    // viewport
-    private OrthographicCamera cam;
-    private Viewport viewport;
-
     // game singletons
     Game game = Game.i();
     com.boliao.eod.GameState gameState = com.boliao.eod.GameState.i();
 
     // game objects
-    private com.boliao.eod.Hud hud;
 //    private TiledMap map;
 //    private TmxMapLoader mapLoader;
 //    private OrthogonalTiledMapRenderer mapRenderer;
@@ -47,14 +42,8 @@ public class PlayScreen implements Screen {
      * Ctor.
      */
     public PlayScreen () {
-        // camera
-        cam = new OrthographicCamera();
-        RenderEngine.i().setCam(cam);
-        viewport = new FitViewport(SETTINGS.VIEWPORT_WIDTH, SETTINGS.VIEWPORT_HEIGHT, cam);
-        cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
-
-        // init hud
-        hud = new com.boliao.eod.Hud();
+        // init render engine
+        RenderEngine.i().init();
 
         // init game objects list
         gameObjects = new LinkedList<GameObject>();
@@ -94,8 +83,8 @@ public class PlayScreen implements Screen {
         bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
         bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
         bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
-        //bug.addComponent(new SteeringPursue(player)); //
-        bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
+        bug.addComponent(new SteeringPursue(player)); //
+        //bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
         bug.addComponent(new FsmBug());
         bug.init();
     }
@@ -106,45 +95,23 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        // process game state updates
         if (!paused) {
-            update(delta);
+            // process game object updates
+            for (GameObject go: gameObjects) {
+                go.update(delta);
+            }
+
+            // process collisions
+            CollisionEngine.i().tick();
         }
 
-        // render
-        draw();
-    }
-
-    private void update (float delta) {
-        hud.update();
-        cam.update();
-        //mapRenderer.setView(cam);
-        for (GameObject go: gameObjects) {
-            go.update(delta);
-        }
-    }
-
-    private void draw () {
-        // clear screen
-        Gdx.gl.glClearColor(0.08f, 0.08f, 0.08f, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // draw map
-        //mapRenderer.render();
-
-        // draw hud
-        //game.spriteBatch.setProjectionMatrix(cam.combined);
-        hud.draw();
-
-        // draw all game objects
-        game.spriteBatch.begin();
-            RenderEngine.i().tick();
-        game.spriteBatch.end();
+        // process graphics
+        RenderEngine.i().tick();
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        RenderEngine.i().setViewport(width, height);
     }
 
     @Override
