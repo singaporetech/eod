@@ -1,14 +1,6 @@
 package com.boliao.eod;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-//import com.badlogic.gdx.maps.tiled.TiledMap;
-//import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-//import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.boliao.eod.components.*;
 
 import java.util.LinkedList;
@@ -27,16 +19,16 @@ public class PlayScreen implements Screen {
     Game game = Game.i();
     com.boliao.eod.GameState gameState = com.boliao.eod.GameState.i();
 
-    // game objects
-//    private TiledMap map;
-//    private TmxMapLoader mapLoader;
-//    private OrthogonalTiledMapRenderer mapRenderer;
-
     // game objects list
     List<GameObject> gameObjects;
 
     // Renderables list
     List<com.boliao.eod.components.Renderable> renderables;
+
+    // Tiled stuff
+//    private TiledMap map;
+//    private TmxMapLoader mapLoader;
+//    private OrthogonalTiledMapRenderer mapRenderer;
 
     /**
      * Ctor.
@@ -62,9 +54,6 @@ public class PlayScreen implements Screen {
         block.addComponent(new Sprite("sprites/block.png", SETTINGS.BLOCK_SIZE));
         block.addComponent(new Collider());
         block.init();
-//        mapLoader = new TmxMapLoader();
-//        map = mapLoader.load("level0.tmx");
-//        mapRenderer = new OrthogonalTiledMapRenderer(map);
 
         // init human
         GameObject player = new GameObject("girl");
@@ -83,10 +72,14 @@ public class PlayScreen implements Screen {
         bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
         bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
         bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
-        bug.addComponent(new SteeringPursue(player)); //
-        //bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
+        //bug.addComponent(new SteeringPursue(player)); //
+        bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
         bug.addComponent(new FsmBug());
         bug.init();
+
+//        mapLoader = new TmxMapLoader();
+//        map = mapLoader.load("level0.tmx");
+//        mapRenderer = new OrthogonalTiledMapRenderer(map);
     }
 
     /**
@@ -139,5 +132,8 @@ public class PlayScreen implements Screen {
         for (GameObject go: gameObjects) {
             go.finalize();
         }
+
+        //shut down engine
+        RenderEngine.i().finalize();
     }
 }

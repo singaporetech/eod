@@ -35,8 +35,8 @@ public final class SETTINGS {
     public static final float PROXIMITY = STOP_RADIUS; // this is squared value
     public static final float MELEE_RANGE = 100.0f;
 
-    public static final float COLLISION_FORWARD_LEN = 50.0f;
-    public static final float COLLISION_FORCE = 20.0f;
+    public static final float COLLISION_FORWARD_LEN = 100.0f;
+    public static final float COLLISION_FORCE = 300.0f;
 
     public static final float ANIM_FRAME_TIME = 0.1f;
 }

@@ -14,11 +14,14 @@ import com.boliao.eod.SETTINGS;
  * - implements Renderable for debugging purposes
  */
 
-public class SteeringPursueCollision extends SteeringPursue implements Renderable {
+public class SteeringPursueCollision extends SteeringPursue implements RenderableDebug {
     private static final String TAG = "SteeringPursueC:C";
 
     protected Vector2 forwardPos = new Vector2();
-    protected ShapeRenderer shapeRenderer = new ShapeRenderer();
+    protected Vector2 pursueForce = new Vector2();
+    protected Vector2 collisionForce = new Vector2();
+    protected Vector2 collisionPos = new Vector2();
+    protected Vector2 pursuePos = new Vector2();
 
     /**
      * Use same name as super so that Fsm can be uniform.
@@ -31,8 +34,7 @@ public class SteeringPursueCollision extends SteeringPursue implements Renderabl
     public void init(GameObject owner) {
         super.init(owner);
 
-        RenderEngine.i().addRenderable(this);
-        shapeRenderer.setProjectionMatrix(RenderEngine.i().getCam().combined);
+        RenderEngine.i().addRenderableDebug(this);
     }
 
     @Override
@@ -42,24 +44,33 @@ public class SteeringPursueCollision extends SteeringPursue implements Renderabl
 //        forward.set(transform.getPos()).add(vec);
         forwardPos.set(dir).scl(SETTINGS.COLLISION_FORWARD_LEN).add(transform.getPos());
 
+        // get pursue force
+        pursueForce.set(super.getForce());
+
         // check collision
         Collidable collidable = CollisionEngine.i().getColliderWithLine(transform.getPos(), forwardPos);
         if (collidable != null) {
-            Vector2 resultantForce = super.getForce().add(collidable.getCollisionDir(forwardPos)).scl(SETTINGS.COLLISION_FORCE);
-            Gdx.app.log(TAG, "COLLIDED: pos=" + transform.getPos() + " forwardPos=" + forwardPos + " resultantForce=" + resultantForce);
-            return resultantForce;
-
+            collisionForce.set(collidable.getCollisionDir(forwardPos)).scl(SETTINGS.COLLISION_FORCE);
+            Vector2 resultantForce = new Vector2().set(pursueForce).scl(0.5f).add(collisionForce.scl(0.5f));
+            Gdx.app.log(TAG, "COLLIDED: pos=" + transform.getPos() + " forwardPos=" + forwardPos + " collF=" + collisionForce + " resF=" + resultantForce);
+            return collisionForce;
         }
-        return super.getForce();
+        return pursueForce;
     }
 
     @Override
     public void draw() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0,0.5f,0.5f,1.0f);
-        //shapeRenderer.line(transform.getPos().x, transform.getPos().y,forwardPos.x, forwardPos.y);
-        shapeRenderer.line(0,0,800,800);
-        shapeRenderer.end();
+        RenderEngine.i().getDebugRenderer().setColor(1,0,0,1);
+        RenderEngine.i().getDebugRenderer().line(transform.getX(), transform.getY(), forwardPos.x, forwardPos.y);
+        RenderEngine.i().getDebugRenderer().setColor(0,1,0,1);
+        collisionPos.set(transform.getPos()).add(collisionForce);
+        RenderEngine.i().getDebugRenderer().line(transform.getX(), transform.getY(), collisionPos.x, collisionPos.y);
+        RenderEngine.i().getDebugRenderer().setColor(0,0,1,1);
+        pursuePos.set(transform.getPos()).add(pursueForce);
+        RenderEngine.i().getDebugRenderer().line(transform.getX(), transform.getY(), pursuePos.x, pursuePos.y);
+
+//        Gdx.app.log(TAG, "DRAW: forwardPos=" + forwardPos + " collF=" + collisionForce + " purF=" + pursueForce);
+
     }
 
     @Override
