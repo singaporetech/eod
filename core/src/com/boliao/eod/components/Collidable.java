@@ -8,10 +8,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public interface Collidable {
-//    boolean hasCollidedWithLine(Vector2 pos1, Vector2 pos2);
-    Vector2 getBoundingCirclePos();
     float getBoundingCircleRadius();
+    Vector2 getBoundingCirclePos();
     Vector2 getCollisionNorm(Collidable collider);
-//    Vector2 getCollisionDir(Vector2 forwardPos);
-//    Polygon getBoundingPolygon();
 }

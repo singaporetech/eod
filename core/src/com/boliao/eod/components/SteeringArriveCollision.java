@@ -39,10 +39,6 @@ public class SteeringArriveCollision extends SteeringArrive {
         // get arrive force (which will also update direction vec
         parentForce.set(super.getForce());
 
-        // setup forward vector
-//        forwardVec.set(dir).scl(SETTINGS.COLLISION_FORWARD_LEN);
-//        collider.setForwardVec(forwardVec);
-
         // get collided position
         Vector2 collisionNorm = CollisionEngine.i().getCollisionNorm(collider);
 
@@ -52,10 +48,10 @@ public class SteeringArriveCollision extends SteeringArrive {
             collisionForce.set(collisionNorm).scl(SETTINGS.COLLISION_FORCE);
             //collisionForce.sub(movement.getVel()).scl(3f);
 
-//            Vector2 resultantForce = new Vector2().set(parentForce).scl(0.5f).add(collisionForce.scl(0.5f));
             Vector2 resultantForce = new Vector2().set(parentForce).scl(0.1f).add(collisionForce.scl(0.9f));
             Gdx.app.log(TAG, "COLLIDED: pos=" + transform.getPos() + " parF=" + parentForce + " collF=" + collisionForce + " resF=" + resultantForce);
-            return resultantForce;
+            return collisionForce;
+//            return resultantForce;
         }
         return parentForce;
     }

@@ -49,15 +49,6 @@ public class CollisionEngine implements Engine {
         return null;
     }
 
-//    public Collidable getColliderWithLine(Vector2 pos1, Vector2 pos2) {
-//        for (Collidable c: collidables) {
-//            if (c.hasCollidedWithLine(pos1, pos2)) {
-//                return c;
-//            }
-//        }
-//        return null;
-//    }
-
     public void addCollidable(Collidable c) {
         collidables.add(c);
     }
