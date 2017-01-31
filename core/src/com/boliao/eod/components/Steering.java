@@ -80,6 +80,9 @@ public abstract class Steering extends Component {
         dir.set(destPos).sub(transform.pos);
         dist = dir.len();
         dir.nor();
+
+        // update transform
+        transform.setForward(dir);
     }
 
     public abstract Vector2 getForce();

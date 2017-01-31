@@ -73,11 +73,9 @@ public class RenderEngine implements Engine{
 
         // draw debug graphics
         shapeRenderer.setProjectionMatrix(cam.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (RenderableDebug r: renderableDebugs) {
             r.draw();
         }
-        shapeRenderer.end();
     }
 
     public void addRenderable(Renderable r) {

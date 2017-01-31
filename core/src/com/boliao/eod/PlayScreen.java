@@ -56,26 +56,29 @@ public class PlayScreen implements Screen {
         block.init();
 
         // init human
-        GameObject player = new GameObject("girl");
+        GameObject player = new GameObject("player");
         gameObjects.add(player);
         player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
         player.addComponent(new SpriteSheet("sprites/player.txt"));
+        player.addComponent(new Collider(SETTINGS.COLLISION_WIDTH,SETTINGS.COLLISION_HEIGHT));
         player.addComponent(new Movement());
-        player.addComponent(new SteeringArrive());
+        //player.addComponent(new SteeringArrive());
+        player.addComponent(new SteeringArriveCollision());
         player.addComponent(new FsmPlayer());
         player.addComponent(new Input(Input.InputType.TOUCH));
         player.init();
 
         // test init bug
-        GameObject bug = new GameObject("bug");
-        gameObjects.add(bug);
-        bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
-        bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
-        bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
-        //bug.addComponent(new SteeringPursue(player)); //
-        bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
-        bug.addComponent(new FsmBug());
-        bug.init();
+//        GameObject bug = new GameObject("bug");
+//        gameObjects.add(bug);
+//        bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
+//        bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
+//        bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
+//        bug.addComponent(new Collider());
+//        //bug.addComponent(new SteeringPursue(player)); //
+//        bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
+//        bug.addComponent(new FsmBug());
+//        bug.init();
 
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("level0.tmx");

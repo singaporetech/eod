@@ -1,7 +1,9 @@
 package com.boliao.eod;
 
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.components.Collidable;
+import com.boliao.eod.components.Collider;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,14 +32,31 @@ public class CollisionEngine implements Engine {
 
     }
 
-    public Collidable getColliderWithLine(Vector2 pos1, Vector2 pos2) {
+    /**
+     * Check if collider has collided with any other collidables
+     * @param collider
+     * @return
+     */
+    public Vector2 getCollisionNorm(Collider collider) {
         for (Collidable c: collidables) {
-            if (c.hasCollidedWithLine(pos1, pos2)) {
-                return c;
+            if (collider != (Collider) c) {
+                Vector2 collisionNorm = collider.getCollisionNorm(c);
+                if (collisionNorm != null) {
+                    return collisionNorm;
+                }
             }
         }
         return null;
     }
+
+//    public Collidable getColliderWithLine(Vector2 pos1, Vector2 pos2) {
+//        for (Collidable c: collidables) {
+//            if (c.hasCollidedWithLine(pos1, pos2)) {
+//                return c;
+//            }
+//        }
+//        return null;
+//    }
 
     public void addCollidable(Collidable c) {
         collidables.add(c);
@@ -45,5 +64,6 @@ public class CollisionEngine implements Engine {
 
     @Override
     public void finalize() {
+
     }
 }

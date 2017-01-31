@@ -57,6 +57,10 @@ public class GameObject {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void finalize() {
         for (Component c: components) {
             c.finalize();

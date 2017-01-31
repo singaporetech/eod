@@ -21,6 +21,11 @@ public class SpriteSheet extends Component implements Renderable, FsmState {
     protected boolean isAnimated = false;
     protected float animationElapsedTime = 0;
 
+    /**
+     * Use the same name
+     * @param spritePath
+     * @param size
+     */
     public SpriteSheet(String spritePath, int size) {
         super("SpriteSheet");
 

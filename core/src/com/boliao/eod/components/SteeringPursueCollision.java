@@ -2,6 +2,7 @@ package com.boliao.eod.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
@@ -17,12 +18,14 @@ import com.boliao.eod.SETTINGS;
 public class SteeringPursueCollision extends SteeringPursue implements RenderableDebug {
     private static final String TAG = "SteeringPursueC:C";
 
+    protected Vector2 forwardVec = new Vector2();
     protected Vector2 forwardPos = new Vector2();
     protected Vector2 pursueForce = new Vector2();
     protected Vector2 collisionForce = new Vector2();
     protected Vector2 collisionPos = new Vector2();
     protected Vector2 pursuePos = new Vector2();
 
+    protected Collider collider;
     /**
      * Use same name as super so that Fsm can be uniform.
      */
@@ -34,7 +37,8 @@ public class SteeringPursueCollision extends SteeringPursue implements Renderabl
     public void init(GameObject owner) {
         super.init(owner);
 
-        RenderEngine.i().addRenderableDebug(this);
+        // setup links
+        collider = (Collider) owner.getComponent("Collider");
     }
 
     @Override
@@ -42,17 +46,21 @@ public class SteeringPursueCollision extends SteeringPursue implements Renderabl
         // setup forward vector
 //        Vector2 vec = new Vector2(dir).scl(SETTINGS.COLLISION_FORWARD_LEN);
 //        forward.set(transform.getPos()).add(vec);
-        forwardPos.set(dir).scl(SETTINGS.COLLISION_FORWARD_LEN).add(transform.getPos());
+//        forwardVec.set(dir).scl(SETTINGS.COLLISION_FORWARD_LEN);
+//        collider.setForwardVec(forwardVec);
 
         // get pursue force
         pursueForce.set(super.getForce());
 
-        // check collision
-        Collidable collidable = CollisionEngine.i().getColliderWithLine(transform.getPos(), forwardPos);
-        if (collidable != null) {
-            collisionForce.set(collidable.getCollisionDir(forwardPos)).scl(SETTINGS.COLLISION_FORCE);
+        // get collided position
+        Vector2 collisionNorm = CollisionEngine.i().getCollisionNorm(collider);
+
+        // if there is a collision position
+        if (collisionNorm != null) {
+            // calc collision force
+            collisionForce.set(collisionNorm).scl(SETTINGS.COLLISION_FORCE);
             Vector2 resultantForce = new Vector2().set(pursueForce).scl(0.5f).add(collisionForce.scl(0.5f));
-            Gdx.app.log(TAG, "COLLIDED: pos=" + transform.getPos() + " forwardPos=" + forwardPos + " collF=" + collisionForce + " resF=" + resultantForce);
+            Gdx.app.log(TAG, "COLLIDED: pos=" + transform.getPos() + " collF=" + collisionForce + " resF=" + resultantForce);
             return collisionForce;
         }
         return pursueForce;
@@ -61,6 +69,7 @@ public class SteeringPursueCollision extends SteeringPursue implements Renderabl
     @Override
     public void draw() {
         RenderEngine.i().getDebugRenderer().setColor(1,0,0,1);
+        forwardPos.set(transform.getPos()).add(forwardVec);
         RenderEngine.i().getDebugRenderer().line(transform.getX(), transform.getY(), forwardPos.x, forwardPos.y);
         RenderEngine.i().getDebugRenderer().setColor(0,1,0,1);
         collisionPos.set(transform.getPos()).add(collisionForce);

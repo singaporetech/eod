@@ -21,7 +21,7 @@ public class FsmPlayer extends Fsm {
         super.init(owner);
 
         // setup additional links
-        steering = (Steering) owner.getComponent("SteeringArrive");
+        steering = (Steering) owner.getComponent("SteeringArriveCollision");
         input = (Input) owner.getComponent("Input");
     }
 

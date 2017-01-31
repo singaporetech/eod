@@ -37,6 +37,9 @@ public final class SETTINGS {
 
     public static final float COLLISION_FORWARD_LEN = 100.0f;
     public static final float COLLISION_FORCE = 300.0f;
+    public static final float COLLISION_WIDTH = 80.0f;
+    public static final float COLLISION_HEIGHT = 40.0f;
+    public static final float COLLISION_RADIUS = 40.0f;
 
     public static final float ANIM_FRAME_TIME = 0.1f;
 }
