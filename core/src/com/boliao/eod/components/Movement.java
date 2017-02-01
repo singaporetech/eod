@@ -14,6 +14,7 @@ public class Movement extends Component {
     private static final String TAG = "Movement:Component";
 
     private Transform transform;
+    private Collider collider;
 
     private Vector2 vel = new Vector2();
     private float mass = SETTINGS.MASS;
@@ -33,6 +34,7 @@ public class Movement extends Component {
 
         // setup links
         transform = (Transform) owner.getComponent("Transform");
+        collider = (Collider) owner.getComponent("Collider");
 
         // init vel
         vel.setZero();
@@ -59,6 +61,9 @@ public class Movement extends Component {
             // todo: is this needed?
 //            if (vel.len2() > speed*speed)
 //                vel.nor().scl(speed);
+
+            // update collider
+            collider.setCollisionVecLen(vel.len()*0.006f*SETTINGS.COLLISION_FORWARD_LEN);
 
             // update position
             Vector2 displacement = new Vector2(vel);

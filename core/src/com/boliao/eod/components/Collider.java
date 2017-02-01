@@ -11,6 +11,9 @@ import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
 import com.boliao.eod.SETTINGS;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by mrboliao on 24/1/17.
  */
@@ -21,23 +24,33 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     Transform transform;
     Renderable renderable;
 
+    // static flag
+    boolean isStatic = true;
+
     //Polygon boundingPolygon;
     Circle boundingCircle;
     Vector2 collisionNorm = new Vector2(0, 0);
-    Vector2 collisionVec = new Vector2();
-    Vector2 collisionForwardPos = new Vector2();
+    float collisionMag = 0;
 
-    //protected Vector2 forwardVec = new Vector2(0, 0);
-    float width = 0;
-    float height = 0;
+    // collision vectors
+    // - using a fan
+    Vector2 collisionVec = new Vector2();
+    Vector2 collisionVec0 = new Vector2(); // equals length of bounding curcle
+    Vector2 collisionVecL = new Vector2();
+    Vector2 collisionVecR = new Vector2();
+    Vector2 collisionForwardPos = new Vector2();
+    Vector2 collisionForwardPos0 = new Vector2();
+    Vector2 collisionForwardPosL = new Vector2();
+    Vector2 collisionForwardPosR = new Vector2();
+    Vector2 prevCollisionForwardPos = collisionForwardPosL;
+    float collisionVecLen = SETTINGS.COLLISION_FORWARD_LEN;
 
     public Collider() {
-        super("Collider");
+        this(true);
     }
-    public Collider(float width, float height) {
+    public Collider(boolean isStatic) {
         super("Collider");
-        this.width = width;
-        this.height = height;
+        this.isStatic = isStatic;
     }
 
     @Override
@@ -68,8 +81,14 @@ public class Collider extends Component implements Collidable, RenderableDebug {
 
         // bounding circle tp match transform position and rotation
         boundingCircle.setPosition(transform.getPos());
-        collisionVec.set(transform.getForward()).scl(SETTINGS.COLLISION_FORWARD_LEN);
+        collisionVec.set(transform.getForward()).scl(collisionVecLen);
+        collisionVec0.set(transform.getForward()).scl(getBoundingCircleRadius());
+        collisionVecL.set(collisionVec).rotate(SETTINGS.COLLISION_VEC_OFFSET_DEG);
+        collisionVecR.set(collisionVec).rotate(-SETTINGS.COLLISION_VEC_OFFSET_DEG);
         collisionForwardPos.set(transform.getPos()).add(collisionVec);
+        collisionForwardPos0.set(transform.getPos()).add(collisionVec0);
+        collisionForwardPosL.set(transform.getPos()).add(collisionVecL);
+        collisionForwardPosR.set(transform.getPos()).add(collisionVecR);
     }
 
     @Override
@@ -83,9 +102,13 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         RenderEngine.i().getDebugRenderer().setColor(0,1,0,1);
         RenderEngine.i().getDebugRenderer().circle(boundingCircle.x, boundingCircle.y, boundingCircle.radius);
 
-        // draw the collision forward vector
+        // draw the collision forward vectors
         RenderEngine.i().getDebugRenderer().setColor(1,1,1,1);
         RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPos);
+        RenderEngine.i().getDebugRenderer().setColor(1,1,1,1);
+        RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPosL);
+        RenderEngine.i().getDebugRenderer().setColor(1,1,1,1);
+        RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPosR);
 
         // draw the collision force in the direction of collisionNorm
         RenderEngine.i().getDebugRenderer().setColor(0,0,1,1);
@@ -107,14 +130,65 @@ public class Collider extends Component implements Collidable, RenderableDebug {
      */
     @Override
     public Vector2 getCollisionNorm(Collidable other) {
-        float dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPos, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), collisionNorm);
+        Vector2 disp = new Vector2();
+        float dist;
 
-        //Gdx.app.log(TAG, owner.getName() + ": collided=" + isCollided + ": mtv=" + mtv + " myPoly=" + boundingPolygon.getX() + "," + boundingPolygon.getY()+ " otherPoly=" + other.getBoundingPolygon().getX() + ","  + other.getBoundingPolygon().getY());
+        // calc collision magnitude
+        // - closer means stronger
+        collisionMag = SETTINGS.COLLISION_FORCE * 1/getBoundingCirclePos().dst(other.getBoundingCirclePos());
 
+        // check collision left fan edge
+        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPosL, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
         if (dist != Float.POSITIVE_INFINITY) {
+            prevCollisionForwardPos = collisionForwardPosL;
+            collisionNorm.set(collisionForwardPosR).sub(other.getBoundingCirclePos()).nor();
+
+            Gdx.app.log(TAG, owner.getName() + ": COLLIDED LEFT: pos=" + transform.getPos() + " collisionMag=" + collisionMag + " colNorm=" + collisionNorm);
+
             return collisionNorm;
         }
+
+        // check collision right fan edge
+        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPosR, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
+        if (dist != Float.POSITIVE_INFINITY) {
+            prevCollisionForwardPos = collisionForwardPosR;
+            collisionNorm.set(collisionForwardPosL).sub(other.getBoundingCirclePos()).nor();
+
+            Gdx.app.log(TAG, owner.getName() + ": COLLIDED RIGHT: pos=" + transform.getPos() + " collisionMag=" + collisionMag + " colNorm=" + collisionNorm);
+
+            return collisionNorm;
+        }
+
+        // check with center edge
+        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPos, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
+        if (dist != Float.POSITIVE_INFINITY) {
+            collisionNorm.set(prevCollisionForwardPos).sub(other.getBoundingCirclePos()).nor();
+
+            Gdx.app.log(TAG, owner.getName() + ": COLLIDED CENTER: pos=" + transform.getPos() + " collisionMag=" + collisionMag + " colNorm=" + collisionNorm);
+
+            return collisionNorm;
+        }
+
+        // else no collisions
         return null;
+    }
+
+    @Override
+    public void checkCollisionAndRespond(Collidable other) {
+        Vector2 disp = new Vector2();
+        float dist;
+
+        // check collisions
+        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPos0, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
+        if (dist != Float.POSITIVE_INFINITY) {
+            // calc displacement
+            disp.set(transform.getPos()).sub(other.getBoundingCirclePos()).nor().scl(dist);
+
+            Gdx.app.log(TAG, "COLLIDED: pos=" + transform.pos + " disp=" + disp + " dist=" + dist);
+
+            // response
+            transform.translate(disp);
+        }
     }
 
     public Vector2 getBoundingCirclePos() {
@@ -123,5 +197,21 @@ public class Collider extends Component implements Collidable, RenderableDebug {
 
     public float getBoundingCircleRadius() {
         return boundingCircle.radius;
+    }
+
+    public void setCollisionVecLen(float collisionVecLen) {
+        this.collisionVecLen = collisionVecLen;
+    }
+
+    private Vector2 getPerpendicularVec(Vector2 vec) {
+        return new Vector2(vec.y, -vec.x);
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public float getCollisionMag() {
+        return collisionMag;
     }
 }

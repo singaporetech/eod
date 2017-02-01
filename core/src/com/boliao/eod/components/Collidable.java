@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public interface Collidable {
+    boolean isStatic();
     float getBoundingCircleRadius();
     Vector2 getBoundingCirclePos();
-    Vector2 getCollisionNorm(Collidable collider);
+    Vector2 getCollisionNorm(Collidable other);
+    void checkCollisionAndRespond(Collidable other);
 }

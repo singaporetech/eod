@@ -60,7 +60,7 @@ public class PlayScreen implements Screen {
         gameObjects.add(player);
         player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
         player.addComponent(new SpriteSheet("sprites/player.txt"));
-        player.addComponent(new Collider(SETTINGS.COLLISION_WIDTH,SETTINGS.COLLISION_HEIGHT));
+        player.addComponent(new Collider(false));
         player.addComponent(new Movement());
         //player.addComponent(new SteeringArrive());
         player.addComponent(new SteeringArriveCollision());
