@@ -47,7 +47,7 @@ public class Transform extends Component {
 
     public void setForward(Vector2 vec) {
         forward.set(vec);
-        rot = MathUtils.atan2(vec.y, vec.x); // todo: check if this is correct
+        rot = MathUtils.radiansToDegrees * MathUtils.atan2(vec.y, vec.x); // todo: check if this is correct
     }
 
     public void translate(float x, float y) {

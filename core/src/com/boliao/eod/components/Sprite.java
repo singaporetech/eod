@@ -1,5 +1,6 @@
 package com.boliao.eod.components;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.boliao.eod.Game;
@@ -12,6 +13,7 @@ import com.boliao.eod.SETTINGS;
  */
 
 public class Sprite extends Component implements Renderable {
+    private static final String TAG = "Sprite:C;R";
     private Transform transform;
     private com.badlogic.gdx.graphics.g2d.Sprite sprite;
 
@@ -55,6 +57,7 @@ public class Sprite extends Component implements Renderable {
     public void update(float delta) {
         // follow transforms position
         //sprite.setPosition(transform.getX(), transform.getY());
+        Gdx.app.log(TAG, "rot="+transform.getRot()); //todo: why is this zerO>
         sprite.setRotation(transform.getRot());
         sprite.setCenter(transform.getX(), transform.getY());
     }

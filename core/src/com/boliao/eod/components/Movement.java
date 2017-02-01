@@ -63,7 +63,7 @@ public class Movement extends Component {
 //                vel.nor().scl(speed);
 
             // update collider
-            collider.setCollisionVecLen(vel.len()*0.006f*SETTINGS.COLLISION_FORWARD_LEN);
+            collider.setCollisionVecLen(vel.len() * SETTINGS.COLLISION_FORWARD_LEN);
 
             // update position
             Vector2 displacement = new Vector2(vel);
@@ -71,8 +71,9 @@ public class Movement extends Component {
             transform.translate(displacement);
 
             // update rotation
-            transform.rot = MathUtils.radiansToDegrees * (float) Math.atan2(vel.y, vel.x);
-
+            //if (vel.x != 0 && vel.y != 0) {
+                transform.setForward(new Vector2(vel).nor());
+            //}
             //Gdx.app.log(TAG, "vel=" + vel + " acc=" + acc + " disp=" + displacement);
         }
         else {
