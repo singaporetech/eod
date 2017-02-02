@@ -57,7 +57,6 @@ public class Sprite extends Component implements Renderable {
     public void update(float delta) {
         // follow transforms position
         //sprite.setPosition(transform.getX(), transform.getY());
-        Gdx.app.log(TAG, "rot="+transform.getRot()); //todo: why is this zerO>
         sprite.setRotation(transform.getRot());
         sprite.setCenter(transform.getX(), transform.getY());
     }

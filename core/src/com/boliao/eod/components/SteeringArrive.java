@@ -74,4 +74,8 @@ public class SteeringArrive extends SteeringSeek {
             return force;
         }
     }
+
+    public Vector2 getBaseForce() {
+        return super.getForce();
+    }
 }

@@ -11,9 +11,6 @@ import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
 import com.boliao.eod.SETTINGS;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Created by mrboliao on 24/1/17.
  */
@@ -30,6 +27,7 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     //Polygon boundingPolygon;
     Circle boundingCircle;
     Vector2 collisionNorm = new Vector2(0, 0);
+    Vector2 collisionAvoidTarget = new Vector2(0, 0);
     float collisionMag = 0;
 
     // collision vectors
@@ -112,8 +110,9 @@ public class Collider extends Component implements Collidable, RenderableDebug {
 
         // draw the collision force in the direction of collisionNorm
         RenderEngine.i().getDebugRenderer().setColor(0,0,1,1);
-        Vector2 v1 = new Vector2(collisionNorm).scl(SETTINGS.COLLISION_FORCE).add(transform.getPos());
-        RenderEngine.i().getDebugRenderer().line(transform.getPos(), v1);
+        //Vector2 v1 = new Vector2(collisionNorm).scl(SETTINGS.COLLISION_FORCE).add(transform.getPos());
+        //RenderEngine.i().getDebugRenderer().line(transform.getPos(), v1);
+        RenderEngine.i().getDebugRenderer().circle(collisionAvoidTarget.x, collisionAvoidTarget.y, 10);
 
         RenderEngine.i().getDebugRenderer().end();
     }
@@ -173,6 +172,52 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         return null;
     }
 
+    public Vector2 getCollisionAvoidTarget(Collidable other) {
+        Vector2 disp = new Vector2();
+        float dist;
+
+        // calc collision magnitude
+        collisionMag = SETTINGS.COLLISION_TARGET_OFFSET + getBoundingCircleRadius();
+
+        // check collision left fan edge
+        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPosL, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
+        if (dist != Float.POSITIVE_INFINITY) {
+            prevCollisionForwardPos = collisionForwardPosL;
+            collisionNorm.set(collisionForwardPosR).sub(other.getBoundingCirclePos()).nor();
+            collisionAvoidTarget.set(collisionNorm).scl(collisionMag).add(other.getBoundingCirclePos());
+
+            // Gdx.app.log(TAG, owner.getName() + ": COLLIDED LEFT: pos=" + transform.getPos() + " collisionMag=" + collisionMag + " collisionAvoidTarget=" + collisionAvoidTarget);
+
+            return collisionAvoidTarget;
+        }
+
+        // check collision right fan edge
+        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPosR, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
+        if (dist != Float.POSITIVE_INFINITY) {
+            prevCollisionForwardPos = collisionForwardPosR;
+            collisionNorm.set(collisionForwardPosL).sub(other.getBoundingCirclePos()).nor();
+            collisionAvoidTarget.set(collisionNorm).scl(collisionMag).add(other.getBoundingCirclePos());
+
+            // Gdx.app.log(TAG, owner.getName() + ": COLLIDED RIGHT: pos=" + transform.getPos() + " collisionMag=" + collisionMag + " collisionAvoidTarget=" + collisionAvoidTarget);
+
+            return collisionAvoidTarget;
+        }
+
+        // check with center edge
+        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPos, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
+        if (dist != Float.POSITIVE_INFINITY) {
+            collisionNorm.set(prevCollisionForwardPos).sub(other.getBoundingCirclePos()).nor();
+            collisionAvoidTarget.set(collisionNorm).scl(collisionMag).add(other.getBoundingCirclePos());
+
+            // Gdx.app.log(TAG, owner.getName() + ": COLLIDED CENTER: pos=" + transform.getPos() + " collisionMag=" + collisionMag + " collisionAvoidTarget=" + collisionAvoidTarget);
+
+            return collisionAvoidTarget;
+        }
+
+        // else no collisions
+        return null;
+    }
+
     @Override
     public void checkCollisionAndRespond(Collidable other) {
         Vector2 disp = new Vector2();
@@ -201,10 +246,6 @@ public class Collider extends Component implements Collidable, RenderableDebug {
 
     public void setCollisionVecLen(float collisionVecLen) {
         this.collisionVecLen = collisionVecLen;
-    }
-
-    private Vector2 getPerpendicularVec(Vector2 vec) {
-        return new Vector2(vec.y, -vec.x);
     }
 
     public boolean isStatic() {

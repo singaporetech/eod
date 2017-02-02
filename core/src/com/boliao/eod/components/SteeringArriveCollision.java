@@ -53,7 +53,6 @@ public class SteeringArriveCollision extends SteeringArrive {
 
             //Gdx.app.log(TAG, "COLLIDED: pos=" + transform.getPos() + " parF=" + parentForce + " collF=" + collisionForce + " resF=" + resultantForce);
 
-//            return collisionForce;
             return resultantForce;
         }
         return parentForce;

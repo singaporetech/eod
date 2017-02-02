@@ -1,5 +1,6 @@
 package com.boliao.eod.components;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -13,6 +14,8 @@ import com.boliao.eod.SETTINGS;
  */
 
 public class SpriteSheet extends Component implements Renderable, FsmState {
+    private static final String TAG = "SpriteSheet:C;R";
+
     protected Transform transform;
     protected TextureAtlas spriteSheet;
     protected Array<com.badlogic.gdx.graphics.g2d.Sprite> sprites;

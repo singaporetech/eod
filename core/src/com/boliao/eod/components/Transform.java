@@ -1,5 +1,6 @@
 package com.boliao.eod.components;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -8,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public class Transform extends Component {
+    private static final String TAG = "Transform:C";
+
     protected Vector2 pos;
     protected float rot;
     protected Vector2 forward;
@@ -48,6 +51,8 @@ public class Transform extends Component {
     public void setForward(Vector2 vec) {
         forward.set(vec);
         rot = MathUtils.radiansToDegrees * MathUtils.atan2(vec.y, vec.x); // todo: check if this is correct
+
+        Gdx.app.log(TAG, "setForward: rot=" + rot);
     }
 
     public void translate(float x, float y) {

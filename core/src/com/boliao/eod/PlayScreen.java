@@ -62,8 +62,7 @@ public class PlayScreen implements Screen {
         player.addComponent(new SpriteSheet("sprites/player.txt"));
         player.addComponent(new Collider(false));
         player.addComponent(new Movement());
-        //player.addComponent(new SteeringArrive());
-        player.addComponent(new SteeringArriveCollision());
+        player.addComponent(new SteeringArrive());
         player.addComponent(new FsmPlayer());
         player.addComponent(new Input(Input.InputType.TOUCH));
         player.init();

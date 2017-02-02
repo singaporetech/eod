@@ -12,10 +12,11 @@ public abstract class Fsm extends Component {
     public static final String TAG = "FSM:C";
 
     // todo: change SEEK to ARRIVE
-    public enum StateType {IDLE, SEEK, PURSUE, ATTACK, BUILD, DESTRUCT};
+    public enum StateType {IDLE, MOVE, PURSUE, COLLISION_RESPONSE, ATTACK, BUILD, DESTRUCT};
     protected StateType currState = StateType.IDLE;
 
     protected Transform transform;
+    protected Collider collider;
     protected Movement movement;
     protected Steering steering;
     protected SpriteSheet spriteSheet;
@@ -33,6 +34,7 @@ public abstract class Fsm extends Component {
         super.init(owner);
 
         transform = (Transform) owner.getComponent("Transform");
+        collider = (Collider) owner.getComponent("Collider");
         spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
         movement = (Movement) owner.getComponent("Movement");
 

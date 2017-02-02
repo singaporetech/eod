@@ -33,4 +33,9 @@ public class SteeringSeek extends Steering {
 
         return force;
     }
+
+    @Override
+    public Vector2 getBaseForce() {
+        return null;
+    }
 }

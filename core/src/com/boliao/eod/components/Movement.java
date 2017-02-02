@@ -73,6 +73,7 @@ public class Movement extends Component {
             // update rotation
             //if (vel.x != 0 && vel.y != 0) {
                 transform.setForward(new Vector2(vel).nor());
+
             //}
             //Gdx.app.log(TAG, "vel=" + vel + " acc=" + acc + " disp=" + displacement);
         }

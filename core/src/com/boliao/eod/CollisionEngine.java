@@ -55,6 +55,23 @@ public class CollisionEngine implements Engine {
         return null;
     }
 
+    /**
+     * Get a new target offset from the obstacle, for steering purposes
+     * @param collider
+     * @return
+     */
+    public Vector2 getCollisionAvoidTarget(Collider collider) {
+        for (Collidable c: collidables) {
+            if (collider != (Collider) c) {
+                Vector2 target = collider.getCollisionAvoidTarget(c);
+                if (target != null) {
+                    return target;
+                }
+            }
+        }
+        return null;
+    }
+
     public void addCollidable(Collidable c) {
         collidables.add(c);
     }

@@ -86,4 +86,5 @@ public abstract class Steering extends Component {
     }
 
     public abstract Vector2 getForce();
+    public abstract Vector2 getBaseForce();
 }
