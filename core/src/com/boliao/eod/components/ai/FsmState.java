@@ -1,4 +1,4 @@
-package com.boliao.eod.components;
+package com.boliao.eod.components.ai;
 
 /**
  * Created by mrboliao on 24/1/17.

@@ -60,8 +60,9 @@ public class PlayScreen implements Screen {
         player.addComponent(new Collider(false, false));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
-        player.addComponent(new FsmPlayer());
+        player.addComponent(new com.boliao.eod.components.ai.FsmPlayer());
         player.addComponent(new Input(Input.InputType.TOUCH));
+        player.addComponent(new Health());
         player.init();
 
         // test init bug
@@ -72,7 +73,7 @@ public class PlayScreen implements Screen {
         bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
         bug.addComponent(new Collider(false, false));
         bug.addComponent(new SteeringPursue(player));
-        bug.addComponent(new FsmBug());
+        bug.addComponent(new com.boliao.eod.components.ai.FsmBug());
         bug.init();
 
 //        mapLoader = new TmxMapLoader();

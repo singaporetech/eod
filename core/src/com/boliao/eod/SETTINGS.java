@@ -14,6 +14,8 @@ public final class SETTINGS {
     public static final int HOUSE_SIZE = 380;
     public static final int BLOCK_SIZE = 150;
     public static final int X_SIZE = 50;
+    public static final int HEALTHBAR_WIDTH = 100;
+    public static final int HEALTHBAR_HEIGHT = 8;
 
     public static final int HOUSE_POS_X = 380;
     public static final int HOUSE_POS_Y = 1000;
@@ -23,6 +25,8 @@ public final class SETTINGS {
     public static final int PLAYER_POS_Y = 900;
     public static final int BUG_POS_X = 400;
     public static final int BUG_POS_Y = 100;
+    public static final int HEALTHBAR_OFFSET_X = -SPRITE_SIZE/2;
+    public static final int HEALTHBAR_OFFSET_Y = SPRITE_SIZE/2;
 
     public static final float SPEED_PLAYER = 500.0f;
     public static final float SPEED_BUG = 350.0f;
