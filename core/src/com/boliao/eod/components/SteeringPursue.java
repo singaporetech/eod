@@ -26,16 +26,27 @@ public class SteeringPursue extends SteeringArrive {
     public void init(GameObject owner) {
         super.init(owner);
 
-        // set destPos by ref
-        destPos = targetTransform.getPos();
+        destPos.set(targetTransform.getPos());
         updateDirAndDist();
     }
 
     public boolean targetGotAway() {
+        destPos.set(targetTransform.getPos());
         updateDirAndDist();
         if (dist > SETTINGS.MELEE_RANGE) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Vector2 getForce() {
+        destPos.set(targetTransform.getPos());
+        return super.getForce();
+    }
+
+    @Override
+    public Vector2 getBaseForce() {
+        return super.getForce();
     }
 }

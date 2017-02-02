@@ -21,8 +21,9 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     Transform transform;
     Renderable renderable;
 
-    // static flag
+    // flags
     boolean isStatic = true;
+    boolean isCollidable = true;
 
     //Polygon boundingPolygon;
     Circle boundingCircle;
@@ -44,10 +45,11 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     float collisionVecLen = SETTINGS.COLLISION_FORWARD_LEN;
 
     public Collider() {
-        this(true);
+        this(true, true);
     }
-    public Collider(boolean isStatic) {
+    public Collider(boolean isCollidable, boolean isStatic) {
         super("Collider");
+        this.isCollidable = isCollidable;
         this.isStatic = isStatic;
     }
 
@@ -90,8 +92,14 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         this.collisionVecLen = collisionVecLen;
     }
 
+    @Override
     public boolean isStatic() {
         return isStatic;
+    }
+
+    @Override
+    public boolean isCollidable() {
+        return isCollidable;
     }
 
     public float getCollisionMag() {

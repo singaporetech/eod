@@ -10,6 +10,7 @@ import com.boliao.eod.GameObject;
 
 public interface Collidable {
     boolean isStatic();
+    boolean isCollidable();
     GameObject getOwner();
     float getBoundingCircleRadius();
     Vector2 getBoundingCirclePos();

@@ -82,7 +82,7 @@ public abstract class Steering extends Component {
         dir.nor();
 
         // update transform
-        transform.setForward(dir);
+        // transform.setForward(dir);
     }
 
     public abstract Vector2 getForce();

@@ -1,7 +1,6 @@
 package com.boliao.eod.components;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
@@ -14,10 +13,6 @@ public class FsmPlayer extends Fsm {
     private static final String TAG = "FsmPlayer:C";
 
     private Input input;
-    private Steering steeringCollision;
-
-    // to remember last destination position to resume steering after collision
-    private Vector2 lastDestPos = new Vector2();
 
     public FsmPlayer() {
         super("FsmPlayer");
@@ -34,79 +29,79 @@ public class FsmPlayer extends Fsm {
 
     @Override
     public void update(float delta) {
-        Vector2 target;
+        Vector2 avoidTarget;
 
         switch (currState) {
             case IDLE:
-                // if health=0, go to DESTRUCT
+                // do actions
+                actIdle(delta);
 
                 // do transitions
+                // if health=0, go to DESTRUCT
+
                 if (input.isTriggered()) {
+                    Gdx.app.log(TAG, "MOUSE PICKED");
 
-                    lastDestPos = input.getWorldPos2D();
+                    // update destination position
+                    lastDestPos.set(input.getWorldPos2D());
 
-                    // transit
+                    exitIdle(); //todo; this should be currState.exit()
+                    transit(StateType.MOVE);
                     enterMove(); // todo: this should be currState.enter() when State class setup
-                    currState = StateType.MOVE;
-                    spriteSheet.enter(); // todo: this should be currState.enter() when State class setup
-                    Gdx.app.log(TAG, "TOUCHED condition; Transit to SEEK destPos=" + steering.getDestPos());
                 }
-
                 break;
 
             case MOVE:
+                // do actions
+                actMove(delta);
+
                 // do transitions
                 if (steering.reachedDestPos()) {
-                    // transit
-                    spriteSheet.exit();
-                    currState = StateType.IDLE;
+                    Gdx.app.log(TAG, "REACHED DEST POS");
 
-                    Gdx.app.log(TAG, "REACHED_DEST; Transit to IDLE");
+                    exitMove();
+                    transit(StateType.IDLE);
+                    enterIdle();
                 }
 
-                target = CollisionEngine.i().getCollisionAvoidTarget(collider);
-                if (target != null) {
-                    steering.setDestPos(target);
+                // COLLIDED condition; transit to COLLISION_RESPONSE
+                avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
+                if (avoidTarget != null) {
+                    Gdx.app.log(TAG, "COLLISION DETECTED");
 
-                    spriteSheet.exit();
-                    currState = StateType.COLLISION_RESPONSE;
-
-                    Gdx.app.log(TAG, "COLLIDED condition; Transit to COLLISION_RESPONSE destPos=" + steering.getDestPos());
+                    exitMove();
+                    transit(StateType.COLLISION_RESPONSE);
+                    enterCollisionResponse(avoidTarget);
                 }
+
                 else if (input.isJustTriggered()) {
-                    lastDestPos = input.getWorldPos2D();
+                    Gdx.app.log(TAG, "NEW MOUSE PICKED; stay in MOVE");
+
+                    lastDestPos.set(input.getWorldPos2D());
                     steering.setDestPos(lastDestPos);
-
-                    Gdx.app.log(TAG, "TOUCHED condition; Stay in MOVE destPos=" + steering.getDestPos());
                 }
-
-                // do actions
-                movement.move(delta, steering.getForce());
                 break;
 
             case COLLISION_RESPONSE:
-                // do transitions
-                if (steering.reachedDestPos()) {
-                    // transit
-                    spriteSheet.exit();
-                    enterMove();
-                    currState = StateType.MOVE;
-
-                    Gdx.app.log(TAG, "REACHED_COLLISION_RESPONSE_TARGET; Transit to MOVE");
-                }
-
-                target = CollisionEngine.i().getCollisionAvoidTarget(collider);
-                if (target == null) {
-                    // transit
-                    enterMove();
-                    currState = StateType.MOVE;
-                    spriteSheet.enter();
-                    Gdx.app.log(TAG, "NO_COLLISIONS condition; Transit to MOVE destPos=" + steering.getDestPos());
-                }
-
                 // do actions
-                // set steering target to off-object position and seek
-                movement.move(delta, steering.getBaseForce());
+                actCollisionResponse(delta);
+
+                // do transitions®
+                avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
+                if (avoidTarget == null) {
+                    Gdx.app.log(TAG, "NO MORE COLLISIONS");
+
+                    exitCollisionResponse();
+                    transit(StateType.MOVE);
+                    enterMove();
+                }
+                else if (steering.reachedDestPos()) {
+                    Gdx.app.log(TAG, "REACHED COLLISION AVOID TARGET");
+
+                    exitCollisionResponse();
+                    transit(StateType.MOVE);
+                    enterMove();
+                 }
                 break;
 
             case BUILD:
@@ -122,10 +117,4 @@ public class FsmPlayer extends Fsm {
 
     }
 
-    private void enterMove() {
-        steering.setDestPos(lastDestPos);
-    }
-    private void exitMove() {
-        lastDestPos = steering.getDestPos();
-    }
 }

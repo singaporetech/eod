@@ -1,6 +1,7 @@
 package com.boliao.eod.components;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 
 /**
@@ -20,6 +21,9 @@ public abstract class Fsm extends Component {
     protected Movement movement;
     protected Steering steering;
     protected SpriteSheet spriteSheet;
+
+    // to remember last destination position to resume steering after collision
+    protected Vector2 lastDestPos = new Vector2();
 
     public Fsm () {
         super("Fsm");
@@ -43,4 +47,64 @@ public abstract class Fsm extends Component {
 
     @Override
     public abstract void update(float delta);
+
+    protected void transit(StateType targetState) {
+        currState = targetState;
+        Gdx.app.log(TAG, "Transit to " + targetState + " lastDestPos=" + lastDestPos);
+    }
+
+    protected void enterMove() {
+        steering.setDestPos(lastDestPos);
+        spriteSheet.onAnimation();
+    }
+    protected void actMove(float delta) {
+        movement.move(delta, steering.getForce());
+    }
+    protected void exitMove() {
+        lastDestPos.set(steering.getDestPos());
+        spriteSheet.offAnimation();
+    }
+
+    protected void enterCollisionResponse(Vector2 avoidTarget) {
+        steering.setDestPos(avoidTarget);
+        spriteSheet.onAnimation();
+    }
+    protected void actCollisionResponse(float delta) {
+        // set steering target to off-object position and seek
+        movement.move(delta, steering.getBaseForce());
+
+    }
+    protected void exitCollisionResponse() {
+        spriteSheet.offAnimation();
+    }
+
+    protected void enterPursue() {
+        enterMove();
+    }
+    protected void actPursue(float delta) {
+        actMove(delta);
+    }
+    protected void exitPursue() {
+        exitMove();
+    }
+
+    protected void enterAttack() {
+
+    }
+    protected void actAttack(float delta) {
+
+    }
+    protected void exitAttack() {
+
+    }
+
+    protected void enterIdle() {
+
+    }
+    protected void actIdle(float delta) {
+
+    }
+    protected void exitIdle() {
+
+    }
 }

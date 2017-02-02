@@ -46,7 +46,7 @@ public class CollisionEngine implements Engine {
      */
     public Vector2 getCollisionNorm(Collider collider) {
         for (Collidable c: collidables) {
-            if (collider != (Collider) c) {
+            if (!collider.equals((Collider)c) && c.isCollidable()) {
                 Vector2 collisionNorm = collider.getCollisionNorm(c);
                 if (collisionNorm != null) {
                     return collisionNorm;
@@ -63,7 +63,7 @@ public class CollisionEngine implements Engine {
      */
     public Vector2 getCollisionAvoidTarget(Collider collider) {
         for (Collidable c: collidables) {
-            if (collider != (Collider) c) {
+            if (!collider.equals((Collider)c) && c.isCollidable()) {
                 Vector2 target = collider.getCollisionAvoidTarget(c);
                 if (target != null) {
                     return target;

@@ -52,7 +52,7 @@ public class Transform extends Component {
         forward.set(vec);
         rot = MathUtils.radiansToDegrees * MathUtils.atan2(vec.y, vec.x); // todo: check if this is correct
 
-        Gdx.app.log(TAG, "setForward: rot=" + rot);
+//        Gdx.app.log(TAG, "setForward: rot=" + rot);
     }
 
     public void translate(float x, float y) {

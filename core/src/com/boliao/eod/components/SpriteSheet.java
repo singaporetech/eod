@@ -13,7 +13,7 @@ import com.boliao.eod.SETTINGS;
  * Created by mrboliao on 24/1/17.
  */
 
-public class SpriteSheet extends Component implements Renderable, FsmState {
+public class SpriteSheet extends Component implements Renderable {
     private static final String TAG = "SpriteSheet:C;R";
 
     protected Transform transform;
@@ -85,13 +85,11 @@ public class SpriteSheet extends Component implements Renderable, FsmState {
         }
     }
 
-    @Override
-    public void enter() {
+    public void onAnimation() {
         isAnimated = true;
     }
 
-    @Override
-    public void exit() {
+    public void offAnimation() {
         isAnimated = false;
     }
 

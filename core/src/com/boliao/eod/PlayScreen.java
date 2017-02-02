@@ -57,7 +57,7 @@ public class PlayScreen implements Screen {
         gameObjects.add(player);
         player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
         player.addComponent(new SpriteSheet("sprites/player.txt"));
-        player.addComponent(new Collider(false));
+        player.addComponent(new Collider(false, false));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
         player.addComponent(new FsmPlayer());
@@ -65,16 +65,15 @@ public class PlayScreen implements Screen {
         player.init();
 
         // test init bug
-//        GameObject bug = new GameObject("bug");
-//        gameObjects.add(bug);
-//        bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
-//        bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
-//        bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
-//        bug.addComponent(new Collider());
-//        //bug.addComponent(new SteeringPursue(player)); //
-//        bug.addComponent(new SteeringPursueCollision(player)); //todo: anyway to auto extract name into init
-//        bug.addComponent(new FsmBug());
-//        bug.init();
+        GameObject bug = new GameObject("bug");
+        gameObjects.add(bug);
+        bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
+        bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
+        bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
+        bug.addComponent(new Collider(false, false));
+        bug.addComponent(new SteeringPursue(player));
+        bug.addComponent(new FsmBug());
+        bug.init();
 
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("level0.tmx");
