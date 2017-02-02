@@ -30,78 +30,48 @@ public class FsmPlayer extends Fsm {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
+
         Vector2 avoidTarget;
 
+        // do transitions
         switch (currState) {
             case IDLE:
-                // do actions
-                actIdle(delta);
-
-                // do transitions
                 // if health=0, go to DESTRUCT
 
                 if (input.isTriggered()) {
                     Gdx.app.log(TAG, "MOUSE PICKED");
-
-                    // update destination position
-                    lastDestPos.set(input.getWorldPos2D());
-
-                    exitIdle(); //todo; this should be currState.exit()
+                    lastDestPos.set(input.getWorldPos2D()); // update destination position
                     transit(StateType.MOVE);
-                    enterMove(); // todo: this should be currState.enter() when State class setup
                 }
                 break;
 
             case MOVE:
-                // do actions
-                actMove(delta);
-
-                // do transitions
-                if (steering.reachedDestPos()) {
-                    Gdx.app.log(TAG, "REACHED DEST POS");
-
-                    exitMove();
-                    transit(StateType.IDLE);
-                    enterIdle();
-                }
-
-                // COLLIDED condition; transit to COLLISION_RESPONSE
                 avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
                 if (avoidTarget != null) {
                     Gdx.app.log(TAG, "COLLISION DETECTED");
-
-                    exitMove();
                     transit(StateType.COLLISION_RESPONSE);
-                    enterCollisionResponse(avoidTarget);
                 }
-
+                else if (steering.reachedDestPos()) {
+                    Gdx.app.log(TAG, "REACHED DEST POS");
+                    transit(StateType.IDLE);
+                }
                 else if (input.isJustTriggered()) {
                     Gdx.app.log(TAG, "NEW MOUSE PICKED; stay in MOVE");
-
                     lastDestPos.set(input.getWorldPos2D());
                     steering.setDestPos(lastDestPos);
                 }
                 break;
 
             case COLLISION_RESPONSE:
-                // do actions
-                actCollisionResponse(delta);
-
-                // do transitions®
                 avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
                 if (avoidTarget == null) {
                     Gdx.app.log(TAG, "NO MORE COLLISIONS");
-
-                    exitCollisionResponse();
                     transit(StateType.MOVE);
-                    enterMove();
                 }
                 else if (steering.reachedDestPos()) {
                     Gdx.app.log(TAG, "REACHED COLLISION AVOID TARGET");
-
-                    exitCollisionResponse();
                     transit(StateType.MOVE);
-                    enterMove();
                  }
                 break;
 

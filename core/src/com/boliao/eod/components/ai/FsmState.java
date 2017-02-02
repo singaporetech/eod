@@ -7,5 +7,6 @@ package com.boliao.eod.components.ai;
 // todo: implement State class that contains the relevant components to start/stop them
 public interface FsmState {
     void enter();
+    void act();
     void exit();
 }

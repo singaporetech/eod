@@ -53,65 +53,96 @@ public abstract class Fsm extends Component {
     }
 
     @Override
-    public abstract void update(float delta);
+    public void update(float delta) {
+        // act on current state
+        actCurrState(delta);
+    }
 
     protected void transit(StateType targetState) {
+        String logStr = "Transit from " + currState + " to ";
+
+        exitCurrState();
         currState = targetState;
-        Gdx.app.log(TAG, "Transit to " + targetState + " lastDestPos=" + lastDestPos);
+        enterCurrState();
+
+        Gdx.app.log(TAG, logStr + currState);
     }
 
-    protected void enterMove() {
-        steering.setDestPos(lastDestPos);
-        spriteSheet.onAnimation();
-    }
-    protected void actMove(float delta) {
-        movement.move(delta, steering.getForce());
-    }
-    protected void exitMove() {
-        lastDestPos.set(steering.getDestPos());
-        spriteSheet.offAnimation();
-    }
-
-    protected void enterCollisionResponse(Vector2 avoidTarget) {
-        steering.setDestPos(avoidTarget);
-        spriteSheet.onAnimation();
-    }
-    protected void actCollisionResponse(float delta) {
-        // set steering target to off-object position and seek
-        movement.move(delta, steering.getBaseForce());
-
-    }
-    protected void exitCollisionResponse() {
-        spriteSheet.offAnimation();
-    }
-
-    protected void enterPursue() {
-        enterMove();
-    }
-    protected void actPursue(float delta) {
-        actMove(delta);
-    }
-    protected void exitPursue() {
-        exitMove();
+    protected void enterCurrState() {
+        switch(currState) {
+            case IDLE:
+                break;
+            case MOVE:
+                steering.setDestPos(lastDestPos);
+                spriteSheet.onAnimation();
+                break;
+            case PURSUE: // todo: exact same as MOVE now
+                steering.setDestPos(lastDestPos);
+                spriteSheet.onAnimation();
+                break;
+            case COLLISION_RESPONSE:
+                steering.setDestPos(collider.getCollisionAvoidTarget());
+                spriteSheet.onAnimation();
+                break;
+            case ATTACK:
+                break;
+            case DESTRUCT:
+                break;
+            case BUILD:
+                break;
+            default:
+                break;
+        }
     }
 
-    protected void enterAttack() {
-
+    protected void actCurrState(float delta) {
+        switch(currState) {
+            case IDLE:
+                break;
+            case MOVE:
+                movement.move(delta, steering.getForce());
+                break;
+            case PURSUE:
+                movement.move(delta, steering.getForce());
+                break;
+            case COLLISION_RESPONSE:
+                // set steering target to off-object position and seek
+                movement.move(delta, steering.getBaseForce());
+                break;
+            case ATTACK:
+                break;
+            case DESTRUCT:
+                break;
+            case BUILD:
+                break;
+            default:
+                break;
+        }
     }
-    protected void actAttack(float delta) {
 
-    }
-    protected void exitAttack() {
-
-    }
-
-    protected void enterIdle() {
-
-    }
-    protected void actIdle(float delta) {
-
-    }
-    protected void exitIdle() {
-
+    protected void exitCurrState() {
+        switch(currState) {
+            case IDLE:
+                break;
+            case MOVE:
+                lastDestPos.set(steering.getDestPos());
+                spriteSheet.offAnimation();
+                break;
+            case PURSUE:
+                lastDestPos.set(steering.getDestPos());
+                spriteSheet.offAnimation();
+                break;
+            case COLLISION_RESPONSE:
+                spriteSheet.offAnimation();
+                break;
+            case ATTACK:
+                break;
+            case DESTRUCT:
+                break;
+            case BUILD:
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -88,6 +88,10 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         return boundingCircle.radius;
     }
 
+    public Vector2 getCollisionAvoidTarget() {
+        return collisionAvoidTarget;
+    }
+
     public void setCollisionVecLen(float collisionVecLen) {
         this.collisionVecLen = collisionVecLen;
     }
