@@ -10,9 +10,16 @@ public class Game extends com.badlogic.gdx.Game {
         return instance;
     }
 
+    private PlayScreen playScreen;
+
 	@Override
 	public void create () {
-        setScreen(new PlayScreen());
+        // init engines
+        RenderEngine.i().init();
+        CollisionEngine.i().init();
+
+        playScreen = new PlayScreen();
+        setScreen(playScreen);
 
         // decrease timer every sec
         Timer timer = new Timer();
@@ -31,6 +38,9 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void dispose () {
+        playScreen.dispose();
 
+        CollisionEngine.i().finalize();
+        RenderEngine.i().finalize();
 	}
 }

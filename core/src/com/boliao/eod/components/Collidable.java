@@ -2,6 +2,7 @@ package com.boliao.eod.components;
 
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.boliao.eod.GameObject;
 
 /**
  * Created by mrboliao on 24/1/17.
@@ -9,8 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public interface Collidable {
     boolean isStatic();
+    GameObject getOwner();
     float getBoundingCircleRadius();
     Vector2 getBoundingCirclePos();
     Vector2 getCollisionNorm(Collidable other);
-    void checkCollisionAndRespond(Collidable other);
+    boolean collidedWithPos(Vector2 pos);
 }

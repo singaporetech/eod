@@ -109,5 +109,6 @@ public class RenderEngine implements Engine{
     @Override
     public void finalize() {
         spriteBatch.dispose();
+        shapeRenderer.dispose();
     }
 }

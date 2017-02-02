@@ -34,9 +34,6 @@ public class PlayScreen implements Screen {
      * Ctor.
      */
     public PlayScreen () {
-        // init render engine
-        RenderEngine.i().init();
-
         // init game objects list
         gameObjects = new LinkedList<GameObject>();
 
@@ -134,8 +131,5 @@ public class PlayScreen implements Screen {
         for (GameObject go: gameObjects) {
             go.finalize();
         }
-
-        //shut down engine
-        RenderEngine.i().finalize();
     }
 }

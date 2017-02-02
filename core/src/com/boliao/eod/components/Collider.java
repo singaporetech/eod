@@ -52,6 +52,11 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     }
 
     @Override
+    public GameObject getOwner() {
+        return owner;
+    }
+
+    @Override
     public void init(GameObject owner) {
         super.init(owner);
 
@@ -71,6 +76,26 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         // add to collision engine
         CollisionEngine.i().addCollidable(this);
         RenderEngine.i().addRenderableDebug(this);
+    }
+
+    public Vector2 getBoundingCirclePos() {
+        return new Vector2(boundingCircle.x, boundingCircle.y);
+    }
+
+    public float getBoundingCircleRadius() {
+        return boundingCircle.radius;
+    }
+
+    public void setCollisionVecLen(float collisionVecLen) {
+        this.collisionVecLen = collisionVecLen;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public float getCollisionMag() {
+        return collisionMag;
     }
 
     @Override
@@ -94,27 +119,34 @@ public class Collider extends Component implements Collidable, RenderableDebug {
      * todo: draw the debug bounds
      */
     public void draw() {
-        RenderEngine.i().getDebugRenderer().begin(ShapeRenderer.ShapeType.Line);
+        if (SETTINGS.IS_DEBUG) {
+            RenderEngine.i().getDebugRenderer().begin(ShapeRenderer.ShapeType.Line);
 
-        // draw bounding circle
-        RenderEngine.i().getDebugRenderer().setColor(0,1,0,1);
-        RenderEngine.i().getDebugRenderer().circle(boundingCircle.x, boundingCircle.y, boundingCircle.radius);
+            // draw bounding circle
+            RenderEngine.i().getDebugRenderer().setColor(0, 1, 0, 1);
+            RenderEngine.i().getDebugRenderer().circle(boundingCircle.x, boundingCircle.y, boundingCircle.radius);
 
-        // draw the collision forward vectors
-        RenderEngine.i().getDebugRenderer().setColor(1,1,1,1);
-        RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPos);
-        RenderEngine.i().getDebugRenderer().setColor(1,1,1,1);
-        RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPosL);
-        RenderEngine.i().getDebugRenderer().setColor(1,1,1,1);
-        RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPosR);
+            // draw the collision forward vectors
+            RenderEngine.i().getDebugRenderer().setColor(1, 1, 1, 1);
+            RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPos);
+            RenderEngine.i().getDebugRenderer().setColor(1, 1, 1, 1);
+            RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPosL);
+            RenderEngine.i().getDebugRenderer().setColor(1, 1, 1, 1);
+            RenderEngine.i().getDebugRenderer().line(transform.getPos(), collisionForwardPosR);
 
-        // draw the collision force in the direction of collisionNorm
-        RenderEngine.i().getDebugRenderer().setColor(0,0,1,1);
-        //Vector2 v1 = new Vector2(collisionNorm).scl(SETTINGS.COLLISION_FORCE).add(transform.getPos());
-        //RenderEngine.i().getDebugRenderer().line(transform.getPos(), v1);
-        RenderEngine.i().getDebugRenderer().circle(collisionAvoidTarget.x, collisionAvoidTarget.y, 10);
 
-        RenderEngine.i().getDebugRenderer().end();
+            RenderEngine.i().getDebugRenderer().end();
+
+            if (!collisionAvoidTarget.equals(Vector2.Zero)) {
+                RenderEngine.i().getDebugRenderer().begin(ShapeRenderer.ShapeType.Filled);
+
+                // draw the collision avoid target
+                RenderEngine.i().getDebugRenderer().setColor(1, 1, 1, 1);
+                RenderEngine.i().getDebugRenderer().circle(collisionAvoidTarget.x, collisionAvoidTarget.y, 5);
+
+                RenderEngine.i().getDebugRenderer().end();
+            }
+        }
     }
 
     @Override
@@ -219,40 +251,7 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     }
 
     @Override
-    public void checkCollisionAndRespond(Collidable other) {
-        Vector2 disp = new Vector2();
-        float dist;
-
-        // check collisions
-        dist = Intersector.intersectSegmentCircleDisplace(transform.getPos(), collisionForwardPos0, other.getBoundingCirclePos(), other.getBoundingCircleRadius(), disp);
-        if (dist != Float.POSITIVE_INFINITY) {
-            // calc displacement
-            disp.set(transform.getPos()).sub(other.getBoundingCirclePos()).nor().scl(dist);
-
-            Gdx.app.log(TAG, "COLLIDED: pos=" + transform.pos + " disp=" + disp + " dist=" + dist);
-
-            // response
-            transform.translate(disp);
-        }
-    }
-
-    public Vector2 getBoundingCirclePos() {
-        return new Vector2(boundingCircle.x, boundingCircle.y);
-    }
-
-    public float getBoundingCircleRadius() {
-        return boundingCircle.radius;
-    }
-
-    public void setCollisionVecLen(float collisionVecLen) {
-        this.collisionVecLen = collisionVecLen;
-    }
-
-    public boolean isStatic() {
-        return isStatic;
-    }
-
-    public float getCollisionMag() {
-        return collisionMag;
+    public boolean collidedWithPos(Vector2 pos) {
+        return boundingCircle.contains(pos);
     }
 }
