@@ -20,6 +20,9 @@ public abstract class Steering extends Component {
     protected Vector2 dir = new Vector2();
     protected float dist;
 
+    // steering params
+    protected float stopRadius = SETTINGS.STOP_RADIUS;
+
     public Steering(String name) {
         super(name);
     }
@@ -60,7 +63,7 @@ public abstract class Steering extends Component {
     public boolean reachedDestPos() {
         //Gdx.app.log(TAG, "dist=" + dist + " pos=" + transform.pos + " destPos=" + destPos);
 
-        if (dist < SETTINGS.PROXIMITY) {
+        if (dist < stopRadius) {
             //todo: see whether got more elegant way to accurately stop near touch point
             //transform.setPos(destPos);
             // face the destPos
@@ -80,9 +83,6 @@ public abstract class Steering extends Component {
         dir.set(destPos).sub(transform.pos);
         dist = dir.len();
         dir.nor();
-
-        // update transform
-        // transform.setForward(dir);
     }
 
     public abstract Vector2 getForce();

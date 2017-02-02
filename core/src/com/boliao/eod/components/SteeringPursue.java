@@ -11,20 +11,24 @@ import com.boliao.eod.SETTINGS;
 public class SteeringPursue extends SteeringArrive {
     private Transform targetTransform;
 
-    // override stop radius
-    private float stopRadius = SETTINGS.STOP_RADIUS_BUG;
-    protected float maxSpeed = SETTINGS.SPEED_BUG;
+    private GameObject targetGO;
 
     public SteeringPursue(GameObject targetGO) {
         super("SteeringPursue");
 
-        //set target transform
-        targetTransform = (Transform) targetGO.getComponent("Transform");
+        this.targetGO = targetGO;
+
+        // override params
+        stopRadius = SETTINGS.STOP_RADIUS_PURSUE;
+        maxSpeed = SETTINGS.SPEED_BUG;
     }
 
     @Override
     public void init(GameObject owner) {
         super.init(owner);
+
+        //set target transform
+        targetTransform = (Transform) targetGO.getComponent("Transform");
 
         destPos.set(targetTransform.getPos());
         updateDirAndDist();

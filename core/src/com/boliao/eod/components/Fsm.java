@@ -10,7 +10,7 @@ import com.boliao.eod.GameObject;
  */
 
 public abstract class Fsm extends Component {
-    public static final String TAG = "FSM:C";
+    private String TAG = "FSM:C";
 
     // todo: change SEEK to ARRIVE
     public enum StateType {IDLE, MOVE, PURSUE, COLLISION_RESPONSE, ATTACK, BUILD, DESTRUCT};
@@ -36,6 +36,7 @@ public abstract class Fsm extends Component {
     @Override
     public void init(GameObject owner) {
         super.init(owner);
+        TAG += ":" + owner.getName();
 
         transform = (Transform) owner.getComponent("Transform");
         collider = (Collider) owner.getComponent("Collider");

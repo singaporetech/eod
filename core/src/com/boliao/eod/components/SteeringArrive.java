@@ -12,7 +12,6 @@ public class SteeringArrive extends SteeringSeek {
     private static final String TAG = "SteeringArrive:C";
 
     private float slowRadius = SETTINGS.SLOW_RADIUS;
-    private float stopRadius = SETTINGS.STOP_RADIUS;
     private float decelFactor = SETTINGS.DECEL_FACTOR;
     private float minSpeed = SETTINGS.MIN_SPEED;
 

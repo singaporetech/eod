@@ -24,13 +24,12 @@ public final class SETTINGS {
     public static final int BUG_POS_X = 400;
     public static final int BUG_POS_Y = 100;
 
-
     public static final float SPEED_PLAYER = 500.0f;
     public static final float SPEED_BUG = 350.0f;
     public static final float FORCE_MULT = 3.0f;
     public static final float SLOW_RADIUS = 150.0f;
     public static final float STOP_RADIUS = 35.0f;
-    public static final float STOP_RADIUS_BUG = 80.0f;
+    public static final float STOP_RADIUS_PURSUE = 100.0f;
     public static final float DECEL_FACTOR = 100.0f;
     public static final float MIN_SPEED = 100.0f;
 
