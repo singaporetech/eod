@@ -1,7 +1,5 @@
 package com.boliao.eod.components;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
@@ -14,7 +12,7 @@ public class Movement extends Component {
     private static final String TAG = "Movement:Component";
 
     private Transform transform;
-    private Collider collider;
+    private com.boliao.eod.components.collision.Collider collider;
 
     private Vector2 vel = new Vector2();
     private float mass = SETTINGS.MASS;
@@ -34,7 +32,7 @@ public class Movement extends Component {
 
         // setup links
         transform = (Transform) owner.getComponent("Transform");
-        collider = (Collider) owner.getComponent("Collider");
+        collider = (com.boliao.eod.components.collision.Collider) owner.getComponent("Collider");
 
         // init vel
         vel.setZero();

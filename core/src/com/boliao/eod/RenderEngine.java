@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.boliao.eod.components.Renderable;
-import com.boliao.eod.components.RenderableDebug;
+import com.boliao.eod.components.render.Renderable;
+import com.boliao.eod.components.render.RenderableDebug;
 
 import java.util.LinkedList;
 import java.util.List;

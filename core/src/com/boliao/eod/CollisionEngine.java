@@ -1,10 +1,8 @@
 package com.boliao.eod;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.boliao.eod.components.Collidable;
-import com.boliao.eod.components.Collider;
+import com.boliao.eod.components.collision.Collidable;
+import com.boliao.eod.components.collision.Collider;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -48,6 +48,11 @@ public final class SETTINGS {
 
     public static final float ANIM_FRAME_TIME = 0.1f;
     public static final float X_FADEOUT_DECREMENT = 1f;
+    public static final float ATTACK_DELAY_TIME = 0.3f;
+
+    public static final float BUG_DMG = 5f;
+    public static final float PLAYER_HP = 100f;
+
 
     public static final String X_SPRITEPATH = "sprites/x.png";
 

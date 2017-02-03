@@ -1,11 +1,8 @@
-package com.boliao.eod.components;
+package com.boliao.eod.components.ai;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
-import com.boliao.eod.SETTINGS;
 
 /**
  * Created by mrboliao on 25/1/17.
@@ -21,7 +18,7 @@ public class SteeringArriveCollision extends SteeringArrive {
     protected Vector2 parentForce = new Vector2();
     protected Vector2 collisionForce = new Vector2();
 
-    protected Collider collider;
+    protected com.boliao.eod.components.collision.Collider collider;
 
     public SteeringArriveCollision() {
         super("SteeringArriveCollision");
@@ -32,7 +29,7 @@ public class SteeringArriveCollision extends SteeringArrive {
         super.init(owner);
 
         // setup links
-        collider = (Collider) owner.getComponent("Collider");
+        collider = (com.boliao.eod.components.collision.Collider) owner.getComponent("Collider");
     }
 
     @Override

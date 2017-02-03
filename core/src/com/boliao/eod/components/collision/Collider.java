@@ -1,4 +1,4 @@
-package com.boliao.eod.components;
+package com.boliao.eod.components.collision;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,16 +10,18 @@ import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
 import com.boliao.eod.SETTINGS;
+import com.boliao.eod.components.*;
+import com.boliao.eod.components.render.Renderable;
 
 /**
  * Created by mrboliao on 24/1/17.
  */
 
-public class Collider extends Component implements Collidable, RenderableDebug {
+public class Collider extends Component implements Collidable, com.boliao.eod.components.render.RenderableDebug {
     private static final String TAG = "Collider:C";
 
     Transform transform;
-    Renderable renderable;
+    com.boliao.eod.components.render.Renderable renderable;
 
     // flags
     boolean isStatic = true;
@@ -66,7 +68,7 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         transform = (Transform) owner.getComponent("Transform");
 
         // todo: do sprite sheet if no sprite, perhaps need a way to get only interface
-        renderable = (Renderable) owner.getComponent("Sprite");
+        renderable = (com.boliao.eod.components.render.Renderable) owner.getComponent("Sprite");
         if (renderable == null) {
             renderable = (Renderable) owner.getComponent("SpriteSheet");
         }

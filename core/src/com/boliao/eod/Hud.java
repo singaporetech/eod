@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.boliao.eod.components.Renderable;
+import com.boliao.eod.components.render.Renderable;
 
 /**
  * Created by mrboliao on 16/1/17.

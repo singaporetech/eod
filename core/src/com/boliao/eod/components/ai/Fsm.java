@@ -3,11 +3,11 @@ package com.boliao.eod.components.ai;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
-import com.boliao.eod.components.Collider;
+import com.boliao.eod.components.Combat;
+import com.boliao.eod.components.collision.Collider;
 import com.boliao.eod.components.Component;
 import com.boliao.eod.components.Movement;
-import com.boliao.eod.components.SpriteSheet;
-import com.boliao.eod.components.Steering;
+import com.boliao.eod.components.render.SpriteSheet;
 import com.boliao.eod.components.Transform;
 
 /**
@@ -27,6 +27,7 @@ public abstract class Fsm extends Component {
     protected Movement movement;
     protected Steering steering;
     protected SpriteSheet spriteSheet;
+    protected Combat combat;
 
     // to remember last destination position to resume steering after collision
     protected Vector2 lastDestPos = new Vector2();
@@ -48,7 +49,7 @@ public abstract class Fsm extends Component {
         collider = (Collider) owner.getComponent("Collider");
         spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
         movement = (Movement) owner.getComponent("Movement");
-
+        combat = (Combat) owner.getComponent("Combat");
         //todo: need to assert all components not null
     }
 
@@ -85,6 +86,7 @@ public abstract class Fsm extends Component {
                 spriteSheet.onAnimation();
                 break;
             case ATTACK:
+                combat.enable();
                 break;
             case DESTRUCT:
                 break;
@@ -136,6 +138,7 @@ public abstract class Fsm extends Component {
                 spriteSheet.offAnimation();
                 break;
             case ATTACK:
+                combat.disable();
                 break;
             case DESTRUCT:
                 break;

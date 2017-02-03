@@ -2,7 +2,6 @@ package com.boliao.eod.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -10,13 +9,17 @@ import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
 import com.boliao.eod.SETTINGS;
+import com.boliao.eod.components.render.Renderable;
+import com.boliao.eod.components.render.SpriteInput;
 
 /**
  * Created by mrboliao on 20/1/17.
  */
 
-public class Input extends Component implements Renderable {
+public class Input extends Component{
     private static final String TAG = "Input:Component";
+
+    private SpriteInput spriteInput;
 
     public enum InputType {TOUCH}
     private InputType type;
@@ -25,26 +28,18 @@ public class Input extends Component implements Renderable {
     private Vector3 worldPos3D = new Vector3();
     private Vector2 worldPos2D = new Vector2();
 
-    private com.badlogic.gdx.graphics.g2d.Sprite sprite;
-    private float spriteAlpha = 1;
-
     public Input(InputType type) {
         super("Input");
 
         this.type = type;
-
-        // init texture
-        sprite = new com.badlogic.gdx.graphics.g2d.Sprite(new Texture(SETTINGS.X_SPRITEPATH));
-        sprite.setOriginCenter();
-        sprite.setSize(SETTINGS.X_SIZE, SETTINGS.X_SIZE);
-        spriteAlpha = 0;
     }
 
     @Override
     public void init(GameObject owner) {
         super.init(owner);
 
-        RenderEngine.i().addRenderable(this);
+        spriteInput = (SpriteInput) owner.getComponent("SpriteInput");
+        spriteInput.setSpriteAlpha(0);
     }
 
     @Override
@@ -52,23 +47,9 @@ public class Input extends Component implements Renderable {
         super.update(delta);
 
         // do fade out animation for sprite
-        if (spriteAlpha > 0) {
-            spriteAlpha -= SETTINGS.X_FADEOUT_DECREMENT * delta;
+        if (spriteInput.getSpriteAlpha() > 0) {
+            spriteInput.fadeOut(SETTINGS.X_FADEOUT_DECREMENT, delta);
         }
-        if (spriteAlpha < 0) {
-            spriteAlpha = 0;
-        }
-        sprite.setAlpha(spriteAlpha);
-    }
-
-    @Override
-    public void draw() {
-        sprite.draw(RenderEngine.i().getSpriteBatch());
-    }
-
-    @Override
-    public Rectangle getBoundingBox() {
-        return null;
     }
 
     public boolean isTriggered() {
@@ -102,8 +83,8 @@ public class Input extends Component implements Renderable {
 
         // check collisions and set visuals
         if (CollisionEngine.i().isFreeOfCollisions(worldPos2D)) {
-            spriteAlpha = 1;
-            sprite.setPosition(worldPos2D.x, worldPos2D.y);
+            spriteInput.setSpriteAlpha(1);
+            spriteInput.setPos(worldPos2D);
             return true;
         }
         return false;
