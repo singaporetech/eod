@@ -1,10 +1,7 @@
 package com.boliao.eod.components;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
-import com.boliao.eod.components.render.Renderable;
 import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteSheet;
 
@@ -54,15 +51,15 @@ public class Combat extends Component{
             timeElapsed += delta;
             if (timeElapsed >= delayTime) {
                 targetHealth.hit(dmg);
-                spriteBam.setSpriteAlpha(1);
+                spriteBam.reset();
                 timeElapsed = 0;
             }
         }
 
         // fade sprite and set position
         spriteBam.setPos(targetTransform.getPos());
-        if (spriteBam.getSpriteAlpha() > 0) {
-            spriteBam.fadeOut(delta, SETTINGS.BAM_FADEOUT_DECREMENT);
+        if (spriteBam.getAlpha() > 0) {
+            spriteBam.shrinkAndFade(delta, SETTINGS.BAM_SHRINK_DECREMENT);
         }
     }
 }

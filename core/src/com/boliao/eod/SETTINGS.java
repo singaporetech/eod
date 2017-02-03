@@ -48,9 +48,10 @@ public final class SETTINGS {
     public static final float COLLISION_TARGET_OFFSET = SPRITE_SIZE + 30.0f;
 
     public static final float ANIM_FRAME_TIME = 0.1f;
-    public static final float X_FADEOUT_DECREMENT = 1f;
+    public static final float X_FADEOUT_DECREMENT = 1.5f;
     public static final float ATTACK_DELAY_TIME = 0.6f;
     public static final float BAM_FADEOUT_DECREMENT = 2.5f;
+    public static final float BAM_SHRINK_DECREMENT = 2.5f;
 
     public static final float BUG_DMG = 5f;
     public static final float PLAYER_HP = 100f;
