@@ -13,6 +13,7 @@ import com.boliao.eod.components.ai.SteeringPursue;
 import com.boliao.eod.components.collision.Collider;
 import com.boliao.eod.components.render.PrimitiveHealth;
 import com.boliao.eod.components.render.Sprite;
+import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteInput;
 import com.boliao.eod.components.render.SpriteSheet;
 
@@ -90,6 +91,7 @@ public class PlayScreen implements Screen {
         bug.addComponent(new SteeringPursue(player));
         bug.addComponent(new Combat(player));
         bug.addComponent(new FsmBug());
+        bug.addComponent(new SpriteBam("sprites/bam.png"));
         bug.init();
 
 //        mapLoader = new TmxMapLoader();

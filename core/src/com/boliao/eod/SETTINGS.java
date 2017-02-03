@@ -14,6 +14,7 @@ public final class SETTINGS {
     public static final int HOUSE_SIZE = 380;
     public static final int BLOCK_SIZE = 150;
     public static final int X_SIZE = 50;
+    public static final int BAM_SIZE = 100;
     public static final int HEALTHBAR_WIDTH = 100;
     public static final int HEALTHBAR_HEIGHT = 8;
 
@@ -48,12 +49,9 @@ public final class SETTINGS {
 
     public static final float ANIM_FRAME_TIME = 0.1f;
     public static final float X_FADEOUT_DECREMENT = 1f;
-    public static final float ATTACK_DELAY_TIME = 0.3f;
+    public static final float ATTACK_DELAY_TIME = 0.6f;
+    public static final float BAM_FADEOUT_DECREMENT = 2.5f;
 
     public static final float BUG_DMG = 5f;
     public static final float PLAYER_HP = 100f;
-
-
-    public static final String X_SPRITEPATH = "sprites/x.png";
-
 }
