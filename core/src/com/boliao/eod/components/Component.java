@@ -9,6 +9,7 @@ import com.boliao.eod.GameObject;
 public abstract class Component {
     protected final String name;
     protected GameObject owner;
+    protected boolean isActive = true;
 
     public Component(String name) {
         this.name = name;
@@ -16,6 +17,14 @@ public abstract class Component {
 
     public String getName() {
         return name;
+    }
+
+    public void enable() {
+        isActive = true;
+    }
+
+    public void disable() {
+        isActive = false;
     }
 
     public void init(GameObject owner) {

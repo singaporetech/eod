@@ -1,4 +1,4 @@
-package com.boliao.eod.components;
+package com.boliao.eod.components.render;
 
 import com.badlogic.gdx.math.Rectangle;
 

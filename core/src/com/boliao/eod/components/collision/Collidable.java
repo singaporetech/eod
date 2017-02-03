@@ -1,6 +1,5 @@
-package com.boliao.eod.components;
+package com.boliao.eod.components.collision;
 
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 

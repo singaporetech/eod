@@ -1,13 +1,12 @@
-package com.boliao.eod.components;
+package com.boliao.eod.components.render;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
 import com.boliao.eod.SETTINGS;
+import com.boliao.eod.components.*;
 
 /**
  * Created by mrboliao on 24/1/17.

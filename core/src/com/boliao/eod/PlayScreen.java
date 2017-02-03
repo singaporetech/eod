@@ -1,7 +1,20 @@
 package com.boliao.eod;
 
 import com.badlogic.gdx.Screen;
-import com.boliao.eod.components.*;
+import com.boliao.eod.components.Combat;
+import com.boliao.eod.components.Health;
+import com.boliao.eod.components.Input;
+import com.boliao.eod.components.Movement;
+import com.boliao.eod.components.Transform;
+import com.boliao.eod.components.ai.FsmBug;
+import com.boliao.eod.components.ai.FsmPlayer;
+import com.boliao.eod.components.ai.SteeringArrive;
+import com.boliao.eod.components.ai.SteeringPursue;
+import com.boliao.eod.components.collision.Collider;
+import com.boliao.eod.components.render.PrimitiveHealth;
+import com.boliao.eod.components.render.Sprite;
+import com.boliao.eod.components.render.SpriteInput;
+import com.boliao.eod.components.render.SpriteSheet;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +36,7 @@ public class PlayScreen implements Screen {
     List<GameObject> gameObjects;
 
     // Renderables list
-    List<com.boliao.eod.components.Renderable> renderables;
+    List<com.boliao.eod.components.render.Renderable> renderables;
 
     // Tiled stuff
 //    private TiledMap map;
@@ -60,9 +73,11 @@ public class PlayScreen implements Screen {
         player.addComponent(new Collider(false, false));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
-        player.addComponent(new com.boliao.eod.components.ai.FsmPlayer());
+        player.addComponent(new FsmPlayer());
         player.addComponent(new Input(Input.InputType.TOUCH));
+        player.addComponent(new SpriteInput("sprites/x.png"));
         player.addComponent(new Health());
+        player.addComponent(new PrimitiveHealth());
         player.init();
 
         // test init bug
@@ -73,7 +88,8 @@ public class PlayScreen implements Screen {
         bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
         bug.addComponent(new Collider(false, false));
         bug.addComponent(new SteeringPursue(player));
-        bug.addComponent(new com.boliao.eod.components.ai.FsmBug());
+        bug.addComponent(new Combat(player));
+        bug.addComponent(new FsmBug());
         bug.init();
 
 //        mapLoader = new TmxMapLoader();

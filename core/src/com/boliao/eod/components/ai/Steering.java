@@ -1,10 +1,13 @@
-package com.boliao.eod.components;
+package com.boliao.eod.components.ai;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
+import com.boliao.eod.components.Component;
+import com.boliao.eod.components.Movement;
+import com.boliao.eod.components.Transform;
 
 /**
  * Created by mrboliao on 22/1/17.
@@ -80,7 +83,7 @@ public abstract class Steering extends Component {
     }
 
     protected void updateDirAndDist() {
-        dir.set(destPos).sub(transform.pos);
+        dir.set(destPos).sub(transform.getPos());
         dist = dir.len();
         dir.nor();
     }
