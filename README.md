@@ -1,5 +1,6 @@
 # eod
 **e**nd-**o**f-**d**ay a.k.a. **e**xercise-**o**r-**d**ie
+
 An attempt to gamify exercise with **real** game mechanics.
 
 ## workflow
