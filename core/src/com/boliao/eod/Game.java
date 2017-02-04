@@ -33,6 +33,9 @@ public class Game extends com.badlogic.gdx.Game {
 
     public void restart() {
         RenderEngine.i().shutdownDebugRenderer();
+        RenderEngine.i().clearRenderables();
+        CollisionEngine.i().clearCollidables();
+
         Game.i().resume();
         playScreen.restart();
         RenderEngine.i().initDebugRenderer();

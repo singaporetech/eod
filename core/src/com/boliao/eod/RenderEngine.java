@@ -121,6 +121,11 @@ public class RenderEngine implements Engine{
         hud.hideEndGameMenu();
     }
 
+    public void clearRenderables() {
+        renderables.clear();
+        renderableDebugs.clear();
+    }
+
     @Override
     public void finalize() {
         spriteBatch.dispose();
