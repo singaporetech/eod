@@ -3,7 +3,9 @@ package com.boliao.eod.components.ai;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
+import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
+import com.boliao.eod.RenderEngine;
 import com.boliao.eod.components.*;
 
 /**
@@ -38,6 +40,9 @@ public class FsmPlayer extends Fsm {
         switch (currState) {
             case IDLE:
                 // if health=0, go to DESTRUCT
+                if (health.isEmpty()) {
+                    transit(StateType.DESTRUCT);
+                }
 
                 if (input.isTriggered()) {
                     Gdx.app.log(TAG, "MOUSE PICKED");
@@ -79,7 +84,6 @@ public class FsmPlayer extends Fsm {
                 break;
 
             case DESTRUCT:
-                Gdx.app.log(TAG, "Destroying");
                 break;
 
             default:

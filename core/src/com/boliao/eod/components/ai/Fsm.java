@@ -2,8 +2,11 @@ package com.boliao.eod.components.ai;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
+import com.boliao.eod.RenderEngine;
 import com.boliao.eod.components.Combat;
+import com.boliao.eod.components.Health;
 import com.boliao.eod.components.collision.Collider;
 import com.boliao.eod.components.Component;
 import com.boliao.eod.components.Movement;
@@ -28,6 +31,7 @@ public abstract class Fsm extends Component {
     protected Steering steering;
     protected SpriteSheet spriteSheet;
     protected Combat combat;
+    protected Health health;
 
     // to remember last destination position to resume steering after collision
     protected Vector2 lastDestPos = new Vector2();
@@ -50,6 +54,7 @@ public abstract class Fsm extends Component {
         spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
         movement = (Movement) owner.getComponent("Movement");
         combat = (Combat) owner.getComponent("Combat");
+        health = (Health) owner.getComponent("Health");
         //todo: need to assert all components not null
     }
 
@@ -89,6 +94,8 @@ public abstract class Fsm extends Component {
                 combat.enable();
                 break;
             case DESTRUCT:
+                Game.i().pause();
+                RenderEngine.i().showEndGameMenu();
                 break;
             case BUILD:
                 break;

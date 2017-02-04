@@ -268,4 +268,9 @@ public class Collider extends Component implements Collidable, com.boliao.eod.co
     public boolean collidedWithPos(Vector2 pos) {
         return boundingCircle.contains(pos);
     }
+
+    @Override
+    public void finalize() {
+        super.finalize();
+    }
 }

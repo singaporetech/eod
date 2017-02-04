@@ -59,7 +59,7 @@ public class Combat extends Component{
         // fade sprite and set position
         spriteBam.setPos(targetTransform.getPos());
         if (spriteBam.getAlpha() > 0) {
-            spriteBam.shrinkAndFade(delta, SETTINGS.BAM_SHRINK_DECREMENT);
+            spriteBam.shrinkAndFade(delta, SETTINGS.BAM_FADEOUT_DECREMENT);
         }
     }
 }

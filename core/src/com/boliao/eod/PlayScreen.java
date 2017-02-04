@@ -11,7 +11,7 @@ import com.boliao.eod.components.ai.FsmPlayer;
 import com.boliao.eod.components.ai.SteeringArrive;
 import com.boliao.eod.components.ai.SteeringPursue;
 import com.boliao.eod.components.collision.Collider;
-import com.boliao.eod.components.render.PrimitiveHealth;
+import com.boliao.eod.components.render.SpriteHealth;
 import com.boliao.eod.components.render.Sprite;
 import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteInput;
@@ -51,6 +51,10 @@ public class PlayScreen implements Screen {
         // init game objects list
         gameObjects = new LinkedList<GameObject>();
 
+        init();
+    }
+
+    public void init() {
         // init house
         GameObject house = new GameObject("house");
         gameObjects.add(house);
@@ -78,7 +82,7 @@ public class PlayScreen implements Screen {
         player.addComponent(new Input(Input.InputType.TOUCH));
         player.addComponent(new SpriteInput("sprites/x.png"));
         player.addComponent(new Health());
-        player.addComponent(new PrimitiveHealth());
+        player.addComponent(new SpriteHealth("sprites/healthbar.png"));
         player.init();
 
         // test init bug
@@ -97,6 +101,13 @@ public class PlayScreen implements Screen {
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("level0.tmx");
 //        mapRenderer = new OrthogonalTiledMapRenderer(map);
+    }
+
+    public void restart() {
+        dispose();
+        gameObjects.clear();
+
+        init();
     }
 
     /**
@@ -131,12 +142,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-
+        paused = true;
     }
 
     @Override
     public void resume() {
-
+        paused = false;
     }
 
     @Override

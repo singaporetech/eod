@@ -15,11 +15,11 @@ import com.boliao.eod.components.Transform;
 
 public class Sprite extends Component implements Renderable {
     private static final String TAG = "Sprite:C;R";
-    private Transform transform;
-    private com.badlogic.gdx.graphics.g2d.Sprite sprite;
+    protected Transform transform;
+    protected com.badlogic.gdx.graphics.g2d.Sprite sprite;
 
-    private float alpha = 1;
-    private float scale = 1;
+    protected float alpha = 1;
+    protected float scale = 1;
 
     public Sprite(String name, String spritePath, int sizeX, int sizeY) {
         super(name);

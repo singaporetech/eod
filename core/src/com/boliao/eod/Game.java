@@ -31,6 +31,14 @@ public class Game extends com.badlogic.gdx.Game {
         }, 1, 1);
     }
 
+    public void restart() {
+        RenderEngine.i().shutdownDebugRenderer();
+        Game.i().resume();
+        playScreen.restart();
+        RenderEngine.i().initDebugRenderer();
+        RenderEngine.i().hideEndGameMenu();
+    }
+
     @Override
     public void render() {
         super.render();
@@ -43,4 +51,16 @@ public class Game extends com.badlogic.gdx.Game {
         CollisionEngine.i().finalize();
         RenderEngine.i().finalize();
 	}
+
+    @Override
+    public void pause() {
+        super.pause();
+        playScreen.pause();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        playScreen.resume();
+    }
 }

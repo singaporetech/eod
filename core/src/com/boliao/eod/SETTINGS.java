@@ -5,7 +5,7 @@ package com.boliao.eod;
  */
 
 public final class SETTINGS {
-    public static final boolean IS_DEBUG = true;
+    public static boolean IS_DEBUG = false;
 
     public static final int VIEWPORT_WIDTH = 720;
     public static final int VIEWPORT_HEIGHT = 1280;
@@ -27,7 +27,7 @@ public final class SETTINGS {
     public static final int BUG_POS_X = 400;
     public static final int BUG_POS_Y = 100;
     public static final int HEALTHBAR_OFFSET_X = -SPRITE_SIZE/2;
-    public static final int HEALTHBAR_OFFSET_Y = SPRITE_SIZE/2;
+    public static final int HEALTHBAR_OFFSET_Y = SPRITE_SIZE/2 + 10;
 
     public static final float SPEED_PLAYER = 500.0f;
     public static final float SPEED_BUG = 350.0f;
@@ -39,7 +39,6 @@ public final class SETTINGS {
     public static final float MIN_SPEED = 100.0f;
 
     public static final float MASS = 1.0f;
-    public static final float PROXIMITY = STOP_RADIUS; // this is squared value
     public static final float MELEE_RANGE = 100.0f;
 
     public static final float COLLISION_FORWARD_LEN = 0.7f;
@@ -51,7 +50,6 @@ public final class SETTINGS {
     public static final float X_FADEOUT_DECREMENT = 1.5f;
     public static final float ATTACK_DELAY_TIME = 0.6f;
     public static final float BAM_FADEOUT_DECREMENT = 2.5f;
-    public static final float BAM_SHRINK_DECREMENT = 2.5f;
 
     public static final float BUG_DMG = 5f;
     public static final float PLAYER_HP = 100f;

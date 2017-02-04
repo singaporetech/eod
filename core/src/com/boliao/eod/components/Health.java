@@ -2,7 +2,7 @@ package com.boliao.eod.components;
 
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
-import com.boliao.eod.components.render.PrimitiveHealth;
+import com.boliao.eod.components.render.SpriteHealth;
 
 /**
  * Created by mrboliao on 2/2/17.
@@ -12,7 +12,7 @@ public class Health extends Component {
     private static final String TAG = "Health:C";
 
     protected Transform transform;
-    protected PrimitiveHealth primitiveHealth;
+    protected SpriteHealth primitiveHealth;
 
     protected float maxHp = SETTINGS.PLAYER_HP;
     protected float hp = maxHp;
@@ -26,7 +26,7 @@ public class Health extends Component {
         super.init(owner);
 
         transform = (Transform) owner.getComponent("Transform");
-        primitiveHealth = (PrimitiveHealth) owner.getComponent("PrimitiveHealth");
+        primitiveHealth = (SpriteHealth) owner.getComponent("SpriteHealth");
     }
 
     public void hit(float dmg) {
