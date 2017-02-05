@@ -1,5 +1,6 @@
 package com.boliao.eod.components.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -87,6 +88,7 @@ public class SpriteSheet extends Component implements Renderable {
                 endFrame = 9;
                 break;
         }
+        currSpriteIndex = startFrame;
     }
 
     @Override

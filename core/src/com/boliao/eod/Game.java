@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Game extends com.badlogic.gdx.Game {
     private static final String TAG = "Game";
+
+    private boolean canIncScore = false;
 
     private static Game instance = new Game();
     private Game() {}
@@ -50,9 +53,13 @@ public class Game extends com.badlogic.gdx.Game {
     }
 
     public void keepScore() {
-        if (gameState.getTimer() == 0 ) {
+        if (gameState.getTimer() == 0) {
+            canIncScore = true;
+        }
+        if (canIncScore) {
             gameState.incNumNights();
             Gdx.app.log(TAG, "+1 POINT!");
+            canIncScore = false;
         }
     }
 

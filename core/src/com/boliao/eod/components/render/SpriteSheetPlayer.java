@@ -25,5 +25,6 @@ public class SpriteSheetPlayer extends SpriteSheet {
                 endFrame = 2;
                 break;
         }
+        currSpriteIndex = startFrame;
     }
 }
