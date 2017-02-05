@@ -7,8 +7,9 @@ package com.boliao.eod;
 public class GameState {
     private static GameState instance = new GameState();
 
-    int steps = 0;
-    int timer = 100;
+    private int steps = 0;
+    private int timer = 100;
+    private int numNights = 0;
 
     private GameState() {}
 
@@ -18,5 +19,37 @@ public class GameState {
 
     public void GameState() {
         --timer;
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
+    }
+
+    public void decTimer() {
+        --timer;
+    }
+
+    public int getSteps() {
+        return steps;
+    }
+
+    public void incSteps(int inc) {
+        steps += inc;
+    }
+
+    public int getNumNights() {
+        return numNights;
+    }
+
+    public void setNumNights(int numNights) {
+        this.numNights = numNights;
+    }
+
+    public void incNumNights() {
+        ++numNights;
     }
 }

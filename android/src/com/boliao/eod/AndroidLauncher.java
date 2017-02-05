@@ -47,7 +47,7 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
                 Log.d(TAG, "Step counter:" + val);
             }
             else if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
-                gameState.steps += val;
+                gameState.incSteps(val);
                 //mTextView.setText(gameState.steps + " steps taken");
             }
         }
