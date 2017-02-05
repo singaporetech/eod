@@ -1,31 +1,28 @@
 package com.boliao.eod.components;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
-import com.boliao.eod.components.render.Renderable;
+import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteSheet;
 
 /**
  * Created by mrboliao on 3/2/17.
  */
 
-public class Combat extends Component implements Renderable{
+public class Combat extends Component{
     private static final String TAG = "Combat:C";
 
     Transform transform;
     SpriteSheet spriteSheet;
+    SpriteBam spriteBam;
 
     GameObject targetGO;
     Health targetHealth;
+    Transform targetTransform;
 
     protected float dmg = SETTINGS.BUG_DMG;
     protected float delayTime = SETTINGS.ATTACK_DELAY_TIME;
     protected float timeElapsed = 0;
-
-    private com.badlogic.gdx.graphics.g2d.Sprite sprite;
-    private float spriteAlpha = 1;
 
     public Combat(GameObject targetGO) {
         super("Combat");
@@ -40,6 +37,8 @@ public class Combat extends Component implements Renderable{
 
         transform = (Transform) owner.getComponent("Transform");
         spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
+        spriteBam = (SpriteBam) owner.getComponent("SpriteBam");
+        targetTransform = (Transform) targetGO.getComponent("Transform");
         targetHealth = (Health) targetGO.getComponent("Health");
     }
 
@@ -52,18 +51,15 @@ public class Combat extends Component implements Renderable{
             timeElapsed += delta;
             if (timeElapsed >= delayTime) {
                 targetHealth.hit(dmg);
+                spriteBam.reset();
                 timeElapsed = 0;
             }
         }
-    }
 
-    @Override
-    public void draw() {
-
-    }
-
-    @Override
-    public Rectangle getBoundingBox() {
-        return null;
+        // fade sprite and set position
+        spriteBam.setPos(targetTransform.getPos());
+        if (spriteBam.getAlpha() > 0) {
+            spriteBam.shrinkAndFade(delta, SETTINGS.BAM_FADEOUT_DECREMENT);
+        }
     }
 }

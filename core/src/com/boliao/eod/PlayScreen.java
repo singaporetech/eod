@@ -11,10 +11,12 @@ import com.boliao.eod.components.ai.FsmPlayer;
 import com.boliao.eod.components.ai.SteeringArrive;
 import com.boliao.eod.components.ai.SteeringPursue;
 import com.boliao.eod.components.collision.Collider;
-import com.boliao.eod.components.render.PrimitiveHealth;
+import com.boliao.eod.components.render.SpriteHealth;
 import com.boliao.eod.components.render.Sprite;
+import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteInput;
-import com.boliao.eod.components.render.SpriteSheet;
+import com.boliao.eod.components.render.SpriteSheetBug;
+import com.boliao.eod.components.render.SpriteSheetPlayer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +52,10 @@ public class PlayScreen implements Screen {
         // init game objects list
         gameObjects = new LinkedList<GameObject>();
 
+        init();
+    }
+
+    public void init() {
         // init house
         GameObject house = new GameObject("house");
         gameObjects.add(house);
@@ -69,7 +75,7 @@ public class PlayScreen implements Screen {
         GameObject player = new GameObject("player");
         gameObjects.add(player);
         player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
-        player.addComponent(new SpriteSheet("sprites/player.txt"));
+        player.addComponent(new SpriteSheetPlayer("sprites/player.txt"));
         player.addComponent(new Collider(false, false));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
@@ -77,24 +83,32 @@ public class PlayScreen implements Screen {
         player.addComponent(new Input(Input.InputType.TOUCH));
         player.addComponent(new SpriteInput("sprites/x.png"));
         player.addComponent(new Health());
-        player.addComponent(new PrimitiveHealth());
+        player.addComponent(new SpriteHealth("sprites/healthbar.png"));
         player.init();
 
         // test init bug
         GameObject bug = new GameObject("bug");
         gameObjects.add(bug);
         bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
-        bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
+        bug.addComponent(new SpriteSheetBug("sprites/bug1.txt"));
         bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
         bug.addComponent(new Collider(false, false));
         bug.addComponent(new SteeringPursue(player));
         bug.addComponent(new Combat(player));
         bug.addComponent(new FsmBug());
+        bug.addComponent(new SpriteBam("sprites/bam.png"));
         bug.init();
 
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("level0.tmx");
 //        mapRenderer = new OrthogonalTiledMapRenderer(map);
+    }
+
+    public void restart() {
+        dispose();
+        gameObjects.clear();
+
+        init();
     }
 
     /**
@@ -129,12 +143,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-
+        paused = true;
     }
 
     @Override
     public void resume() {
-
+        paused = false;
     }
 
     @Override

@@ -1,15 +1,12 @@
 package com.boliao.eod.components;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
 import com.boliao.eod.SETTINGS;
-import com.boliao.eod.components.render.Renderable;
 import com.boliao.eod.components.render.SpriteInput;
 
 /**
@@ -39,7 +36,7 @@ public class Input extends Component{
         super.init(owner);
 
         spriteInput = (SpriteInput) owner.getComponent("SpriteInput");
-        spriteInput.setSpriteAlpha(0);
+        spriteInput.setAlpha(0);
     }
 
     @Override
@@ -47,8 +44,8 @@ public class Input extends Component{
         super.update(delta);
 
         // do fade out animation for sprite
-        if (spriteInput.getSpriteAlpha() > 0) {
-            spriteInput.fadeOut(SETTINGS.X_FADEOUT_DECREMENT, delta);
+        if (spriteInput.getAlpha() > 0) {
+            spriteInput.shrinkAndFade(SETTINGS.X_FADEOUT_DECREMENT, delta);
         }
     }
 
@@ -83,7 +80,7 @@ public class Input extends Component{
 
         // check collisions and set visuals
         if (CollisionEngine.i().isFreeOfCollisions(worldPos2D)) {
-            spriteInput.setSpriteAlpha(1);
+            spriteInput.reset();
             spriteInput.setPos(worldPos2D);
             return true;
         }

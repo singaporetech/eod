@@ -2,8 +2,11 @@ package com.boliao.eod.components.ai;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
+import com.boliao.eod.RenderEngine;
 import com.boliao.eod.components.Combat;
+import com.boliao.eod.components.Health;
 import com.boliao.eod.components.collision.Collider;
 import com.boliao.eod.components.Component;
 import com.boliao.eod.components.Movement;
@@ -28,6 +31,7 @@ public abstract class Fsm extends Component {
     protected Steering steering;
     protected SpriteSheet spriteSheet;
     protected Combat combat;
+    protected Health health;
 
     // to remember last destination position to resume steering after collision
     protected Vector2 lastDestPos = new Vector2();
@@ -40,6 +44,10 @@ public abstract class Fsm extends Component {
         super(name);
     }
 
+    /**
+     * Note that some component links need to be set in the subclass
+     * @param owner
+     */
     @Override
     public void init(GameObject owner) {
         super.init(owner);
@@ -47,9 +55,9 @@ public abstract class Fsm extends Component {
 
         transform = (Transform) owner.getComponent("Transform");
         collider = (Collider) owner.getComponent("Collider");
-        spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
         movement = (Movement) owner.getComponent("Movement");
         combat = (Combat) owner.getComponent("Combat");
+        health = (Health) owner.getComponent("Health");
         //todo: need to assert all components not null
     }
 
@@ -75,20 +83,23 @@ public abstract class Fsm extends Component {
                 break;
             case MOVE:
                 steering.setDestPos(lastDestPos);
-                spriteSheet.onAnimation();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case PURSUE: // todo: exact same as MOVE now
                 steering.setDestPos(lastDestPos);
-                spriteSheet.onAnimation();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case COLLISION_RESPONSE:
                 steering.setDestPos(collider.getCollisionAvoidTarget());
-                spriteSheet.onAnimation();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case ATTACK:
                 combat.enable();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.MELEE);
                 break;
             case DESTRUCT:
+                Game.i().pause();
+                RenderEngine.i().showEndGameMenu();
                 break;
             case BUILD:
                 break;

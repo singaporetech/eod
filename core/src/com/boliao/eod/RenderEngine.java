@@ -46,8 +46,7 @@ public class RenderEngine implements Engine{
         cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
 
         // debug renderer
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(cam.combined);
+        initDebugRenderer();
     }
 
     public void tick() {
@@ -58,10 +57,6 @@ public class RenderEngine implements Engine{
         // clear screen
         Gdx.gl.glClearColor(0.08f, 0.08f, 0.08f, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // draw hud
-        spriteBatch.setProjectionMatrix(hud.getStageCam().combined);
-        hud.draw();
 
         // draw all game objects
         spriteBatch.setProjectionMatrix(cam.combined);
@@ -76,6 +71,10 @@ public class RenderEngine implements Engine{
         for (RenderableDebug r: renderableDebugs) {
             r.draw();
         }
+
+        // draw hud
+        spriteBatch.setProjectionMatrix(hud.getStageCam().combined);
+        hud.draw();
     }
 
     public void addRenderable(Renderable r) {
@@ -102,8 +101,29 @@ public class RenderEngine implements Engine{
         return shapeRenderer;
     }
 
+    public void initDebugRenderer() {
+        shapeRenderer = new ShapeRenderer();
+    }
+
+    public void shutdownDebugRenderer() {
+        shapeRenderer.dispose();
+    }
+
     public void setViewport(int width, int height) {
         viewport.update(width, height);
+    }
+
+    public void showEndGameMenu() {
+        hud.showEndGameMenu();
+    }
+
+    public void hideEndGameMenu() {
+        hud.hideEndGameMenu();
+    }
+
+    public void clearRenderables() {
+        renderables.clear();
+        renderableDebugs.clear();
     }
 
     @Override

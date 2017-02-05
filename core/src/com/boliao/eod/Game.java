@@ -1,9 +1,14 @@
 package com.boliao.eod;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
 
+import java.util.Date;
+
 public class Game extends com.badlogic.gdx.Game {
+    private static final String TAG = "Game";
+
     private static Game instance = new Game();
     private Game() {}
     public static Game i(){
@@ -11,6 +16,8 @@ public class Game extends com.badlogic.gdx.Game {
     }
 
     private PlayScreen playScreen;
+    private GameState gameState = GameState.i();
+    Date today;
 
 	@Override
 	public void create () {
@@ -26,14 +33,34 @@ public class Game extends com.badlogic.gdx.Game {
         timer.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
-                --GameState.i().timer;
+                gameState.decTimer();
             }
         }, 1, 1);
+    }
+
+    public void restart() {
+        RenderEngine.i().shutdownDebugRenderer();
+        RenderEngine.i().clearRenderables();
+        CollisionEngine.i().clearCollidables();
+
+        Game.i().resume();
+        playScreen.restart();
+        RenderEngine.i().initDebugRenderer();
+        RenderEngine.i().hideEndGameMenu();
+    }
+
+    public void keepScore() {
+        if (gameState.getTimer() == 0 ) {
+            gameState.incNumNights();
+            Gdx.app.log(TAG, "+1 POINT!");
+        }
     }
 
     @Override
     public void render() {
         super.render();
+
+        keepScore();
     }
 
 	@Override
@@ -43,4 +70,16 @@ public class Game extends com.badlogic.gdx.Game {
         CollisionEngine.i().finalize();
         RenderEngine.i().finalize();
 	}
+
+    @Override
+    public void pause() {
+        super.pause();
+        playScreen.pause();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        playScreen.resume();
+    }
 }

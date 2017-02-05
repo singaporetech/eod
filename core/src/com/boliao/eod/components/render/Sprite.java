@@ -15,24 +15,20 @@ import com.boliao.eod.components.Transform;
 
 public class Sprite extends Component implements Renderable {
     private static final String TAG = "Sprite:C;R";
-    private Transform transform;
-    private com.badlogic.gdx.graphics.g2d.Sprite sprite;
+    protected Transform transform;
+    protected com.badlogic.gdx.graphics.g2d.Sprite sprite;
 
-    private float spriteAlpha = 1;
+    protected float alpha = 1;
+    protected float scale = 1;
 
     public Sprite(String name, String spritePath, int sizeX, int sizeY) {
         super(name);
 
-        // init spritesheet
+        // init sprite
         sprite = new com.badlogic.gdx.graphics.g2d.Sprite(new Texture(spritePath));
-
-        //sprite.setOriginCenter();
         sprite.setSize(sizeX, sizeY);
         //sprite.setScale(0.1f);
         sprite.setOriginCenter();
-
-        // add to Render Engine
-        RenderEngine.i().addRenderable(this);
     }
 
     public Sprite(String spritePath, int sizeX, int sizeY) {
@@ -53,6 +49,9 @@ public class Sprite extends Component implements Renderable {
 
         // setup links
         transform = (Transform) owner.getComponent("Transform");
+
+        // add to Render Engine
+        RenderEngine.i().addRenderable(this);
     }
 
     @Override
@@ -64,20 +63,48 @@ public class Sprite extends Component implements Renderable {
         sprite.setCenter(pos.x, pos.y);
     }
 
-    public float getSpriteAlpha() {
-        return spriteAlpha;
+    public float getAlpha() {
+        return alpha;
     }
 
-    public void setSpriteAlpha(float spriteAlpha) {
-        this.spriteAlpha = spriteAlpha;
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+        sprite.setAlpha(alpha);
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+        sprite.setScale(scale);
+    }
+
+    public void shrink(float dec, float delta) {
+        scale -= dec * delta;
+        if (scale < 0) {
+            scale = 0;
+        }
+        sprite.setScale(scale);
+    }
+
+    public void reset() {
+        setAlpha(1);
+        setScale(1);
     }
 
     public void fadeOut(float dec, float delta) {
-        spriteAlpha -= dec * delta;
-        if (spriteAlpha < 0) {
-            spriteAlpha = 0;
+        alpha -= dec * delta;
+        if (alpha < 0) {
+            alpha = 0;
         }
-        sprite.setAlpha(spriteAlpha);
+        sprite.setAlpha(alpha);
+    }
+
+    public void shrinkAndFade(float dec, float delta) {
+        shrink(dec, delta);
+        fadeOut(dec, delta);
     }
 
     @Override

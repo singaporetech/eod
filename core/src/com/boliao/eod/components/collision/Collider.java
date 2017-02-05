@@ -12,16 +12,17 @@ import com.boliao.eod.RenderEngine;
 import com.boliao.eod.SETTINGS;
 import com.boliao.eod.components.*;
 import com.boliao.eod.components.render.Renderable;
+import com.boliao.eod.components.render.RenderableDebug;
 
 /**
  * Created by mrboliao on 24/1/17.
  */
 
-public class Collider extends Component implements Collidable, com.boliao.eod.components.render.RenderableDebug {
+public class Collider extends Component implements Collidable, RenderableDebug {
     private static final String TAG = "Collider:C";
 
     Transform transform;
-    com.boliao.eod.components.render.Renderable renderable;
+    Renderable renderable;
 
     // flags
     boolean isStatic = true;
@@ -68,10 +69,7 @@ public class Collider extends Component implements Collidable, com.boliao.eod.co
         transform = (Transform) owner.getComponent("Transform");
 
         // todo: do sprite sheet if no sprite, perhaps need a way to get only interface
-        renderable = (com.boliao.eod.components.render.Renderable) owner.getComponent("Sprite");
-        if (renderable == null) {
-            renderable = (Renderable) owner.getComponent("SpriteSheet");
-        }
+        renderable = owner.getRenderable();
 
         // init bounding circle
         Rectangle rect = renderable.getBoundingBox();
@@ -267,5 +265,10 @@ public class Collider extends Component implements Collidable, com.boliao.eod.co
     @Override
     public boolean collidedWithPos(Vector2 pos) {
         return boundingCircle.contains(pos);
+    }
+
+    @Override
+    public void finalize() {
+        super.finalize();
     }
 }
