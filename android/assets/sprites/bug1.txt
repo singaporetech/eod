@@ -1,5 +1,5 @@
 bug1.png
-size: 1536, 512
+size: 2048, 1536
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -20,6 +20,55 @@ bug12
 bug13
   rotate: false
   xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bug21-1
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bug21
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bug22-1
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bug22
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bug23-1
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bug23-2
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bug23
+  rotate: false
+  xy: 512, 1024
   size: 512, 512
   orig: 512, 512
   offset: 0, 0

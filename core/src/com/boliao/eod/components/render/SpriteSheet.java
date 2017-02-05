@@ -15,6 +15,10 @@ import com.boliao.eod.components.*;
 public class SpriteSheet extends Component implements Renderable {
     private static final String TAG = "SpriteSheet:C;R";
 
+    public enum Sequence {RUN, MELEE}
+    protected Sequence sequence;
+    protected int startFrame, endFrame;
+
     protected Transform transform;
     protected TextureAtlas spriteSheet;
     protected Array<com.badlogic.gdx.graphics.g2d.Sprite> sprites;
@@ -28,13 +32,14 @@ public class SpriteSheet extends Component implements Renderable {
      * @param spritePath
      * @param size
      */
-    public SpriteSheet(String spritePath, int size) {
-        super("SpriteSheet");
+    public SpriteSheet(String name, String spritePath, int size) {
+        super(name);
 
         // init spritesheet
         spriteSheet = new TextureAtlas(spritePath);
         sprites = spriteSheet.createSprites();
         currSprite = sprites.get(0);
+        startFrame = endFrame = 0;
 
         // init sprites
         for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
@@ -46,6 +51,10 @@ public class SpriteSheet extends Component implements Renderable {
 
         // add to render engine
         RenderEngine.i().addRenderable(this);
+    }
+
+    public SpriteSheet (String spritePath, int size) {
+        this("SpriteSheet", spritePath, size);
     }
 
     public SpriteSheet(String spritePath) {
@@ -65,9 +74,24 @@ public class SpriteSheet extends Component implements Renderable {
         return currSprite.getBoundingRectangle();
     }
 
+    public void setSequence(Sequence seq) {
+        this.sequence = seq;
+        switch(seq) {
+            case RUN:
+                startFrame = 0;
+                endFrame = 2;
+                break;
+
+            case MELEE:
+                startFrame = 3;
+                endFrame = 9;
+                break;
+        }
+    }
+
     @Override
     public void update(float delta) {
-        // follow transforms position
+        // set position
         for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
             sprite.setRotation(transform.getRot());
             sprite.setCenter(transform.getX(), transform.getY());
@@ -77,15 +101,16 @@ public class SpriteSheet extends Component implements Renderable {
         if (isAnimated) {
             animationElapsedTime += delta;
             if (animationElapsedTime > SETTINGS.ANIM_FRAME_TIME) {
-                currSpriteIndex = (currSpriteIndex == sprites.size-1) ? 0 : ++currSpriteIndex;
+                currSpriteIndex = (currSpriteIndex == endFrame) ? startFrame : ++currSpriteIndex;
                 currSprite = sprites.get(currSpriteIndex);
                 animationElapsedTime = 0;
             }
         }
     }
 
-    public void onAnimation() {
+    public void onAnimation(Sequence seq) {
         isAnimated = true;
+        setSequence(seq);
     }
 
     public void offAnimation() {

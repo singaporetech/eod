@@ -3,6 +3,7 @@ package com.boliao.eod;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.components.Component;
+import com.boliao.eod.components.render.Renderable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,15 @@ public class GameObject {
         for (Component c: components) {
             if (c.getName() == name) {
                 return c;
+            }
+        }
+        return null;
+    }
+
+    public Renderable getRenderable() {
+        for (Component c: components) {
+            if (c instanceof Renderable) {
+                return (Renderable)c;
             }
         }
         return null;

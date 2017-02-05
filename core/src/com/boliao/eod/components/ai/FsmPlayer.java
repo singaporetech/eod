@@ -7,6 +7,7 @@ import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
 import com.boliao.eod.components.*;
+import com.boliao.eod.components.render.SpriteSheet;
 
 /**
  * Created by mrboliao on 23/1/17.
@@ -26,6 +27,7 @@ public class FsmPlayer extends Fsm {
         super.init(owner);
 
         // setup additional links
+        spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheetPlayer");
         steering = (Steering) owner.getComponent("SteeringArrive");
         input = (Input) owner.getComponent("Input");
     }

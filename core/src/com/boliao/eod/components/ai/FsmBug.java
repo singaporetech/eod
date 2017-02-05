@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
+import com.boliao.eod.components.render.SpriteSheet;
 
 /**
  * Created by mrboliao on 23/1/17.
@@ -21,6 +22,7 @@ public class FsmBug extends Fsm {
         super.init(owner);
 
         // setup additional links
+        spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheetBug");
         steering = (Steering) owner.getComponent("SteeringPursue");
     }
 

@@ -200,6 +200,13 @@
             <key type="filename">bug11.png</key>
             <key type="filename">bug12.png</key>
             <key type="filename">bug13.png</key>
+            <key type="filename">bug21-1.png</key>
+            <key type="filename">bug21.png</key>
+            <key type="filename">bug22-1.png</key>
+            <key type="filename">bug22.png</key>
+            <key type="filename">bug23-1.png</key>
+            <key type="filename">bug23-2.png</key>
+            <key type="filename">bug23.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -218,6 +225,13 @@
             <filename>bug11.png</filename>
             <filename>bug12.png</filename>
             <filename>bug13.png</filename>
+            <filename>bug21.png</filename>
+            <filename>bug21-1.png</filename>
+            <filename>bug22-1.png</filename>
+            <filename>bug22.png</filename>
+            <filename>bug23-1.png</filename>
+            <filename>bug23-2.png</filename>
+            <filename>bug23.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

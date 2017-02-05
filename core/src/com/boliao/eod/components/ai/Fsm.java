@@ -44,6 +44,10 @@ public abstract class Fsm extends Component {
         super(name);
     }
 
+    /**
+     * Note that some component links need to be set in the subclass
+     * @param owner
+     */
     @Override
     public void init(GameObject owner) {
         super.init(owner);
@@ -51,7 +55,6 @@ public abstract class Fsm extends Component {
 
         transform = (Transform) owner.getComponent("Transform");
         collider = (Collider) owner.getComponent("Collider");
-        spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
         movement = (Movement) owner.getComponent("Movement");
         combat = (Combat) owner.getComponent("Combat");
         health = (Health) owner.getComponent("Health");
@@ -80,18 +83,19 @@ public abstract class Fsm extends Component {
                 break;
             case MOVE:
                 steering.setDestPos(lastDestPos);
-                spriteSheet.onAnimation();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case PURSUE: // todo: exact same as MOVE now
                 steering.setDestPos(lastDestPos);
-                spriteSheet.onAnimation();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case COLLISION_RESPONSE:
                 steering.setDestPos(collider.getCollisionAvoidTarget());
-                spriteSheet.onAnimation();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case ATTACK:
                 combat.enable();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.MELEE);
                 break;
             case DESTRUCT:
                 Game.i().pause();

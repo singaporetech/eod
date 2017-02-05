@@ -15,7 +15,8 @@ import com.boliao.eod.components.render.SpriteHealth;
 import com.boliao.eod.components.render.Sprite;
 import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteInput;
-import com.boliao.eod.components.render.SpriteSheet;
+import com.boliao.eod.components.render.SpriteSheetBug;
+import com.boliao.eod.components.render.SpriteSheetPlayer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class PlayScreen implements Screen {
         GameObject player = new GameObject("player");
         gameObjects.add(player);
         player.addComponent(new Transform(SETTINGS.PLAYER_POS_X, SETTINGS.PLAYER_POS_Y, 0));
-        player.addComponent(new SpriteSheet("sprites/player.txt"));
+        player.addComponent(new SpriteSheetPlayer("sprites/player.txt"));
         player.addComponent(new Collider(false, false));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
@@ -89,7 +90,7 @@ public class PlayScreen implements Screen {
         GameObject bug = new GameObject("bug");
         gameObjects.add(bug);
         bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
-        bug.addComponent(new SpriteSheet("sprites/bug1.txt"));
+        bug.addComponent(new SpriteSheetBug("sprites/bug1.txt"));
         bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
         bug.addComponent(new Collider(false, false));
         bug.addComponent(new SteeringPursue(player));
