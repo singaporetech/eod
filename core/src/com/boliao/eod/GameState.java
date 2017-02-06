@@ -7,18 +7,24 @@ package com.boliao.eod;
 public class GameState {
     private static GameState instance = new GameState();
 
-    private int steps = 0;
-    private int timer = SETTINGS.SECS_IN_DAY;
-    private int numNights = 0;
+    private int steps;
+    private int timer;
+    private int numNights;
+    private boolean canSpawn;
 
-    private GameState() {}
+    private GameState() {
+        reset();
+    }
 
     public static GameState i() {
         return instance;
     }
 
-    public void GameState() {
-        --timer;
+    public void reset() {
+        steps = 0;
+        timer = SETTINGS.SECS_IN_DAY;
+        numNights = 0;
+        canSpawn = false;
     }
 
     public int getTimer() {
@@ -33,7 +39,18 @@ public class GameState {
         --timer;
         if (timer == 0) {
             incNumNights();
+            canSpawn = true;
             timer = SETTINGS.SECS_IN_DAY;
+        }
+    }
+
+    public boolean isCanSpawn() {
+        if (canSpawn) {
+            canSpawn = false; // reset whenever return true
+            return true;
+        }
+        else {
+            return false;
         }
     }
 

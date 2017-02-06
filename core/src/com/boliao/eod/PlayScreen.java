@@ -5,6 +5,7 @@ import com.boliao.eod.components.Combat;
 import com.boliao.eod.components.Health;
 import com.boliao.eod.components.Input;
 import com.boliao.eod.components.Movement;
+import com.boliao.eod.components.SpawnMgr;
 import com.boliao.eod.components.Transform;
 import com.boliao.eod.components.ai.FsmBug;
 import com.boliao.eod.components.ai.FsmPlayer;
@@ -86,18 +87,11 @@ public class PlayScreen implements Screen {
         player.addComponent(new SpriteHealth("sprites/healthbar.png"));
         player.init();
 
-        // test init bug
-        GameObject bug = new GameObject("bug");
-        gameObjects.add(bug);
-        bug.addComponent(new Transform(SETTINGS.BUG_POS_X, SETTINGS.BUG_POS_Y, 50));
-        bug.addComponent(new SpriteSheetBug("sprites/bug1.txt"));
-        bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
-        bug.addComponent(new Collider(false, false));
-        bug.addComponent(new SteeringPursue(player));
-        bug.addComponent(new Combat(player));
-        bug.addComponent(new FsmBug());
-        bug.addComponent(new SpriteBam("sprites/bam.png"));
-        bug.init();
+        // init spawn manager
+        GameObject spawnMgr = new GameObject("SpawnMgr");
+        gameObjects.add(spawnMgr);
+        spawnMgr.addComponent(new SpawnMgr(player));
+        spawnMgr.init();
 
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("level0.tmx");

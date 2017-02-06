@@ -43,6 +43,7 @@ public class Game extends com.badlogic.gdx.Game {
         RenderEngine.i().shutdownDebugRenderer();
         RenderEngine.i().clearRenderables();
         CollisionEngine.i().clearCollidables();
+        GameState.i().reset();
 
         Game.i().resume();
         playScreen.restart();
@@ -66,12 +67,10 @@ public class Game extends com.badlogic.gdx.Game {
     @Override
     public void pause() {
         super.pause();
-        playScreen.pause();
     }
 
     @Override
     public void resume() {
         super.resume();
-        playScreen.resume();
     }
 }

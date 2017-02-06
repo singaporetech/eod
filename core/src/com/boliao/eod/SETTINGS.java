@@ -28,6 +28,7 @@ public final class SETTINGS {
     public static final int PLAYER_POS_Y = 900;
     public static final int BUG_POS_X = 400;
     public static final int BUG_POS_Y = 100;
+    public static final int BUG_POS_JITTER_X = 80;
     public static final int HEALTHBAR_OFFSET_X = -SPRITE_SIZE/2;
     public static final int HEALTHBAR_OFFSET_Y = SPRITE_SIZE/2 + 10;
 
