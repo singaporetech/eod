@@ -57,7 +57,7 @@ public class GameObject {
         }
     }
 
-    protected void addComponent(Component component) {
+    public void addComponent(Component component) {
         components.add(component);
     }
 
