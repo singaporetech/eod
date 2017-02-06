@@ -6,7 +6,9 @@ import com.boliao.eod.SETTINGS;
 import com.boliao.eod.components.ai.FsmBug;
 import com.boliao.eod.components.ai.SteeringPursue;
 import com.boliao.eod.components.collision.Collider;
+import com.boliao.eod.components.render.PrimitiveHealth;
 import com.boliao.eod.components.render.SpriteBam;
+import com.boliao.eod.components.render.SpritePlusOne;
 import com.boliao.eod.components.render.SpriteSheetBug;
 
 import java.util.LinkedList;
@@ -45,6 +47,9 @@ public class SpawnMgr extends Component {
             bug.addComponent(new Collider(false, false));
             bug.addComponent(new SteeringPursue(player));
             bug.addComponent(new Combat(player));
+            bug.addComponent(new Health());
+            bug.addComponent(new SpritePlusOne("sprites/plus1.png")); //todo: decouple this from primitive health
+            bug.addComponent(new PrimitiveHealth());
             bug.addComponent(new FsmBug());
             bug.addComponent(new SpriteBam("sprites/bam.png"));
             bug.init();

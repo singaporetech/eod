@@ -49,6 +49,7 @@ public class Hud implements Renderable {
     Label stepsLabel;
     Label scoreLabel;
     Label gameOverLabel;
+    Label hpLabel;
     Button restartButton;
     TextButton.TextButtonStyle textButtonStyle;
 
@@ -91,6 +92,7 @@ public class Hud implements Renderable {
         gameOverLabel = new Label("sorry UP LORRY oredi\ngo exercise more and", new Label.LabelStyle(font, lightGreen));
         gameOverLabel.setAlignment(Align.center);
         scoreLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
+        hpLabel = new Label("HP:", new Label.LabelStyle(font, new Color(1f,0.5f,0.5f,1)));
 
         // create buttons
         Gdx.input.setInputProcessor(stage);
@@ -107,6 +109,8 @@ public class Hud implements Renderable {
         // add labels to table
         table.add(scoreLabel).expandX().align(Align.left).padTop(10);
         table.add(stepsLabel).expandX().align(Align.right).padTop(10);
+        table.row();
+        table.add(hpLabel).colspan(2).align(Align.topLeft).padTop(20);
         table.row();
         table.add(gameOverLabel).align(Align.center).expandX().colspan(2).padTop(350);
         table.row();

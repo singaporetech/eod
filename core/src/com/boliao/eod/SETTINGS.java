@@ -16,9 +16,14 @@ public final class SETTINGS {
     public static final int HOUSE_SIZE = 380;
     public static final int BLOCK_SIZE = 150;
     public static final int X_SIZE = 50;
+    public static final int PLUSONE_SIZE = 100;
     public static final int BAM_SIZE = 100;
     public static final int HEALTHBAR_WIDTH = 100;
     public static final int HEALTHBAR_HEIGHT = 8;
+    public static final int HEALTHBAR_PLAYER_WIDTH = 620;
+    public static final int HEALTHBAR_PLAYER_HEIGHT = 38;
+    public static final int HEALTHBAR_LINEWIDTH = 5;
+
 
     public static final int HOUSE_POS_X = 380;
     public static final int HOUSE_POS_Y = 1000;
@@ -31,6 +36,10 @@ public final class SETTINGS {
     public static final int BUG_POS_JITTER_X = 80;
     public static final int HEALTHBAR_OFFSET_X = -SPRITE_SIZE/2;
     public static final int HEALTHBAR_OFFSET_Y = SPRITE_SIZE/2 + 10;
+    public static final int HEALTHBAR_PLAYER_X = 80;
+    public static final int HEALTHBAR_PLAYER_Y = 1148;
+    public static final int PLUSONE_OFFSET_X = 50;
+    public static final int PLUSONE_OFFSET_Y = 20;
 
     public static final float SPEED_PLAYER = 500.0f;
     public static final float SPEED_BUG = 350.0f;
@@ -51,9 +60,11 @@ public final class SETTINGS {
 
     public static final float ANIM_FRAME_TIME = 0.1f;
     public static final float X_FADEOUT_DECREMENT = 1.5f;
+    public static final float PLUSONE_FADEOUT_DECREMENT = 0.8f;
     public static final float ATTACK_DELAY_TIME = 0.6f;
     public static final float BAM_FADEOUT_DECREMENT = 2.5f;
 
-    public static final float BUG_DMG = 5f;
+    public static final float BUG_DMG = 1f;
     public static final float PLAYER_HP = 100f;
+    public static final float HP_HEAL_AMT_STEPS = 1f;
 }
