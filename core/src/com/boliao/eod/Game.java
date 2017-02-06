@@ -10,8 +10,6 @@ import java.util.Date;
 public class Game extends com.badlogic.gdx.Game {
     private static final String TAG = "Game";
 
-    private boolean canIncScore = false;
-
     private static Game instance = new Game();
     private Game() {}
     public static Game i(){
@@ -52,22 +50,9 @@ public class Game extends com.badlogic.gdx.Game {
         RenderEngine.i().hideEndGameMenu();
     }
 
-    public void keepScore() {
-        if (gameState.getTimer() == 0) {
-            canIncScore = true;
-        }
-        if (canIncScore) {
-            gameState.incNumNights();
-            Gdx.app.log(TAG, "+1 POINT!");
-            canIncScore = false;
-        }
-    }
-
     @Override
     public void render() {
         super.render();
-
-        keepScore();
     }
 
 	@Override
