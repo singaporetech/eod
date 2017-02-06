@@ -150,6 +150,7 @@ public abstract class Fsm extends Component {
                 break;
             case ATTACK:
                 combat.disable();
+                spriteSheet.offAnimation();
                 break;
             case DESTRUCT:
                 break;

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Game extends com.badlogic.gdx.Game {
@@ -49,18 +50,9 @@ public class Game extends com.badlogic.gdx.Game {
         RenderEngine.i().hideEndGameMenu();
     }
 
-    public void keepScore() {
-        if (gameState.getTimer() == 0 ) {
-            gameState.incNumNights();
-            Gdx.app.log(TAG, "+1 POINT!");
-        }
-    }
-
     @Override
     public void render() {
         super.render();
-
-        keepScore();
     }
 
 	@Override

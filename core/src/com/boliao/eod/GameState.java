@@ -8,7 +8,7 @@ public class GameState {
     private static GameState instance = new GameState();
 
     private int steps = 0;
-    private int timer = 100;
+    private int timer = SETTINGS.SECS_IN_DAY;
     private int numNights = 0;
 
     private GameState() {}
@@ -31,6 +31,10 @@ public class GameState {
 
     public void decTimer() {
         --timer;
+        if (timer == 0) {
+            incNumNights();
+            timer = SETTINGS.SECS_IN_DAY;
+        }
     }
 
     public int getSteps() {
