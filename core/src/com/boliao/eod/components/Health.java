@@ -2,7 +2,8 @@ package com.boliao.eod.components;
 
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
-import com.boliao.eod.components.render.SpriteHealth;
+import com.boliao.eod.components.render.PrimitiveHealth;
+import com.boliao.eod.components.render.SpritePlusOne;
 
 /**
  * Created by mrboliao on 2/2/17.
@@ -12,13 +13,20 @@ public class Health extends Component {
     private static final String TAG = "Health:C";
 
     protected Transform transform;
-    protected SpriteHealth primitiveHealth;
+    protected PrimitiveHealth primitiveHealth;
+    protected SpritePlusOne spritePlusOne;
 
     protected float maxHp = SETTINGS.PLAYER_HP;
     protected float hp = maxHp;
 
-    public Health() {
+    public Health(float startHpScale) {
         super("Health");
+
+        this.hp = startHpScale * maxHp;
+    }
+
+    public Health() {
+        this(1);
     }
 
     @Override
@@ -26,7 +34,12 @@ public class Health extends Component {
         super.init(owner);
 
         transform = (Transform) owner.getComponent("Transform");
-        primitiveHealth = (SpriteHealth) owner.getComponent("SpriteHealth");
+        primitiveHealth = (PrimitiveHealth) owner.getComponent("PrimitiveHealth");
+        spritePlusOne = (SpritePlusOne) owner.getComponent("SpritePlusOne");
+
+        // init the width of the visuals
+        primitiveHealth.scaleWidth(hp/maxHp);
+        spritePlusOne.setAlpha(0);
     }
 
     public void hit(float dmg) {
@@ -43,6 +56,19 @@ public class Health extends Component {
             hp = maxHp;
         }
         primitiveHealth.scaleWidth(hp/maxHp);
+
+        spritePlusOne.reset();
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+
+        // do fade out animation for sprite
+        if (spritePlusOne.getAlpha() > 0) {
+            spritePlusOne.shrinkAndFade(SETTINGS.PLUSONE_FADEOUT_DECREMENT, delta);
+            spritePlusOne.setPos(primitiveHealth.getRightEdgePos());
+        }
     }
 
     public boolean isEmpty() {

@@ -1,5 +1,7 @@
 package com.boliao.eod;
 
+import com.boliao.eod.components.Health;
+
 /**
  * Created by mrboliao on 16/1/17.
  */
@@ -11,6 +13,8 @@ public class GameState {
     private int timer;
     private int numNights;
     private boolean canSpawn;
+
+    private Health playerHealth = null;
 
     private GameState() {
         reset();
@@ -29,10 +33,6 @@ public class GameState {
 
     public int getTimer() {
         return timer;
-    }
-
-    public void setTimer(int timer) {
-        this.timer = timer;
     }
 
     public void decTimer() {
@@ -60,17 +60,22 @@ public class GameState {
 
     public void incSteps(int inc) {
         steps += inc;
+
+        // todo: should send a message to all subscribers and they can do their callback
+        if (playerHealth != null) {
+            playerHealth.heal(SETTINGS.HP_HEAL_AMT_STEPS);
+        }
     }
 
     public int getNumNights() {
         return numNights;
     }
 
-    public void setNumNights(int numNights) {
-        this.numNights = numNights;
-    }
-
     public void incNumNights() {
         ++numNights;
+    }
+
+    public void setPlayerHealth(GameObject player) {
+        playerHealth = (Health) player.getComponent("Health");
     }
 }

@@ -59,9 +59,13 @@ public class Sprite extends Component implements Renderable {
         return sprite.getBoundingRectangle();
     }
 
-    public void setPos(Vector2 pos) {
-        sprite.setCenter(pos.x, pos.y);
+    public void setPos(float x, float y) {
+        sprite.setCenter(x, y);
     }
+    public void setPos(Vector2 pos) {
+        setPos(pos.x, pos.y);
+    }
+
 
     public float getAlpha() {
         return alpha;

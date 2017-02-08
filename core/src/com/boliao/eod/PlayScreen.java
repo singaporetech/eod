@@ -12,10 +12,13 @@ import com.boliao.eod.components.ai.FsmPlayer;
 import com.boliao.eod.components.ai.SteeringArrive;
 import com.boliao.eod.components.ai.SteeringPursue;
 import com.boliao.eod.components.collision.Collider;
+import com.boliao.eod.components.render.PrimitiveHealthPlayer;
 import com.boliao.eod.components.render.SpriteHealth;
 import com.boliao.eod.components.render.Sprite;
 import com.boliao.eod.components.render.SpriteBam;
+import com.boliao.eod.components.render.SpriteHealthPlayer;
 import com.boliao.eod.components.render.SpriteInput;
+import com.boliao.eod.components.render.SpritePlusOne;
 import com.boliao.eod.components.render.SpriteSheetBug;
 import com.boliao.eod.components.render.SpriteSheetPlayer;
 
@@ -57,18 +60,28 @@ public class PlayScreen implements Screen {
     }
 
     public void init() {
-        // init house
-        GameObject house = new GameObject("house");
-        gameObjects.add(house);
-        house.addComponent(new Transform(SETTINGS.HOUSE_POS_X, SETTINGS.HOUSE_POS_Y, 0));
-        house.addComponent(new Sprite("sprites/house.png", SETTINGS.HOUSE_SIZE));
-        house.init();
 
         // init block
-        GameObject block = new GameObject("block");
+        GameObject block = new GameObject("block1");
         gameObjects.add(block);
         block.addComponent(new Transform(SETTINGS.BLOCK_POS_X, SETTINGS.BLOCK_POS_Y, 0));
         block.addComponent(new Sprite("sprites/block.png", SETTINGS.BLOCK_SIZE));
+        block.addComponent(new Collider());
+        block.init();
+
+        // init block
+        block = new GameObject("block2");
+        gameObjects.add(block);
+        block.addComponent(new Transform(SETTINGS.BLOCK_POS_X+200, SETTINGS.BLOCK_POS_Y+300, 0));
+        block.addComponent(new Sprite("sprites/block.png", 80));
+        block.addComponent(new Collider());
+        block.init();
+
+        // init block
+        block = new GameObject("block3");
+        gameObjects.add(block);
+        block.addComponent(new Transform(SETTINGS.BLOCK_POS_X-200, SETTINGS.BLOCK_POS_Y+500, 0));
+        block.addComponent(new Sprite("sprites/block.png", 100));
         block.addComponent(new Collider());
         block.init();
 
@@ -81,11 +94,15 @@ public class PlayScreen implements Screen {
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
         player.addComponent(new FsmPlayer());
-        player.addComponent(new Input(Input.InputType.TOUCH));
         player.addComponent(new SpriteInput("sprites/x.png"));
-        player.addComponent(new Health());
-        player.addComponent(new SpriteHealth("sprites/healthbar.png"));
+        player.addComponent(new Input(Input.InputType.TOUCH));
+        player.addComponent(new SpritePlusOne("sprites/plus1.png"));
+        player.addComponent(new Health(0.5f));
+        player.addComponent(new PrimitiveHealthPlayer());
         player.init();
+
+        // give player handle to gameState so that sensors can be linked to player stats
+        gameState.setPlayerHealth(player);
 
         // init spawn manager
         GameObject spawnMgr = new GameObject("SpawnMgr");
