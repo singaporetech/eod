@@ -1,0 +1,82 @@
+cockroach.png
+size: 512, 1152
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cockroach1
+  rotate: false
+  xy: 0, 0
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach2
+  rotate: false
+  xy: 256, 0
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach3
+  rotate: false
+  xy: 0, 192
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach4
+  rotate: false
+  xy: 256, 192
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach5
+  rotate: false
+  xy: 0, 384
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach6
+  rotate: false
+  xy: 256, 384
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach7-1
+  rotate: false
+  xy: 0, 576
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach7
+  rotate: false
+  xy: 256, 576
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach8
+  rotate: false
+  xy: 0, 768
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach9
+  rotate: false
+  xy: 256, 768
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+cockroach10
+  rotate: false
+  xy: 0, 960
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
