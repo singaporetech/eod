@@ -93,12 +93,15 @@ public class PlayScreen implements Screen {
         player.addComponent(new Collider(false, false));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
+        player.addComponent(new SteeringPursue(null));
         player.addComponent(new FsmPlayer());
         player.addComponent(new SpriteInput("sprites/x.png"));
         player.addComponent(new Input(Input.InputType.TOUCH));
         player.addComponent(new SpritePlusOne("sprites/plus1.png"));
         player.addComponent(new Health(0.5f));
         player.addComponent(new PrimitiveHealthPlayer());
+        player.addComponent(new SpriteBam("sprites/bam.png"));
+        player.addComponent(new Combat(null, SETTINGS.PLAYER_DMG));
         player.init();
 
         // give player handle to gameState so that sensors can be linked to player stats

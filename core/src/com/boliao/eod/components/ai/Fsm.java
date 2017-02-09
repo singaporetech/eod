@@ -98,8 +98,6 @@ public abstract class Fsm extends Component {
                 spriteSheet.onAnimation(SpriteSheet.Sequence.MELEE);
                 break;
             case DESTRUCT:
-                Game.i().pause();
-                RenderEngine.i().showEndGameMenu();
                 break;
             case BUILD:
                 break;

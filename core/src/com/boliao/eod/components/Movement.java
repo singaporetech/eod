@@ -46,6 +46,10 @@ public class Movement extends Component {
         return vel;
     }
 
+    public void faceTargetPos(Vector2 pos) {
+        transform.setForward(pos.sub(transform.getPos()).nor());
+    }
+
     public void move(float delta, Vector2 force) {
         // calc acc
         Vector2 acc = new Vector2(force);

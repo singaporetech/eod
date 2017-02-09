@@ -70,6 +70,7 @@ public abstract class Steering extends Component {
             //todo: see whether got more elegant way to accurately stop near touch point
             //transform.setPos(destPos);
             // face the destPos
+            movement.faceTargetPos(destPos);
 
             // face the destination
             // todo: need to gradually turn to face destPos (now simply increase STOP_RAD

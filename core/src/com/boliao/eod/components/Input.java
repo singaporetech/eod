@@ -25,6 +25,8 @@ public class Input extends Component{
     private Vector3 worldPos3D = new Vector3();
     private Vector2 worldPos2D = new Vector2();
 
+    private GameObject pickedBug = null;
+
     public Input(InputType type) {
         super("Input");
 
@@ -53,7 +55,8 @@ public class Input extends Component{
         switch (type) {
             case TOUCH:
                 if (Gdx.input.isTouched()) {
-                    return processPos(Gdx.input.getX(), Gdx.input.getY());
+                    processPos(Gdx.input.getX(), Gdx.input.getY());
+                    return true;
                 }
                 break;
         }
@@ -64,27 +67,38 @@ public class Input extends Component{
         switch (type) {
             case TOUCH:
                 if (Gdx.input.justTouched()) {
-                    return processPos(Gdx.input.getX(), Gdx.input.getY());
+                    processPos(Gdx.input.getX(), Gdx.input.getY());
+                    return true;
                 }
                 break;
         }
         return false;
     }
 
-    private boolean processPos(int x, int y) {
+    private void processPos(int x, int y) {
         // set all pos
         screenPos3D.set(x, y, 0);
         worldPos3D.set(screenPos3D);
         RenderEngine.i().getCam().unproject(worldPos3D);
         worldPos2D.set(worldPos3D.x, worldPos3D.y);
 
-        // check collisions and set visuals
-        if (CollisionEngine.i().isFreeOfCollisions(worldPos2D)) {
+        // get collided game object with this position
+        pickedBug = CollisionEngine.i().getObjectCollidedWithPos(worldPos2D);
+
+        // check if it's a walkable position
+        if (pickedBug == null) {
             spriteInput.reset();
             spriteInput.setPos(worldPos2D);
-            return true;
         }
-        return false;
+
+        // check whether it's actually a bug that's picked
+        else if (!pickedBug.getName().contains("bug")) {
+            pickedBug = null;
+        }
+    }
+
+    public GameObject getPickedBug() {
+        return pickedBug;
     }
 
     public Vector2 getWorldPos2D() {

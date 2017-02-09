@@ -20,14 +20,15 @@ public class Combat extends Component{
     Health targetHealth;
     Transform targetTransform;
 
-    protected float dmg = SETTINGS.BUG_DMG;
+    protected float dmg;
     protected float delayTime = SETTINGS.ATTACK_DELAY_TIME;
     protected float timeElapsed = 0;
 
-    public Combat(GameObject targetGO) {
+    public Combat(GameObject targetGO, float dmg) {
         super("Combat");
 
         this.targetGO = targetGO;
+        this.dmg = dmg;
         disable();
     }
 
@@ -38,6 +39,15 @@ public class Combat extends Component{
         transform = (Transform) owner.getComponent("Transform");
         spriteSheet = (SpriteSheet) owner.getComponent("SpriteSheet");
         spriteBam = (SpriteBam) owner.getComponent("SpriteBam");
+
+        if (targetGO != null) {
+            targetTransform = (Transform) targetGO.getComponent("Transform");
+            targetHealth = (Health) targetGO.getComponent("Health");
+        }
+    }
+
+    public void setTarget(GameObject targetGO) {
+        this.targetGO = targetGO;
         targetTransform = (Transform) targetGO.getComponent("Transform");
         targetHealth = (Health) targetGO.getComponent("Health");
     }
@@ -54,12 +64,12 @@ public class Combat extends Component{
                 spriteBam.reset();
                 timeElapsed = 0;
             }
-        }
 
-        // fade sprite and set position
-        spriteBam.setPos(targetTransform.getPos());
-        if (spriteBam.getAlpha() > 0) {
-            spriteBam.shrinkAndFade(delta, SETTINGS.BAM_FADEOUT_DECREMENT);
+            // fade sprite and set position
+            spriteBam.setPos(targetTransform.getPos());
+            if (spriteBam.getAlpha() > 0) {
+                spriteBam.shrinkAndFade(delta, SETTINGS.BAM_FADEOUT_DECREMENT);
+            }
         }
     }
 }

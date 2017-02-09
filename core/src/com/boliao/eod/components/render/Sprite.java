@@ -21,12 +21,12 @@ public class Sprite extends Component implements Renderable {
     protected float alpha = 1;
     protected float scale = 1;
 
-    public Sprite(String name, String spritePath, int sizeX, int sizeY) {
+    public Sprite(String name, String spritePath, int width, int height) {
         super(name);
 
         // init sprite
         sprite = new com.badlogic.gdx.graphics.g2d.Sprite(new Texture(spritePath));
-        sprite.setSize(sizeX, sizeY);
+        sprite.setSize(width, height);
         //sprite.setScale(0.1f);
         sprite.setOriginCenter();
     }
@@ -40,7 +40,7 @@ public class Sprite extends Component implements Renderable {
     }
 
     public Sprite(String spritePath) {
-        this(spritePath, SETTINGS.SPRITE_SIZE);
+        this(spritePath, SETTINGS.SPRITE_WIDTH, SETTINGS.SPRITE_HEIGHT);
     }
 
     @Override

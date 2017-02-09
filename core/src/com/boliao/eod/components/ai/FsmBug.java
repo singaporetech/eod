@@ -39,34 +39,48 @@ public class FsmBug extends Fsm {
                 break;
 
             case PURSUE:
-                // todo: conditions to be a class for reuse
-                avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
-                if (avoidTarget != null) {
-                    Gdx.app.log(TAG, "COLLISION DETECTED");
-                    transit(StateType.COLLISION_RESPONSE);
+                // tothink: this is an alarm condition, need HFSM to resolve...
+                if (health.isEmpty()) {
+                    transit(StateType.DESTRUCT);
                 }
-                else if (steering.reachedDestPos()) {
-                    Gdx.app.log(TAG, "REACHED TARGET");
-                    transit(StateType.ATTACK);
+                else {
+                    // todo: conditions to be a class for reuse
+                    avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
+                    if (avoidTarget != null) {
+                        Gdx.app.log(TAG, "COLLISION DETECTED");
+                        transit(StateType.COLLISION_RESPONSE);
+                    } else if (steering.reachedDestPos()) {
+                        Gdx.app.log(TAG, "REACHED TARGET");
+                        transit(StateType.ATTACK);
+                    }
                 }
                 break;
 
             case COLLISION_RESPONSE:
-                avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
-                if (avoidTarget == null) {
-                    Gdx.app.log(TAG, "NO MORE COLLISIONS");
-                    transit(StateType.PURSUE);
+                if (health.isEmpty()) {
+                    transit(StateType.DESTRUCT);
                 }
-                else if (steering.reachedDestPos()) {
-                    Gdx.app.log(TAG, "REACHED COLLISION AVOID TARGET");
-                    transit(StateType.PURSUE);
+                else {
+                    avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
+                    if (avoidTarget == null) {
+                        Gdx.app.log(TAG, "NO MORE COLLISIONS");
+                        transit(StateType.PURSUE);
+                    } else if (steering.reachedDestPos()) {
+                        Gdx.app.log(TAG, "REACHED COLLISION AVOID TARGET");
+                        transit(StateType.PURSUE);
+                    }
                 }
                 break;
 
             case ATTACK:
-                if (((SteeringPursue)steering).targetGotAway()) {
-                    Gdx.app.log(TAG, "ATTACK TARGET GOT AWAY");
-                    transit(StateType.PURSUE);
+                if (health.isEmpty()) {
+                    transit(StateType.DESTRUCT);
+                }
+                else {
+                    if (((SteeringPursue) steering).targetGotAway()) {
+                        Gdx.app.log(TAG, "ATTACK TARGET GOT AWAY");
+                        transit(StateType.PURSUE);
+                    }
                 }
                 break;
 
@@ -74,7 +88,9 @@ public class FsmBug extends Fsm {
                 break;
 
             case DESTRUCT:
-                Gdx.app.log(TAG, "Destroying");
+                Gdx.app.log(TAG, "Destroying " + owner.getName());
+                spriteSheet.onAnimation(SpriteSheet.Sequence.DESTRUCT, false);
+                //todo: destroy object on finish animation
                 break;
 
             default:

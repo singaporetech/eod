@@ -29,15 +29,21 @@ public class SteeringPursue extends SteeringArrive {
         super.init(owner);
 
         //set target transform
-        targetTransform = (Transform) targetGO.getComponent("Transform");
+        if (targetGO != null) {
+            setTarget(targetGO);
+        }
+    }
 
-        destPos.set(targetTransform.getPos());
-        updateDirAndDist();
+    public void setTarget(GameObject targetGO) {
+        if (!targetGO.equals(this.targetGO)) {
+            this.targetGO = targetGO;
+        }
+        targetTransform = (Transform) targetGO.getComponent("Transform");
+        setDestPos(targetTransform.getPos());
     }
 
     public boolean targetGotAway() {
-        destPos.set(targetTransform.getPos());
-        updateDirAndDist();
+        setDestPos(targetTransform.getPos());
         if (dist > SETTINGS.MELEE_RANGE) {
             return true;
         }

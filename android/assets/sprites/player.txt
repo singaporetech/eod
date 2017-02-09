@@ -1,26 +1,61 @@
 player.png
-size: 1536, 512
+size: 2048, 192
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 player1
   rotate: false
   xy: 0, 0
-  size: 512, 512
-  orig: 512, 512
+  size: 256, 192
+  orig: 256, 192
   offset: 0, 0
   index: -1
 player2
   rotate: false
-  xy: 512, 0
-  size: 512, 512
-  orig: 512, 512
+  xy: 256, 0
+  size: 256, 192
+  orig: 256, 192
   offset: 0, 0
   index: -1
 player3
   rotate: false
+  xy: 512, 0
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+player4
+  rotate: false
+  xy: 768, 0
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+player5-1
+  rotate: false
   xy: 1024, 0
-  size: 512, 512
-  orig: 512, 512
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+player5
+  rotate: false
+  xy: 1280, 0
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+player6-2
+  rotate: false
+  xy: 1536, 0
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+player6
+  rotate: false
+  xy: 1792, 0
+  size: 256, 192
+  orig: 256, 192
   offset: 0, 0
   index: -1

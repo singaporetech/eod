@@ -35,6 +35,14 @@ public class SpawnMgr extends Component {
         this.player = player;
     }
 
+    @Override
+    public void init(GameObject owner) {
+        super.init(owner);
+
+        spawn();
+
+    }
+
     public void spawn() {
         GameObject bug;
 
@@ -42,11 +50,11 @@ public class SpawnMgr extends Component {
             bug = new GameObject("bug"+i);
             gameObjects.add(bug);
             bug.addComponent(new Transform(spawnPosX, SETTINGS.BUG_POS_Y, 50));
-            bug.addComponent(new SpriteSheetBug("sprites/bug1.txt"));
+            bug.addComponent(new SpriteSheetBug("sprites/cockroach.txt"));
             bug.addComponent(new Movement(SETTINGS.SPEED_BUG));
             bug.addComponent(new Collider(false, false));
             bug.addComponent(new SteeringPursue(player));
-            bug.addComponent(new Combat(player));
+            bug.addComponent(new Combat(player, SETTINGS.BUG_DMG));
             bug.addComponent(new Health());
             bug.addComponent(new SpritePlusOne("sprites/plus1.png")); //todo: decouple this from primitive health
             bug.addComponent(new PrimitiveHealth());
@@ -77,9 +85,9 @@ public class SpawnMgr extends Component {
         super.update(delta);
 
         // spawn when night arrives
-        if (GameState.i().isCanSpawn()) {
-            spawn();
-        }
+//        if (GameState.i().isCanSpawn()) {
+//            spawn();
+//        }
 
         // process game object updates
         for (GameObject go: gameObjects) {
