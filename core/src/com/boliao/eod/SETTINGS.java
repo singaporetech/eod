@@ -60,6 +60,7 @@ public final class SETTINGS {
     public static final float COLLISION_TARGET_OFFSET = SPRITE_WIDTH + 30.0f;
 
     public static final float ANIM_FRAME_TIME = 0.12f;
+    public static final float GC_DURATION = 10f;
     public static final float X_FADEOUT_DECREMENT = 1.5f;
     public static final float PLUSONE_FADEOUT_DECREMENT = 0.8f;
     public static final float ATTACK_DELAY_TIME = 0.6f;
@@ -69,4 +70,5 @@ public final class SETTINGS {
     public static final float PLAYER_DMG = 10f;
     public static final float PLAYER_HP = 100f;
     public static final float HP_HEAL_AMT_STEPS = 1f;
+    public static final float DESTRUCTED_ALPHA = 0.5f;
 }

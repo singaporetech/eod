@@ -270,5 +270,9 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     @Override
     public void finalize() {
         super.finalize();
+
+        // remove to collision engine
+        CollisionEngine.i().removeCollidable(this);
+        RenderEngine.i().removeRenderableDebug(this);
     }
 }

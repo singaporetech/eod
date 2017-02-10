@@ -113,14 +113,18 @@ public class Sprite extends Component implements Renderable {
 
     @Override
     public void update(float delta) {
-        // follow transforms position
-        //sprite.setPosition(transform.getX(), transform.getY());
-        sprite.setRotation(transform.getRot());
-        sprite.setCenter(transform.getX(), transform.getY());
+        if (isActive) {
+            // follow transforms position
+            //sprite.setPosition(transform.getX(), transform.getY());
+            sprite.setRotation(transform.getRot());
+            sprite.setCenter(transform.getX(), transform.getY());
+        }
     }
 
     public void draw() {
-        sprite.draw(RenderEngine.i().getSpriteBatch());
+        if (isActive) {
+            sprite.draw(RenderEngine.i().getSpriteBatch());
+        }
     }
 
     @Override
@@ -129,5 +133,8 @@ public class Sprite extends Component implements Renderable {
 
         // opengl textures are not auto deleted
         sprite.getTexture().dispose();
+
+        // remove from render engine
+        RenderEngine.i().removeRenderable(this);
     }
 }

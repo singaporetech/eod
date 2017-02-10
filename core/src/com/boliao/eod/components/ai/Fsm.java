@@ -5,11 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
+import com.boliao.eod.SETTINGS;
 import com.boliao.eod.components.Combat;
 import com.boliao.eod.components.Health;
 import com.boliao.eod.components.collision.Collider;
 import com.boliao.eod.components.Component;
 import com.boliao.eod.components.Movement;
+import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteSheet;
 import com.boliao.eod.components.Transform;
 
@@ -30,6 +32,7 @@ public abstract class Fsm extends Component {
     protected Movement movement;
     protected Steering steering;
     protected SpriteSheet spriteSheet;
+    protected SpriteBam spriteBam;
     protected Combat combat;
     protected Health health;
 
@@ -58,6 +61,7 @@ public abstract class Fsm extends Component {
         movement = (Movement) owner.getComponent("Movement");
         combat = (Combat) owner.getComponent("Combat");
         health = (Health) owner.getComponent("Health");
+        spriteBam = (SpriteBam) owner.getComponent("SpriteBam");
         //todo: need to assert all components not null
     }
 
@@ -98,6 +102,10 @@ public abstract class Fsm extends Component {
                 spriteSheet.onAnimation(SpriteSheet.Sequence.MELEE);
                 break;
             case DESTRUCT:
+                spriteSheet.onAnimation(SpriteSheet.Sequence.DESTRUCT, false);
+                spriteSheet.setAlpha(SETTINGS.DESTRUCTED_ALPHA);
+                owner.setDestroyed();
+                //todo: destroy object on finish animation
                 break;
             case BUILD:
                 break;
@@ -121,6 +129,10 @@ public abstract class Fsm extends Component {
                 movement.move(delta, steering.getBaseForce());
                 break;
             case ATTACK:
+                if (combat.isTargetDestroyed()) {
+                    combat.releaseTarget();
+                    transit(StateType.IDLE);
+                }
                 break;
             case DESTRUCT:
                 break;
@@ -148,6 +160,7 @@ public abstract class Fsm extends Component {
                 break;
             case ATTACK:
                 combat.disable();
+                spriteBam.disable();
                 spriteSheet.offAnimation();
                 break;
             case DESTRUCT:

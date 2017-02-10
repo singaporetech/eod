@@ -45,9 +45,6 @@ public class SpriteSheet extends Component implements Renderable {
             //sprite.setScale(0.1f);
             sprite.setOriginCenter();
         }
-
-        // add to render engine
-        RenderEngine.i().addRenderable(this);
     }
 
     public SpriteSheet(String name, String spritePath, int size) {
@@ -68,13 +65,15 @@ public class SpriteSheet extends Component implements Renderable {
 
         // setup links
         transform = (Transform) owner.getComponent("Transform");
+
+        // add to render engine
+        RenderEngine.i().addRenderable(this);
     }
 
     @Override
     public Rectangle getBoundingBox() {
         return currSprite.getBoundingRectangle();
     }
-
 
     public void setSequence(Sequence seq) {
         this.sequence = seq;
@@ -90,6 +89,12 @@ public class SpriteSheet extends Component implements Renderable {
                 break;
         }
         currSpriteIndex = startFrame;
+    }
+
+    public void setAlpha(float alpha) {
+        for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
+            sprite.setAlpha(alpha);
+        }
     }
 
     @Override
@@ -110,6 +115,7 @@ public class SpriteSheet extends Component implements Renderable {
                         currSpriteIndex = startFrame;
                     }
                     else {
+                        --currSpriteIndex;
                         isAnimated = false;
                     }
                 }
@@ -146,5 +152,8 @@ public class SpriteSheet extends Component implements Renderable {
         for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
             sprite.getTexture().dispose();
         }
+        
+        // remove from render engine
+        RenderEngine.i().removeRenderable(this);
     }
 }

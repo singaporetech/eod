@@ -52,12 +52,24 @@ public class Combat extends Component{
         targetHealth = (Health) targetGO.getComponent("Health");
     }
 
+    public void releaseTarget() {
+        disable();
+        targetGO = null ;
+        targetTransform = null;
+        targetHealth = null;
+    }
+
+    public boolean isTargetDestroyed() {
+        return (targetHealth == null) || targetHealth.isEmpty();
+    }
+
     @Override
     public void update(float delta) {
         super.update(delta);
         //Gdx.app.log(TAG, "timeElapsed=" + timeElapsed + " delta=" + delta);
 
-        if (isActive) {
+        // need to recheck targethealth == null as sometimes fsm not fast enough to detect player destroyed
+        if (isActive && (targetHealth != null)) {
             timeElapsed += delta;
             if (timeElapsed >= delayTime) {
                 targetHealth.hit(dmg);

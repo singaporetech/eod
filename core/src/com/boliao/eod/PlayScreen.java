@@ -39,10 +39,7 @@ public class PlayScreen implements Screen {
     com.boliao.eod.GameState gameState = com.boliao.eod.GameState.i();
 
     // game objects list
-    List<GameObject> gameObjects;
-
-    // Renderables list
-    List<com.boliao.eod.components.render.Renderable> renderables;
+    protected List<GameObject> gameObjects;
 
     // Tiled stuff
 //    private TiledMap map;
@@ -175,5 +172,9 @@ public class PlayScreen implements Screen {
         for (GameObject go: gameObjects) {
             go.finalize();
         }
+    }
+
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
     }
 }

@@ -18,6 +18,7 @@ public class Health extends Component {
 
     protected float maxHp = SETTINGS.PLAYER_HP;
     protected float hp = maxHp;
+    protected float gcTime = SETTINGS.GC_DURATION; // when this expires, garbage collected
 
     public Health(float startHpScale) {
         super("Health");
@@ -63,6 +64,14 @@ public class Health extends Component {
     @Override
     public void update(float delta) {
         super.update(delta);
+
+        // flag to be destroyed after timer expires
+        if (isEmpty()) {
+            gcTime -= delta;
+            if (gcTime <= 0) {
+                owner.setDestroyed();
+            }
+        }
 
         // do fade out animation for sprite
         if (spritePlusOne.getAlpha() > 0) {

@@ -1,5 +1,6 @@
 package com.boliao.eod.components;
 
+import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.GameState;
 import com.boliao.eod.SETTINGS;
@@ -13,6 +14,8 @@ import com.boliao.eod.components.render.SpriteSheetBug;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.print.attribute.SetOfIntegerSyntax;
 
 /**
  * Created by mrboliao on 6/2/17.
@@ -40,7 +43,6 @@ public class SpawnMgr extends Component {
         super.init(owner);
 
         spawn();
-
     }
 
     public void spawn() {
@@ -85,9 +87,19 @@ public class SpawnMgr extends Component {
         super.update(delta);
 
         // spawn when night arrives
-//        if (GameState.i().isCanSpawn()) {
-//            spawn();
-//        }
+        if (GameState.i().isCanSpawn()) {
+            spawn();
+        }
+
+        // garbage collection
+        // - delete one at a time
+        for (GameObject go: gameObjects) {
+            if (go.isDestroyed()) {
+                go.finalize();
+                gameObjects.remove(go);
+                break;
+            }
+        }
 
         // process game object updates
         for (GameObject go: gameObjects) {

@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
+import com.boliao.eod.SETTINGS;
+import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteSheet;
 
 /**
@@ -88,9 +90,7 @@ public class FsmBug extends Fsm {
                 break;
 
             case DESTRUCT:
-                Gdx.app.log(TAG, "Destroying " + owner.getName());
-                spriteSheet.onAnimation(SpriteSheet.Sequence.DESTRUCT, false);
-                //todo: destroy object on finish animation
+                //Gdx.app.log(TAG, "Destroying " + owner.getName());
                 break;
 
             default:

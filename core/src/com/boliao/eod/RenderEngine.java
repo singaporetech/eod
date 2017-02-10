@@ -80,9 +80,15 @@ public class RenderEngine implements Engine{
     public void addRenderable(Renderable r) {
         renderables.add(r);
     }
+    public void removeRenderable(Renderable r) {
+        renderables.remove(r);
+    }
 
     public void addRenderableDebug(RenderableDebug r) {
         renderableDebugs.add(r);
+    }
+    public void removeRenderableDebug(RenderableDebug r) {
+        renderableDebugs.remove(r);
     }
 
     public void setCam (Camera cam) {

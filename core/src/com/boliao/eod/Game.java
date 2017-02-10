@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Timer;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Game extends com.badlogic.gdx.Game {
     private static final String TAG = "Game";
@@ -37,6 +38,10 @@ public class Game extends com.badlogic.gdx.Game {
                 gameState.decTimer();
             }
         }, 1, 1);
+    }
+
+    public List<GameObject> getGameObjects() {
+        return playScreen.getGameObjects();
     }
 
     public void restart() {

@@ -88,6 +88,10 @@ public class CollisionEngine implements Engine {
         collidables.add(c);
     }
 
+    public void removeCollidable(Collidable c) {
+        collidables.remove(c);
+    }
+
     public void clearCollidables() {
         collidables.clear();
     }
