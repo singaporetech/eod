@@ -98,7 +98,7 @@ public class SpriteSheet extends Component implements Renderable {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         // set position
         for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
             sprite.setRotation(transform.getRot());
@@ -107,7 +107,7 @@ public class SpriteSheet extends Component implements Renderable {
 
         // do animation
         if (isAnimated) {
-            animationElapsedTime += delta;
+            animationElapsedTime += dt;
             if (animationElapsedTime > SETTINGS.ANIM_FRAME_TIME) {
                 ++currSpriteIndex;
                 if (currSpriteIndex > endFrame) {

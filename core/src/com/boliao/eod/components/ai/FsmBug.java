@@ -29,8 +29,8 @@ public class FsmBug extends Fsm {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
 
         Vector2 avoidTarget;
 

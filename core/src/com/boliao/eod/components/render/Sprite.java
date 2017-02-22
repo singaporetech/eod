@@ -85,8 +85,8 @@ public class Sprite extends Component implements Renderable {
         sprite.setScale(scale);
     }
 
-    public void shrink(float dec, float delta) {
-        scale -= dec * delta;
+    public void shrink(float dec, float dt) {
+        scale -= dec * dt;
         if (scale < 0) {
             scale = 0;
         }
@@ -98,21 +98,21 @@ public class Sprite extends Component implements Renderable {
         setScale(1);
     }
 
-    public void fadeOut(float dec, float delta) {
-        alpha -= dec * delta;
+    public void fadeOut(float dec, float dt) {
+        alpha -= dec * dt;
         if (alpha < 0) {
             alpha = 0;
         }
         sprite.setAlpha(alpha);
     }
 
-    public void shrinkAndFade(float dec, float delta) {
-        shrink(dec, delta);
-        fadeOut(dec, delta);
+    public void shrinkAndFade(float dec, float dt) {
+        shrink(dec, dt);
+        fadeOut(dec, dt);
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         if (isActive) {
             // follow transforms position
             //sprite.setPosition(transform.getX(), transform.getY());

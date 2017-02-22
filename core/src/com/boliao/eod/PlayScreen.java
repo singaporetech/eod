@@ -123,15 +123,15 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * The gameloop.
-     * @param delta
+     * 1. The gameloop.
+     * @param dt
      */
     @Override
-    public void render(float delta) {
+    public void render(float dt) {
         if (!paused) {
             // process game object updates
             for (GameObject go: gameObjects) {
-                go.update(delta);
+                go.update(dt);
             }
 
             // process collisions

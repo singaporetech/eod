@@ -83,8 +83,8 @@ public class SpawnMgr extends Component {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
 
         // spawn when night arrives
         if (GameState.i().isCanSpawn()) {
@@ -103,7 +103,7 @@ public class SpawnMgr extends Component {
 
         // process game object updates
         for (GameObject go: gameObjects) {
-            go.update(delta);
+            go.update(dt);
         }
     }
 

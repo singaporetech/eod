@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -37,13 +38,19 @@ public class RenderEngine implements Engine{
     protected ShapeRenderer shapeRenderer;
 
     @Override
-    public void init() {// camera
+    public void init() {
+        // create sprite drawer
         spriteBatch = new SpriteBatch();
+
+        // create camera
         cam = new OrthographicCamera();
-        hud = new Hud();
-        RenderEngine.i().setCam(cam);
+
+        // create viewport
         viewport = new FitViewport(SETTINGS.VIEWPORT_WIDTH, SETTINGS.VIEWPORT_HEIGHT, cam);
         cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
+
+        // create heads up display
+        hud = new Hud();
 
         // debug renderer
         initDebugRenderer();

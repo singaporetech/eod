@@ -19,7 +19,7 @@ public class SpriteHealthPlayer extends SpriteHealth {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         // no updates to pos, always fixed at top
     }
 }

@@ -62,9 +62,9 @@ public class GameObject {
         components.add(component);
     }
 
-    public void update(float delta) {
+    public void update(float dt) {
         for (Component c: components) {
-            c.update(delta);
+            c.update(dt);
         }
     }
 

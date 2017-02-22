@@ -14,7 +14,7 @@ public class SpriteBam extends Sprite implements Renderable {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         // NO FRAME UPDATES, changes only by request
     }
 }

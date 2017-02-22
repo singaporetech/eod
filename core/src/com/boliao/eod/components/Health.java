@@ -62,12 +62,12 @@ public class Health extends Component {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
 
         // flag to be destroyed after timer expires
         if (isEmpty()) {
-            gcTime -= delta;
+            gcTime -= dt;
             if (gcTime <= 0) {
                 owner.setDestroyed();
             }
@@ -75,7 +75,7 @@ public class Health extends Component {
 
         // do fade out animation for sprite
         if (spritePlusOne.getAlpha() > 0) {
-            spritePlusOne.shrinkAndFade(SETTINGS.PLUSONE_FADEOUT_DECREMENT, delta);
+            spritePlusOne.shrinkAndFade(SETTINGS.PLUSONE_FADEOUT_DECREMENT, dt);
             spritePlusOne.setPos(primitiveHealth.getRightEdgePos());
         }
     }

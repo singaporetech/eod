@@ -66,9 +66,9 @@ public abstract class Fsm extends Component {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         // act on current state
-        actCurrState(delta);
+        actCurrState(dt);
     }
 
     protected void transit(StateType targetState) {
@@ -114,19 +114,19 @@ public abstract class Fsm extends Component {
         }
     }
 
-    protected void actCurrState(float delta) {
+    protected void actCurrState(float dt) {
         switch(currState) {
             case IDLE:
                 break;
             case MOVE:
-                movement.move(delta, steering.getForce());
+                movement.move(dt, steering.getForce());
                 break;
             case PURSUE:
-                movement.move(delta, steering.getForce());
+                movement.move(dt, steering.getForce());
                 break;
             case COLLISION_RESPONSE:
                 // set steering target to off-object position and seek
-                movement.move(delta, steering.getBaseForce());
+                movement.move(dt, steering.getBaseForce());
                 break;
             case ATTACK:
                 if (combat.isTargetDestroyed()) {

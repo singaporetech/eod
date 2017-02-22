@@ -43,8 +43,8 @@ public abstract class Steering extends Component {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
     }
 
     public void setDestPos(float x, float y) {

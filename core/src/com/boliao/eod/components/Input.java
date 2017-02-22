@@ -42,12 +42,12 @@ public class Input extends Component{
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
 
         // do fade out animation for sprite
         if (spriteInput.getAlpha() > 0) {
-            spriteInput.shrinkAndFade(SETTINGS.X_FADEOUT_DECREMENT, delta);
+            spriteInput.shrinkAndFade(SETTINGS.X_FADEOUT_DECREMENT, dt);
         }
     }
 

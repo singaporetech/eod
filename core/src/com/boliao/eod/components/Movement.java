@@ -50,14 +50,14 @@ public class Movement extends Component {
         transform.setForward(pos.sub(transform.getPos()).nor());
     }
 
-    public void move(float delta, Vector2 force) {
+    public void move(float dt, Vector2 force) {
         // calc acc
         Vector2 acc = new Vector2(force);
         acc.scl(1/mass);
 
         // update vel
         if (acc.len2() > 0) {
-            vel.add(acc.scl(delta));
+            vel.add(acc.scl(dt));
 
             // clip to maxSpeed
             // todo: is this needed?
@@ -69,7 +69,7 @@ public class Movement extends Component {
 
             // update position
             Vector2 displacement = new Vector2(vel);
-            displacement.scl(delta);
+            displacement.scl(dt);
             transform.translate(displacement);
 
             // update rotation

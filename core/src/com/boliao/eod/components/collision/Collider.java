@@ -111,8 +111,8 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
 
         // bounding circle tp match transform position and rotation
         boundingCircle.setPosition(transform.getPos());

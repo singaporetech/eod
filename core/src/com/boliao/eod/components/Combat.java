@@ -64,13 +64,13 @@ public class Combat extends Component{
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
-        //Gdx.app.log(TAG, "timeElapsed=" + timeElapsed + " delta=" + delta);
+    public void update(float dt) {
+        super.update(dt);
+        //Gdx.app.log(TAG, "timeElapsed=" + timeElapsed + " dt=" + dt);
 
         // need to recheck targethealth == null as sometimes fsm not fast enough to detect player destroyed
         if (isActive && (targetHealth != null)) {
-            timeElapsed += delta;
+            timeElapsed += dt;
             if (timeElapsed >= delayTime) {
                 targetHealth.hit(dmg);
                 spriteBam.reset();
@@ -80,7 +80,7 @@ public class Combat extends Component{
             // fade sprite and set position
             spriteBam.setPos(targetTransform.getPos());
             if (spriteBam.getAlpha() > 0) {
-                spriteBam.shrinkAndFade(delta, SETTINGS.BAM_FADEOUT_DECREMENT);
+                spriteBam.shrinkAndFade(dt, SETTINGS.BAM_FADEOUT_DECREMENT);
             }
         }
     }

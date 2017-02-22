@@ -5,7 +5,7 @@ package com.boliao.eod;
  */
 
 public final class SETTINGS {
-    public static boolean IS_DEBUG = false;
+    public static boolean IS_DEBUG = true;
 
     public static final int SECS_IN_DAY = 10;
 
