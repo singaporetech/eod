@@ -73,7 +73,7 @@ public abstract class Steering extends Component {
             movement.faceTargetPos(destPos);
 
             // face the destination
-            // todo: need to gradually turn to face destPos (now simply increase STOP_RAD
+            // todo: option to gradually turn to face destPos (now simply increase STOP_RAD)
             //transform.rot = MathUtils.radiansToDegrees * (float) Math.atan2(dir.y, dir.x);
 
             return true;

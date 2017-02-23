@@ -11,6 +11,8 @@ import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+import java.util.List;
+
 public class AndroidLauncher extends AndroidApplication implements SensorEventListener {
     private static final String TAG = "AndroidLauncher";
 
@@ -29,15 +31,50 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        // get sensor manager and sensors
+        /**
+         * Sensors
+         * 1. Setting up sensors needed for the app.
+         */
+        // get handle to sensor device
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        // get list of all available sensors, along with some capability data
+        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        String sensorsStr = "available sensors:";
+        for (Sensor sensor: sensors) {
+            sensorsStr += "\n" + sensor.getName() +
+                    " madeBy=" + sensor.getVendor() +
+                    " v" + sensor.getVersion() +
+                    " minDelay=" + sensor.getMinDelay() +
+                    " maxRange=" + sensor.getMaximumRange() +
+                    " power=" + sensor.getPower();
+        }
+        Log.i(TAG, sensorsStr);
+
+        // get handles to required sensors
         stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        if (stepCounter == null) {
+            Log.e(TAG, "No step counter sensor on device!");
+            System.exit(1);
+        }
+        if (stepDetector == null) {
+            Log.e(TAG, "No step detector sensor on device!");
+            System.exit(1);
+        }
 
+        // init game
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(game, config);
 	}
 
+
+    /**
+     * Sensors
+     * 2. Implementing listener functions.
+     */
+    // callback when sensor has new values
+    @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.values.length > 0) {
             int val = (int) event.values[0];
@@ -48,27 +85,38 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
             }
             else if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
                 gameState.incSteps(val);
-                //mTextView.setText(gameState.steps + " steps taken");
             }
         }
     }
 
+    // callback when accuracy changes
+    @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+        Log.i(TAG, "sensor accuracy changed to " + accuracy);
     }
 
+    /**
+     * Sensors.
+     * 3. Registering listener to listen for sensor events.
+     */
+    @Override
     public void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, stepCounter, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_FASTEST);
+
+        // note that the DELAY is the max, and system normally lower
+        // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
+        sensorManager.registerListener(this, stepCounter, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME);
     }
 
+    @Override
     public void onStop() {
         super.onStop();
         sensorManager.unregisterListener(this, stepCounter);
         sensorManager.unregisterListener(this, stepDetector);
     }
 
+    @Override
     public void onPause() {
         super.onPause();
     }

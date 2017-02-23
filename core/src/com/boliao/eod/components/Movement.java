@@ -14,7 +14,10 @@ public class Movement extends Component {
     private Transform transform;
     private com.boliao.eod.components.collision.Collider collider;
 
+    private Vector2 acc = new Vector2();
     private Vector2 vel = new Vector2();
+    private Vector2 disp = new Vector2();
+    private Vector2 dir = new Vector2();
     private float mass = SETTINGS.MASS;
     private float speed = SETTINGS.SPEED_PLAYER; //todo: need to match the speed of steering
 
@@ -52,31 +55,30 @@ public class Movement extends Component {
 
     public void move(float dt, Vector2 force) {
         // calc acc
-        Vector2 acc = new Vector2(force);
-        acc.scl(1/mass);
+        acc.set(force).scl(1/mass);
 
         // update vel
         if (acc.len2() > 0) {
             vel.add(acc.scl(dt));
 
             // clip to maxSpeed
-            // todo: is this needed?
-//            if (vel.len2() > speed*speed)
-//                vel.nor().scl(speed);
+            // todo: evaluate the following code necessity
+            /*
+            if (vel.len2() > speed*speed)
+                vel.nor().scl(speed);
+            */
 
             // update collider
             collider.setCollisionVecLen(vel.len() * SETTINGS.COLLISION_FORWARD_LEN);
 
             // update position
-            Vector2 displacement = new Vector2(vel);
-            displacement.scl(dt);
-            transform.translate(displacement);
+            disp.set(vel).scl(dt);
+            transform.translate(disp);
 
             // update rotation
-            //if (vel.x != 0 && vel.y != 0) {
-                transform.setForward(new Vector2(vel).nor());
+            dir.set(vel).nor();
+            transform.setForward(dir);
 
-            //}
             //Gdx.app.log(TAG, "vel=" + vel + " acc=" + acc + " disp=" + displacement);
         }
         else {
