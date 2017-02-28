@@ -1,5 +1,6 @@
 package com.boliao.eod.components;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
@@ -53,20 +54,19 @@ public class Movement extends Component {
         transform.setForward(pos.sub(transform.getPos()).nor());
     }
 
+    /**
+     * AI: steering
+     * 2. Using the force to update position
+     * - don't forget your classical mechanics
+     * @return
+     */
     public void move(float dt, Vector2 force) {
         // calc acc
         acc.set(force).scl(1/mass);
 
-        // update vel
         if (acc.len2() > 0) {
+            // update vel
             vel.add(acc.scl(dt));
-
-            // clip to maxSpeed
-            // todo: evaluate the following code necessity
-            /*
-            if (vel.len2() > speed*speed)
-                vel.nor().scl(speed);
-            */
 
             // update collider
             collider.setCollisionVecLen(vel.len() * SETTINGS.COLLISION_FORWARD_LEN);

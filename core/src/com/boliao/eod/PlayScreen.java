@@ -82,6 +82,10 @@ public class PlayScreen implements Screen {
         block.addComponent(new Collider());
         block.init();
 
+        /**
+         * Physics: collisions
+         * 1. The collider component.
+         */
         // init human
         GameObject player = new GameObject("player");
         gameObjects.add(player);
@@ -126,8 +130,7 @@ public class PlayScreen implements Screen {
      * 1. The gameloop.
      * @param dt
      */
-    @Override
-    public void render(float dt) {
+    private void gameLoop(float dt) {
         if (!paused) {
             // process game object updates
             for (GameObject go: gameObjects) {
@@ -140,6 +143,11 @@ public class PlayScreen implements Screen {
 
         // process graphics
         RenderEngine.i().tick();
+    }
+
+    @Override
+    public void render(float dt) {
+        gameLoop(dt);
     }
 
     @Override

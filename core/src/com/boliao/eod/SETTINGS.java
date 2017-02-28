@@ -59,7 +59,7 @@ public final class SETTINGS {
 
     public static final float COLLISION_FORWARD_LEN = 0.7f;
     public static final float COLLISION_FORCE = 100000.0f;
-    public static final float COLLISION_VEC_OFFSET_DEG = 30.0f;
+    public static final float COLLISION_VEC_OFFSET_DEG = 50.0f;
     public static final float COLLISION_TARGET_OFFSET = SPRITE_WIDTH + 30.0f;
 
     public static final float ANIM_FRAME_TIME = 0.12f;

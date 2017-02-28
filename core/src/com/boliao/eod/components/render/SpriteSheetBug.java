@@ -12,6 +12,11 @@ public class SpriteSheetBug extends SpriteSheet {
         super("SpriteSheetBug", spritePath, SETTINGS.SPRITE_WIDTH, SETTINGS.SPRITE_HEIGHT);
     }
 
+    /**
+     * Graphics: 2D Graphics
+     * 2. Setting keyframes. (see actual cockroach.png/.txt and TexturePacker app)
+     * @param seq The keyframes.
+     */
     @Override
     public void setSequence(Sequence seq) {
         this.sequence = seq;

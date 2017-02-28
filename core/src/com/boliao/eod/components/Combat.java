@@ -1,5 +1,6 @@
 package com.boliao.eod.components;
 
+import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
 import com.boliao.eod.components.render.SpriteBam;
@@ -44,6 +45,10 @@ public class Combat extends Component{
             targetTransform = (Transform) targetGO.getComponent("Transform");
             targetHealth = (Health) targetGO.getComponent("Health");
         }
+    }
+
+    public Vector2 getTargetPos() {
+        return new Vector2(targetTransform.getPos());
     }
 
     public void setTarget(GameObject targetGO) {

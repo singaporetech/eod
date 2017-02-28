@@ -67,15 +67,6 @@ public abstract class Steering extends Component {
         //Gdx.app.log(TAG, "dist=" + dist + " pos=" + transform.pos + " destPos=" + destPos);
 
         if (dist < stopRadius) {
-            //todo: see whether got more elegant way to accurately stop near touch point
-            //transform.setPos(destPos);
-            // face the destPos
-            movement.faceTargetPos(destPos);
-
-            // face the destination
-            // todo: option to gradually turn to face destPos (now simply increase STOP_RAD)
-            //transform.rot = MathUtils.radiansToDegrees * (float) Math.atan2(dir.y, dir.x);
-
             return true;
         }
         else {

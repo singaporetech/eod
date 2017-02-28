@@ -39,7 +39,7 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         // get list of all available sensors, along with some capability data
-        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_STEP_DETECTOR);
         String sensorsStr = "available sensors:";
         for (Sensor sensor: sensors) {
             sensorsStr += "\n" + sensor.getName() +
@@ -52,6 +52,7 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
         Log.i(TAG, sensorsStr);
 
         // get handles to required sensors
+        // - if you want to show app only if user has the sensor, then do <uses-feature> in manifest
         stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         if (stepCounter == null) {
@@ -74,6 +75,7 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
      * 2. Implementing listener functions.
      */
     // callback when sensor has new values
+    // - do as minimal as possible (this is called VERY frequently)
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.values.length > 0) {
@@ -109,6 +111,8 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME);
     }
 
+    // sensors are only "switched off" when app stops
+    // - to save battery sensors should be off onPause (i.e., screen off)
     @Override
     public void onStop() {
         super.onStop();

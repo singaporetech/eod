@@ -98,6 +98,7 @@ public abstract class Fsm extends Component {
                 spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case ATTACK:
+                movement.faceTargetPos(combat.getTargetPos());
                 combat.enable();
                 spriteSheet.onAnimation(SpriteSheet.Sequence.MELEE);
                 break;

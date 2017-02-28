@@ -97,6 +97,11 @@ public class SpriteSheet extends Component implements Renderable {
         }
     }
 
+    /**
+     * Graphics: 2D Graphics
+     * 1. Looping keyframes.
+     * @param dt
+     */
     @Override
     public void update(float dt) {
         // set position

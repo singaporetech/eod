@@ -28,6 +28,11 @@ public class FsmBug extends Fsm {
         steering = (Steering) owner.getComponent("SteeringPursue");
     }
 
+    /**
+     * AI: decision making
+     * 1. transition switch cases.
+     * @param dt
+     */
     @Override
     public void update(float dt) {
         super.update(dt);
@@ -47,6 +52,7 @@ public class FsmBug extends Fsm {
                 }
                 else {
                     // todo: conditions to be a class for reuse
+                    // this will check whether near obstacle using steering collision technique
                     avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
                     if (avoidTarget != null) {
                         Gdx.app.log(TAG, "COLLISION DETECTED");
