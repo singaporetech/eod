@@ -1,5 +1,6 @@
 package com.boliao.eod.components.render;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -29,6 +30,11 @@ public class Sprite extends Component implements Renderable {
         sprite.setSize(width, height);
         //sprite.setScale(0.1f);
         sprite.setOriginCenter();
+    }
+
+    public Sprite(String name, String spritePath, int width, int height, float r, float g, float b, float a) {
+        this(name, spritePath, width, height);
+        sprite.setColor(new Color(r, g, b, a));
     }
 
     public Sprite(String spritePath, int sizeX, int sizeY) {
@@ -107,8 +113,10 @@ public class Sprite extends Component implements Renderable {
     }
 
     public void shrinkAndFade(float dec, float dt) {
-        shrink(dec, dt);
-        fadeOut(dec, dt);
+        if (getAlpha() > 0) {
+            shrink(dec, dt);
+            fadeOut(dec, dt);
+        }
     }
 
     @Override

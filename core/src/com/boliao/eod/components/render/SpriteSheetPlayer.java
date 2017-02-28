@@ -22,7 +22,7 @@ public class SpriteSheetPlayer extends SpriteSheet {
 
             case MELEE:
                 startFrame = 3;
-                endFrame = 7;
+                endFrame = 8;
                 break;
         }
         currSpriteIndex = startFrame;

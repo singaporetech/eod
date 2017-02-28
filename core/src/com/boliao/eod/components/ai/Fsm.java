@@ -11,7 +11,6 @@ import com.boliao.eod.components.Health;
 import com.boliao.eod.components.collision.Collider;
 import com.boliao.eod.components.Component;
 import com.boliao.eod.components.Movement;
-import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteSheet;
 import com.boliao.eod.components.Transform;
 
@@ -32,7 +31,6 @@ public abstract class Fsm extends Component {
     protected Movement movement;
     protected Steering steering;
     protected SpriteSheet spriteSheet;
-    protected SpriteBam spriteBam;
     protected Combat combat;
     protected Health health;
 
@@ -61,7 +59,6 @@ public abstract class Fsm extends Component {
         movement = (Movement) owner.getComponent("Movement");
         combat = (Combat) owner.getComponent("Combat");
         health = (Health) owner.getComponent("Health");
-        spriteBam = (SpriteBam) owner.getComponent("SpriteBam");
         //todo: need to assert all components not null
     }
 
@@ -131,7 +128,7 @@ public abstract class Fsm extends Component {
                 break;
             case ATTACK:
                 if (combat.isTargetDestroyed()) {
-                    combat.releaseTarget();
+                    combat.disable();
                     transit(StateType.IDLE);
                 }
                 break;
@@ -161,7 +158,6 @@ public abstract class Fsm extends Component {
                 break;
             case ATTACK:
                 combat.disable();
-                spriteBam.disable();
                 spriteSheet.offAnimation();
                 break;
             case DESTRUCT:

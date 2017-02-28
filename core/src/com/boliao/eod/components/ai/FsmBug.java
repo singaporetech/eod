@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;
-import com.boliao.eod.components.render.SpriteBam;
 import com.boliao.eod.components.render.SpriteSheet;
 
 /**
@@ -41,8 +40,9 @@ public class FsmBug extends Fsm {
 
         switch (currState) {
             case IDLE:
-                Gdx.app.log(TAG, "SKIP IDLE");
-                transit(StateType.PURSUE);
+                if (combat.hasTarget()) {
+                    transit(StateType.PURSUE);
+                }
                 break;
 
             case PURSUE:

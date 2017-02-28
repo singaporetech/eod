@@ -143,6 +143,8 @@ public class SpriteSheet extends Component implements Renderable {
     public void offAnimation() {
         isAnimated = false;
         isRepeat = true;
+        currSpriteIndex = startFrame;
+        currSprite = sprites.get(currSpriteIndex);
     }
 
     public void draw() {
