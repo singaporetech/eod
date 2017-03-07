@@ -10,7 +10,7 @@ public final class SETTINGS {
     /*
      * 1. Steering: set longer
      */
-    public static final int SECS_IN_DAY = 30;
+    public static final int SECS_IN_DAY = 10;
 
     public static final int VIEWPORT_WIDTH = 720;
     public static final int VIEWPORT_HEIGHT = 1280;

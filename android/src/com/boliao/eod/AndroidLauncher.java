@@ -44,4 +44,20 @@ public class AndroidLauncher extends AndroidApplication {
 
         //Game.i().dispose();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // set app to active
+        GameState.i().setAppActive(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // set app to active
+        GameState.i().setAppActive(true);
+    }
 }

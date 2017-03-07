@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "com.boliao.eod"
-        minSdkVersion 9
+        minSdkVersion 23
         targetSdkVersion 25
     }
 }

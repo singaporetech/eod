@@ -13,11 +13,13 @@ public class GameState {
     private static GameState instance = new GameState();
 
     private boolean isServiceStarted = false;
+    private boolean isAppActive = true;
 
     private int steps;
     private int timer;
     private int numNights;
     private boolean canSpawn;
+    private boolean canNotify;
 
     private Health playerHealth = null;
 
@@ -40,13 +42,27 @@ public class GameState {
         return timer;
     }
 
+    /**
+     *
+     * @return whether can spawn
+     */
     public void decTimer() {
         //Gdx.app.log(TAG, "decTimer()");
         --timer;
         if (timer == 0) {
             incNumNights();
-            canSpawn = true;
+            canSpawn = canNotify = true;
             timer = SETTINGS.SECS_IN_DAY;
+        }
+    }
+
+    public boolean isCanNotify() {
+        if (canNotify) {
+            canNotify = false; // reset whenever return true
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -91,5 +107,13 @@ public class GameState {
 
     public void setServiceStarted(boolean serviceStarted) {
         isServiceStarted = serviceStarted;
+    }
+
+    public boolean isAppActive() {
+        return isAppActive;
+    }
+
+    public void setAppActive(boolean appActive) {
+        isAppActive = appActive;
     }
 }

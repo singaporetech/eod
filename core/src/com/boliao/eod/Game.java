@@ -8,8 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-// todo: investigate dissappearing BAM
-
 public class Game extends com.badlogic.gdx.Game {
     private static final String TAG = "Game";
 
@@ -30,6 +28,8 @@ public class Game extends com.badlogic.gdx.Game {
 
         playScreen = new PlayScreen();
         setScreen(playScreen);
+
+        restart();
     }
 
     public List<GameObject> getGameObjects() {
