@@ -1,5 +1,6 @@
 package com.boliao.eod;
 
+import com.badlogic.gdx.Gdx;
 import com.boliao.eod.components.Health;
 
 /**
@@ -7,7 +8,11 @@ import com.boliao.eod.components.Health;
  */
 
 public class GameState {
+    private static final String TAG = "GameState";
+
     private static GameState instance = new GameState();
+
+    private boolean isServiceStarted = false;
 
     private int steps;
     private int timer;
@@ -36,6 +41,7 @@ public class GameState {
     }
 
     public void decTimer() {
+        //Gdx.app.log(TAG, "decTimer()");
         --timer;
         if (timer == 0) {
             incNumNights();
@@ -77,5 +83,13 @@ public class GameState {
 
     public void setPlayerHealth(GameObject player) {
         playerHealth = (Health) player.getComponent("Health");
+    }
+
+    public boolean isServiceStarted() {
+        return isServiceStarted;
+    }
+
+    public void setServiceStarted(boolean serviceStarted) {
+        isServiceStarted = serviceStarted;
     }
 }

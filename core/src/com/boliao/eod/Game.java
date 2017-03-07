@@ -21,7 +21,6 @@ public class Game extends com.badlogic.gdx.Game {
 
     private PlayScreen playScreen;
     private GameState gameState = GameState.i();
-    Date today;
 
 	@Override
 	public void create () {
@@ -31,15 +30,6 @@ public class Game extends com.badlogic.gdx.Game {
 
         playScreen = new PlayScreen();
         setScreen(playScreen);
-
-        // decrease timer every sec
-        Timer timer = new Timer();
-        timer.scheduleTask(new Timer.Task() {
-            @Override
-            public void run() {
-                gameState.decTimer();
-            }
-        }, 1, 1);
     }
 
     public List<GameObject> getGameObjects() {
@@ -65,6 +55,7 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void dispose () {
+        Gdx.app.log(TAG, "in Game.dispose()");
         playScreen.dispose();
 
         CollisionEngine.i().finalize();

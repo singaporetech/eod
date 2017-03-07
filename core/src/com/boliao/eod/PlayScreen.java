@@ -30,21 +30,13 @@ import java.util.List;
  */
 
 public class PlayScreen implements Screen {
-    private final int CAMSPEED = 100;
-
     private boolean paused = false;
 
     // game singletons
-    Game game = Game.i();
     com.boliao.eod.GameState gameState = com.boliao.eod.GameState.i();
 
     // game objects list
     protected List<GameObject> gameObjects;
-
-    // Tiled stuff
-//    private TiledMap map;
-//    private TmxMapLoader mapLoader;
-//    private OrthogonalTiledMapRenderer mapRenderer;
 
     /**
      * Ctor.
@@ -83,6 +75,9 @@ public class PlayScreen implements Screen {
         block.init();
 
         /**
+         * Overview: Game Engines
+         * 1. The entity-component system.
+         *
          * Physics: collisions
          * 1. The collider component.
          */
@@ -113,15 +108,10 @@ public class PlayScreen implements Screen {
         gameObjects.add(spawnMgr);
         spawnMgr.addComponent(new SpawnMgr(player));
         spawnMgr.init();
-
-//        mapLoader = new TmxMapLoader();
-//        map = mapLoader.load("level0.tmx");
-//        mapRenderer = new OrthogonalTiledMapRenderer(map);
     }
 
     public void restart() {
         dispose();
-        gameObjects.clear();
 
         init();
     }
@@ -180,6 +170,7 @@ public class PlayScreen implements Screen {
         for (GameObject go: gameObjects) {
             go.finalize();
         }
+        gameObjects.clear();
     }
 
     public List<GameObject> getGameObjects() {
