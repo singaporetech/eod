@@ -40,7 +40,9 @@ public class Game extends com.badlogic.gdx.Game {
         RenderEngine.i().shutdownDebugRenderer();
         RenderEngine.i().clearRenderables();
         CollisionEngine.i().clearCollidables();
-        GameState.i().reset();
+
+        //TODO shift this elsewhere to allow reset when gameplay resets
+        //GameState.i().reset();
 
         Game.i().resume();
         playScreen.restart();

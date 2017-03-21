@@ -11,9 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.opengl.Visibility;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -22,7 +20,6 @@ import com.badlogic.gdx.utils.Timer;
 
 import java.util.List;
 
-import static android.app.Notification.DEFAULT_VIBRATE;
 import static android.app.Notification.VISIBILITY_PUBLIC;
 
 /**

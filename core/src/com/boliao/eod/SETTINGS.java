@@ -5,12 +5,12 @@ package com.boliao.eod;
  */
 
 public final class SETTINGS {
-    public static boolean IS_DEBUG = false;
+    public static boolean IS_DEBUG = true;
 
     /*
      * 1. Steering: set longer
      */
-    public static final int SECS_IN_DAY = 10;
+    public static final int SECS_IN_DAY = 60;
 
     public static final int VIEWPORT_WIDTH = 720;
     public static final int VIEWPORT_HEIGHT = 1280;
