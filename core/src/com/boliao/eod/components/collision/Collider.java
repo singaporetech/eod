@@ -28,7 +28,7 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     boolean isStatic = true;
     boolean isCollidable = true;
 
-    //Polygon boundingPolygon;
+    // bounding circle
     Circle boundingCircle;
     Vector2 collisionNorm = new Vector2(0, 0);
     Vector2 collisionAvoidTarget = new Vector2(0, 0);
@@ -68,9 +68,15 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         // setup links
         transform = (Transform) owner.getComponent("Transform");
 
-        // todo: do sprite sheet if no sprite, perhaps need a way to get only interface
+        // todo: do sprite sheet if no sprite, perhaps create common interface
         renderable = owner.getRenderable();
 
+        /**
+         * Physics: collisions
+         * 2. Create bounding circle around object dimensions.
+         * - also see update code below.
+         * - view the circles by enabling DEBUG in SETTINGS
+         */
         // init bounding circle
         Rectangle rect = renderable.getBoundingBox();
         boundingCircle = new Circle(transform.getPos(), rect.getWidth()/2);
@@ -111,8 +117,8 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
 
         // bounding circle tp match transform position and rotation
         boundingCircle.setPosition(transform.getPos());
@@ -262,6 +268,12 @@ public class Collider extends Component implements Collidable, RenderableDebug {
         return null;
     }
 
+    /**
+     * Phyics: collisions
+     * 3. Use functions provided by API to check circ-circ collisions.
+     * @param pos
+     * @return
+     */
     @Override
     public boolean collidedWithPos(Vector2 pos) {
         return boundingCircle.contains(pos);
@@ -270,5 +282,9 @@ public class Collider extends Component implements Collidable, RenderableDebug {
     @Override
     public void finalize() {
         super.finalize();
+
+        // remove to collision engine
+        CollisionEngine.i().removeCollidable(this);
+        RenderEngine.i().removeRenderableDebug(this);
     }
 }

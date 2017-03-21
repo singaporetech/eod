@@ -22,14 +22,16 @@ public class CollisionEngine implements Engine {
 
     public void tick() {
         // do collision responses to prevent overlapping objects
-        // todo: do quadtrees when things grow big
-//        for (Collidable c1: collidables) {
-//            for (Collidable c2: collidables) {
-//                if (c1 != c2 && c2.isStatic()) {
-//                    c1.checkCollisionAndRespond(c2);
-//                }
-//            }
-//        }
+        // todo: quadtrees when things grow big
+        /*
+        for (Collidable c1: collidables) {
+            for (Collidable c2: collidables) {
+                if (c1 != c2 && c2.isStatic()) {
+                    c1.checkCollisionAndRespond(c2);
+                }
+            }
+        }
+        */
     }
 
     @Override
@@ -86,6 +88,10 @@ public class CollisionEngine implements Engine {
 
     public void addCollidable(Collidable c) {
         collidables.add(c);
+    }
+
+    public void removeCollidable(Collidable c) {
+        collidables.remove(c);
     }
 
     public void clearCollidables() {

@@ -42,6 +42,7 @@ public class SteeringArrive extends SteeringSeek {
 
         // if close enough, save direction and return 0 force
         else if (dist < stopRadius) {
+            //movement.faceTargetPos(destPos);
             //Gdx.app.log(TAG, "IN STOP RAD: dist=" + dist + " force=" + force + " pos=" + transform.pos);
             return new Vector2(0, 0);
         }

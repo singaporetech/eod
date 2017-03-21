@@ -14,6 +14,7 @@ import java.util.List;
 
 public class GameObject {
     protected String name;
+    protected boolean isDestroyed = false;
     protected List<Component> components = new ArrayList<Component>();
 
     public GameObject (String name) {
@@ -61,14 +62,22 @@ public class GameObject {
         components.add(component);
     }
 
-    public void update(float delta) {
+    public void update(float dt) {
         for (Component c: components) {
-            c.update(delta);
+            c.update(dt);
         }
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setDestroyed() {
+        isDestroyed = true;
+    }
+
+    public boolean isDestroyed() {
+        return isDestroyed;
     }
 
     public void finalize() {

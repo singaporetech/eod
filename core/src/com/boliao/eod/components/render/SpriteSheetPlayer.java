@@ -9,7 +9,7 @@ import com.boliao.eod.SETTINGS;
 
 public class SpriteSheetPlayer extends SpriteSheet {
     public SpriteSheetPlayer(String spritePath) {
-        super("SpriteSheetPlayer", spritePath, SETTINGS.SPRITE_SIZE);
+        super("SpriteSheetPlayer", spritePath, SETTINGS.SPRITE_WIDTH, SETTINGS.SPRITE_HEIGHT);
     }
 
     public void setSequence(Sequence seq) {
@@ -21,8 +21,8 @@ public class SpriteSheetPlayer extends SpriteSheet {
                 break;
 
             case MELEE:
-                startFrame = 0;
-                endFrame = 2;
+                startFrame = 3;
+                endFrame = 8;
                 break;
         }
         currSpriteIndex = startFrame;

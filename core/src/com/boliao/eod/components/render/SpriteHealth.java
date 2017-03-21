@@ -18,7 +18,7 @@ public class SpriteHealth extends Sprite implements Renderable {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         sprite.setCenter(transform.getX(), transform.getY() + SETTINGS.HEALTHBAR_OFFSET_Y);
     }
 

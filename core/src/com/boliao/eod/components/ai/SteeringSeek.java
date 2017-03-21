@@ -19,6 +19,12 @@ public class SteeringSeek extends Steering {
         super (name);
     }
 
+    /**
+     * AI: steering
+     * 1. Calculating force for each frame.
+     * - goto Movement component for actually using this force
+     * @return
+     */
     @Override
     public Vector2 getForce() {
         // update direction and distance

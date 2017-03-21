@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -37,13 +38,19 @@ public class RenderEngine implements Engine{
     protected ShapeRenderer shapeRenderer;
 
     @Override
-    public void init() {// camera
+    public void init() {
+        // create sprite drawer
         spriteBatch = new SpriteBatch();
+
+        // create camera
         cam = new OrthographicCamera();
-        hud = new Hud();
-        RenderEngine.i().setCam(cam);
+
+        // create viewport
         viewport = new FitViewport(SETTINGS.VIEWPORT_WIDTH, SETTINGS.VIEWPORT_HEIGHT, cam);
         cam.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
+
+        // create heads up display
+        hud = new Hud();
 
         // debug renderer
         initDebugRenderer();
@@ -80,9 +87,15 @@ public class RenderEngine implements Engine{
     public void addRenderable(Renderable r) {
         renderables.add(r);
     }
+    public void removeRenderable(Renderable r) {
+        renderables.remove(r);
+    }
 
     public void addRenderableDebug(RenderableDebug r) {
         renderableDebugs.add(r);
+    }
+    public void removeRenderableDebug(RenderableDebug r) {
+        renderableDebugs.remove(r);
     }
 
     public void setCam (Camera cam) {
@@ -128,6 +141,7 @@ public class RenderEngine implements Engine{
 
     @Override
     public void finalize() {
+        clearRenderables();
         spriteBatch.dispose();
         shapeRenderer.dispose();
     }

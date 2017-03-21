@@ -1,5 +1,6 @@
 package com.boliao.eod.components.render;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -21,14 +22,19 @@ public class Sprite extends Component implements Renderable {
     protected float alpha = 1;
     protected float scale = 1;
 
-    public Sprite(String name, String spritePath, int sizeX, int sizeY) {
+    public Sprite(String name, String spritePath, int width, int height) {
         super(name);
 
         // init sprite
         sprite = new com.badlogic.gdx.graphics.g2d.Sprite(new Texture(spritePath));
-        sprite.setSize(sizeX, sizeY);
+        sprite.setSize(width, height);
         //sprite.setScale(0.1f);
         sprite.setOriginCenter();
+    }
+
+    public Sprite(String name, String spritePath, int width, int height, float r, float g, float b, float a) {
+        this(name, spritePath, width, height);
+        sprite.setColor(new Color(r, g, b, a));
     }
 
     public Sprite(String spritePath, int sizeX, int sizeY) {
@@ -40,7 +46,7 @@ public class Sprite extends Component implements Renderable {
     }
 
     public Sprite(String spritePath) {
-        this(spritePath, SETTINGS.SPRITE_SIZE);
+        this(spritePath, SETTINGS.SPRITE_WIDTH, SETTINGS.SPRITE_HEIGHT);
     }
 
     @Override
@@ -59,9 +65,13 @@ public class Sprite extends Component implements Renderable {
         return sprite.getBoundingRectangle();
     }
 
-    public void setPos(Vector2 pos) {
-        sprite.setCenter(pos.x, pos.y);
+    public void setPos(float x, float y) {
+        sprite.setCenter(x, y);
     }
+    public void setPos(Vector2 pos) {
+        setPos(pos.x, pos.y);
+    }
+
 
     public float getAlpha() {
         return alpha;
@@ -81,8 +91,8 @@ public class Sprite extends Component implements Renderable {
         sprite.setScale(scale);
     }
 
-    public void shrink(float dec, float delta) {
-        scale -= dec * delta;
+    public void shrink(float dec, float dt) {
+        scale -= dec * dt;
         if (scale < 0) {
             scale = 0;
         }
@@ -94,29 +104,35 @@ public class Sprite extends Component implements Renderable {
         setScale(1);
     }
 
-    public void fadeOut(float dec, float delta) {
-        alpha -= dec * delta;
+    public void fadeOut(float dec, float dt) {
+        alpha -= dec * dt;
         if (alpha < 0) {
             alpha = 0;
         }
         sprite.setAlpha(alpha);
     }
 
-    public void shrinkAndFade(float dec, float delta) {
-        shrink(dec, delta);
-        fadeOut(dec, delta);
+    public void shrinkAndFade(float dec, float dt) {
+        if (getAlpha() > 0) {
+            shrink(dec, dt);
+            fadeOut(dec, dt);
+        }
     }
 
     @Override
-    public void update(float delta) {
-        // follow transforms position
-        //sprite.setPosition(transform.getX(), transform.getY());
-        sprite.setRotation(transform.getRot());
-        sprite.setCenter(transform.getX(), transform.getY());
+    public void update(float dt) {
+        if (isActive) {
+            // follow transforms position
+            //sprite.setPosition(transform.getX(), transform.getY());
+            sprite.setRotation(transform.getRot());
+            sprite.setCenter(transform.getX(), transform.getY());
+        }
     }
 
     public void draw() {
-        sprite.draw(RenderEngine.i().getSpriteBatch());
+        if (isActive) {
+            sprite.draw(RenderEngine.i().getSpriteBatch());
+        }
     }
 
     @Override
@@ -125,5 +141,8 @@ public class Sprite extends Component implements Renderable {
 
         // opengl textures are not auto deleted
         sprite.getTexture().dispose();
+
+        // remove from render engine
+        RenderEngine.i().removeRenderable(this);
     }
 }

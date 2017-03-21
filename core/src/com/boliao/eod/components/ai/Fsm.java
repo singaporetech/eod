@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.Game;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
+import com.boliao.eod.SETTINGS;
 import com.boliao.eod.components.Combat;
 import com.boliao.eod.components.Health;
 import com.boliao.eod.components.collision.Collider;
@@ -62,9 +63,9 @@ public abstract class Fsm extends Component {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         // act on current state
-        actCurrState(delta);
+        actCurrState(dt);
     }
 
     protected void transit(StateType targetState) {
@@ -94,12 +95,15 @@ public abstract class Fsm extends Component {
                 spriteSheet.onAnimation(SpriteSheet.Sequence.RUN);
                 break;
             case ATTACK:
+                movement.faceTargetPos(combat.getTargetPos());
                 combat.enable();
                 spriteSheet.onAnimation(SpriteSheet.Sequence.MELEE);
                 break;
             case DESTRUCT:
-                Game.i().pause();
-                RenderEngine.i().showEndGameMenu();
+                spriteSheet.onAnimation(SpriteSheet.Sequence.DESTRUCT, false);
+                spriteSheet.setAlpha(SETTINGS.DESTRUCTED_ALPHA);
+                owner.setDestroyed();
+                //todo: destroy object on finish animation
                 break;
             case BUILD:
                 break;
@@ -108,21 +112,25 @@ public abstract class Fsm extends Component {
         }
     }
 
-    protected void actCurrState(float delta) {
+    protected void actCurrState(float dt) {
         switch(currState) {
             case IDLE:
                 break;
             case MOVE:
-                movement.move(delta, steering.getForce());
+                movement.move(dt, steering.getForce());
                 break;
             case PURSUE:
-                movement.move(delta, steering.getForce());
+                movement.move(dt, steering.getForce());
                 break;
             case COLLISION_RESPONSE:
                 // set steering target to off-object position and seek
-                movement.move(delta, steering.getBaseForce());
+                movement.move(dt, steering.getBaseForce());
                 break;
             case ATTACK:
+                if (combat.isTargetDestroyed()) {
+                    combat.disable();
+                    transit(StateType.IDLE);
+                }
                 break;
             case DESTRUCT:
                 break;

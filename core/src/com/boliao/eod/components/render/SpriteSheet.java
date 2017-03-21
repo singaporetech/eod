@@ -16,7 +16,7 @@ import com.boliao.eod.components.*;
 public class SpriteSheet extends Component implements Renderable {
     private static final String TAG = "SpriteSheet:C;R";
 
-    public enum Sequence {RUN, MELEE}
+    public enum Sequence {RUN, MELEE, DESTRUCT}
     protected Sequence sequence;
     protected int startFrame, endFrame;
 
@@ -26,14 +26,10 @@ public class SpriteSheet extends Component implements Renderable {
     protected com.badlogic.gdx.graphics.g2d.Sprite currSprite;
     protected int currSpriteIndex = 0;
     protected boolean isAnimated = false;
+    protected boolean isRepeat = true;
     protected float animationElapsedTime = 0;
 
-    /**
-     * Use the same name
-     * @param spritePath
-     * @param size
-     */
-    public SpriteSheet(String name, String spritePath, int size) {
+    public SpriteSheet(String name, String spritePath, int width, int height) {
         super(name);
 
         // init spritesheet
@@ -45,13 +41,14 @@ public class SpriteSheet extends Component implements Renderable {
         // init sprites
         for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
             //sprite.setOriginCenter();
-            sprite.setSize(size, size);
+            sprite.setSize(width, height);
             //sprite.setScale(0.1f);
             sprite.setOriginCenter();
         }
+    }
 
-        // add to render engine
-        RenderEngine.i().addRenderable(this);
+    public SpriteSheet(String name, String spritePath, int size) {
+        this(name, spritePath, size, size);
     }
 
     public SpriteSheet (String spritePath, int size) {
@@ -59,7 +56,7 @@ public class SpriteSheet extends Component implements Renderable {
     }
 
     public SpriteSheet(String spritePath) {
-        this(spritePath, SETTINGS.SPRITE_SIZE);
+        this("SpriteSheet", spritePath, SETTINGS.SPRITE_WIDTH, SETTINGS.SPRITE_HEIGHT);
     }
 
     @Override
@@ -68,6 +65,9 @@ public class SpriteSheet extends Component implements Renderable {
 
         // setup links
         transform = (Transform) owner.getComponent("Transform");
+
+        // add to render engine
+        RenderEngine.i().addRenderable(this);
     }
 
     @Override
@@ -80,19 +80,30 @@ public class SpriteSheet extends Component implements Renderable {
         switch(seq) {
             case RUN:
                 startFrame = 0;
-                endFrame = 2;
+                endFrame = 3;
                 break;
 
             case MELEE:
-                startFrame = 3;
-                endFrame = 9;
+                startFrame = 4;
+                endFrame = 8;
                 break;
         }
         currSpriteIndex = startFrame;
     }
 
+    public void setAlpha(float alpha) {
+        for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
+            sprite.setAlpha(alpha);
+        }
+    }
+
+    /**
+     * Graphics: 2D Graphics
+     * 1. Looping keyframes.
+     * @param dt
+     */
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         // set position
         for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
             sprite.setRotation(transform.getRot());
@@ -101,22 +112,39 @@ public class SpriteSheet extends Component implements Renderable {
 
         // do animation
         if (isAnimated) {
-            animationElapsedTime += delta;
+            animationElapsedTime += dt;
             if (animationElapsedTime > SETTINGS.ANIM_FRAME_TIME) {
-                currSpriteIndex = (currSpriteIndex == endFrame) ? startFrame : ++currSpriteIndex;
-                currSprite = sprites.get(currSpriteIndex);
+                ++currSpriteIndex;
+                if (currSpriteIndex > endFrame) {
+                    if (isRepeat) {
+                        currSpriteIndex = startFrame;
+                    }
+                    else {
+                        --currSpriteIndex;
+                        isAnimated = false;
+                    }
+                }
                 animationElapsedTime = 0;
+                currSprite = sprites.get(currSpriteIndex);
             }
         }
     }
 
-    public void onAnimation(Sequence seq) {
+    public void onAnimation(Sequence seq, boolean isRepeat) {
         isAnimated = true;
+        this.isRepeat = isRepeat;
         setSequence(seq);
+    }
+
+    public void onAnimation(Sequence seq) {
+        onAnimation(seq, true);
     }
 
     public void offAnimation() {
         isAnimated = false;
+        isRepeat = true;
+        currSpriteIndex = startFrame;
+        currSprite = sprites.get(currSpriteIndex);
     }
 
     public void draw() {
@@ -131,5 +159,8 @@ public class SpriteSheet extends Component implements Renderable {
         for (com.badlogic.gdx.graphics.g2d.Sprite sprite: sprites) {
             sprite.getTexture().dispose();
         }
+        
+        // remove from render engine
+        RenderEngine.i().removeRenderable(this);
     }
 }

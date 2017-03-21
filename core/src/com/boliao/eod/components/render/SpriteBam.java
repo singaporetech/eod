@@ -13,8 +13,12 @@ public class SpriteBam extends Sprite implements Renderable {
         setAlpha(0);
     }
 
+    public SpriteBam(String spritePath, float r, float g, float b, float a) {
+        super("SpriteBam", spritePath, SETTINGS.BAM_SIZE, SETTINGS.BAM_SIZE, r, g, b, a);
+    }
+
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         // NO FRAME UPDATES, changes only by request
     }
 }

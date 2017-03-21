@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.CollisionEngine;
 import com.boliao.eod.GameObject;
+import com.boliao.eod.SETTINGS;
 import com.boliao.eod.components.render.SpriteSheet;
 
 /**
@@ -26,47 +27,68 @@ public class FsmBug extends Fsm {
         steering = (Steering) owner.getComponent("SteeringPursue");
     }
 
+    /**
+     * AI: decision making
+     * 1. transition switch cases.
+     * @param dt
+     */
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
 
         Vector2 avoidTarget;
 
         switch (currState) {
             case IDLE:
-                Gdx.app.log(TAG, "SKIP IDLE");
-                transit(StateType.PURSUE);
+                if (combat.hasTarget()) {
+                    transit(StateType.PURSUE);
+                }
                 break;
 
             case PURSUE:
-                // todo: conditions to be a class for reuse
-                avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
-                if (avoidTarget != null) {
-                    Gdx.app.log(TAG, "COLLISION DETECTED");
-                    transit(StateType.COLLISION_RESPONSE);
+                // tothink: this is an alarm condition, need HFSM to resolve...
+                if (health.isEmpty()) {
+                    transit(StateType.DESTRUCT);
                 }
-                else if (steering.reachedDestPos()) {
-                    Gdx.app.log(TAG, "REACHED TARGET");
-                    transit(StateType.ATTACK);
+                else {
+                    // todo: conditions to be a class for reuse
+                    // this will check whether near obstacle using steering collision technique
+                    avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
+                    if (avoidTarget != null) {
+                        Gdx.app.log(TAG, "COLLISION DETECTED");
+                        transit(StateType.COLLISION_RESPONSE);
+                    } else if (steering.reachedDestPos()) {
+                        Gdx.app.log(TAG, "REACHED TARGET");
+                        transit(StateType.ATTACK);
+                    }
                 }
                 break;
 
             case COLLISION_RESPONSE:
-                avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
-                if (avoidTarget == null) {
-                    Gdx.app.log(TAG, "NO MORE COLLISIONS");
-                    transit(StateType.PURSUE);
+                if (health.isEmpty()) {
+                    transit(StateType.DESTRUCT);
                 }
-                else if (steering.reachedDestPos()) {
-                    Gdx.app.log(TAG, "REACHED COLLISION AVOID TARGET");
-                    transit(StateType.PURSUE);
+                else {
+                    avoidTarget = CollisionEngine.i().getCollisionAvoidTarget(collider);
+                    if (avoidTarget == null) {
+                        Gdx.app.log(TAG, "NO MORE COLLISIONS");
+                        transit(StateType.PURSUE);
+                    } else if (steering.reachedDestPos()) {
+                        Gdx.app.log(TAG, "REACHED COLLISION AVOID TARGET");
+                        transit(StateType.PURSUE);
+                    }
                 }
                 break;
 
             case ATTACK:
-                if (((SteeringPursue)steering).targetGotAway()) {
-                    Gdx.app.log(TAG, "ATTACK TARGET GOT AWAY");
-                    transit(StateType.PURSUE);
+                if (health.isEmpty()) {
+                    transit(StateType.DESTRUCT);
+                }
+                else {
+                    if (((SteeringPursue) steering).targetGotAway()) {
+                        Gdx.app.log(TAG, "ATTACK TARGET GOT AWAY");
+                        transit(StateType.PURSUE);
+                    }
                 }
                 break;
 
@@ -74,7 +96,7 @@ public class FsmBug extends Fsm {
                 break;
 
             case DESTRUCT:
-                Gdx.app.log(TAG, "Destroying");
+                //Gdx.app.log(TAG, "Destroying " + owner.getName());
                 break;
 
             default:

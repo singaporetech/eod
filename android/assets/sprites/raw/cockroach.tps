@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.3.3</string>
         <key>fileName</key>
-        <string>/Users/mrboliao/Documents/repos/eod/android/assets/sprites/bug1.tps</string>
+        <string>/Users/mrboliao/repos/eod/android/assets/sprites/raw/cockroach.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -150,7 +150,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>bug1.txt</filename>
+                <filename>../cockroach.txt</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -197,41 +197,43 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">bug11.png</key>
-            <key type="filename">bug12.png</key>
-            <key type="filename">bug13.png</key>
-            <key type="filename">bug21-1.png</key>
-            <key type="filename">bug21.png</key>
-            <key type="filename">bug22-1.png</key>
-            <key type="filename">bug22.png</key>
-            <key type="filename">bug23-1.png</key>
-            <key type="filename">bug23-2.png</key>
-            <key type="filename">bug23.png</key>
+            <key type="filename">cockroach1.png</key>
+            <key type="filename">cockroach10.png</key>
+            <key type="filename">cockroach2.png</key>
+            <key type="filename">cockroach3.png</key>
+            <key type="filename">cockroach4.png</key>
+            <key type="filename">cockroach5.png</key>
+            <key type="filename">cockroach6.png</key>
+            <key type="filename">cockroach7-1.png</key>
+            <key type="filename">cockroach7.png</key>
+            <key type="filename">cockroach8.png</key>
+            <key type="filename">cockroach9.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>128,128,256,256</rect>
+                <rect>64,48,128,96</rect>
                 <key>scale9Paddings</key>
-                <rect>128,128,256,256</rect>
+                <rect>64,48,128,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
         </map>
         <key>fileList</key>
         <array>
-            <filename>bug11.png</filename>
-            <filename>bug12.png</filename>
-            <filename>bug13.png</filename>
-            <filename>bug21.png</filename>
-            <filename>bug21-1.png</filename>
-            <filename>bug22-1.png</filename>
-            <filename>bug22.png</filename>
-            <filename>bug23-1.png</filename>
-            <filename>bug23-2.png</filename>
-            <filename>bug23.png</filename>
+            <filename>cockroach1.png</filename>
+            <filename>cockroach2.png</filename>
+            <filename>cockroach3.png</filename>
+            <filename>cockroach4.png</filename>
+            <filename>cockroach5.png</filename>
+            <filename>cockroach6.png</filename>
+            <filename>cockroach7-1.png</filename>
+            <filename>cockroach7.png</filename>
+            <filename>cockroach8.png</filename>
+            <filename>cockroach9.png</filename>
+            <filename>cockroach10.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

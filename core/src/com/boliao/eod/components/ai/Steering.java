@@ -43,8 +43,8 @@ public abstract class Steering extends Component {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void update(float dt) {
+        super.update(dt);
     }
 
     public void setDestPos(float x, float y) {
@@ -67,14 +67,6 @@ public abstract class Steering extends Component {
         //Gdx.app.log(TAG, "dist=" + dist + " pos=" + transform.pos + " destPos=" + destPos);
 
         if (dist < stopRadius) {
-            //todo: see whether got more elegant way to accurately stop near touch point
-            //transform.setPos(destPos);
-            // face the destPos
-
-            // face the destination
-            // todo: need to gradually turn to face destPos (now simply increase STOP_RAD
-            //transform.rot = MathUtils.radiansToDegrees * (float) Math.atan2(dir.y, dir.x);
-
             return true;
         }
         else {

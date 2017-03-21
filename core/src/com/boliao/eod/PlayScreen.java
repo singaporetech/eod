@@ -12,10 +12,13 @@ import com.boliao.eod.components.ai.FsmPlayer;
 import com.boliao.eod.components.ai.SteeringArrive;
 import com.boliao.eod.components.ai.SteeringPursue;
 import com.boliao.eod.components.collision.Collider;
+import com.boliao.eod.components.render.PrimitiveHealthPlayer;
 import com.boliao.eod.components.render.SpriteHealth;
 import com.boliao.eod.components.render.Sprite;
 import com.boliao.eod.components.render.SpriteBam;
+import com.boliao.eod.components.render.SpriteHealthPlayer;
 import com.boliao.eod.components.render.SpriteInput;
+import com.boliao.eod.components.render.SpritePlusOne;
 import com.boliao.eod.components.render.SpriteSheetBug;
 import com.boliao.eod.components.render.SpriteSheetPlayer;
 
@@ -27,24 +30,13 @@ import java.util.List;
  */
 
 public class PlayScreen implements Screen {
-    private final int CAMSPEED = 100;
-
     private boolean paused = false;
 
     // game singletons
-    Game game = Game.i();
     com.boliao.eod.GameState gameState = com.boliao.eod.GameState.i();
 
     // game objects list
-    List<GameObject> gameObjects;
-
-    // Renderables list
-    List<com.boliao.eod.components.render.Renderable> renderables;
-
-    // Tiled stuff
-//    private TiledMap map;
-//    private TmxMapLoader mapLoader;
-//    private OrthogonalTiledMapRenderer mapRenderer;
+    protected List<GameObject> gameObjects;
 
     /**
      * Ctor.
@@ -57,21 +49,38 @@ public class PlayScreen implements Screen {
     }
 
     public void init() {
-        // init house
-        GameObject house = new GameObject("house");
-        gameObjects.add(house);
-        house.addComponent(new Transform(SETTINGS.HOUSE_POS_X, SETTINGS.HOUSE_POS_Y, 0));
-        house.addComponent(new Sprite("sprites/house.png", SETTINGS.HOUSE_SIZE));
-        house.init();
 
         // init block
-        GameObject block = new GameObject("block");
+        GameObject block = new GameObject("block1");
         gameObjects.add(block);
         block.addComponent(new Transform(SETTINGS.BLOCK_POS_X, SETTINGS.BLOCK_POS_Y, 0));
         block.addComponent(new Sprite("sprites/block.png", SETTINGS.BLOCK_SIZE));
         block.addComponent(new Collider());
         block.init();
 
+        // init block
+        block = new GameObject("block2");
+        gameObjects.add(block);
+        block.addComponent(new Transform(SETTINGS.BLOCK_POS_X+200, SETTINGS.BLOCK_POS_Y+300, 0));
+        block.addComponent(new Sprite("sprites/block.png", 80));
+        block.addComponent(new Collider());
+        block.init();
+
+        // init block
+        block = new GameObject("block3");
+        gameObjects.add(block);
+        block.addComponent(new Transform(SETTINGS.BLOCK_POS_X-200, SETTINGS.BLOCK_POS_Y+500, 0));
+        block.addComponent(new Sprite("sprites/block.png", 100));
+        block.addComponent(new Collider());
+        block.init();
+
+        /**
+         * Overview: Game Engines
+         * 1. The entity-component system.
+         *
+         * Physics: collisions
+         * 1. The collider component.
+         */
         // init human
         GameObject player = new GameObject("player");
         gameObjects.add(player);
@@ -80,41 +89,42 @@ public class PlayScreen implements Screen {
         player.addComponent(new Collider(false, false));
         player.addComponent(new Movement());
         player.addComponent(new SteeringArrive());
+        player.addComponent(new SteeringPursue(null));
         player.addComponent(new FsmPlayer());
-        player.addComponent(new Input(Input.InputType.TOUCH));
         player.addComponent(new SpriteInput("sprites/x.png"));
-        player.addComponent(new Health());
-        player.addComponent(new SpriteHealth("sprites/healthbar.png"));
+        player.addComponent(new Input(Input.InputType.TOUCH));
+        player.addComponent(new SpritePlusOne("sprites/plus1.png"));
+        player.addComponent(new Health(0.5f));
+        player.addComponent(new PrimitiveHealthPlayer());
+        player.addComponent(new SpriteBam("sprites/bam.png"));
+        player.addComponent(new Combat(null, SETTINGS.PLAYER_DMG));
         player.init();
+
+        // give player handle to gameState so that sensors can be linked to player stats
+        gameState.setPlayerHealth(player);
 
         // init spawn manager
         GameObject spawnMgr = new GameObject("SpawnMgr");
         gameObjects.add(spawnMgr);
         spawnMgr.addComponent(new SpawnMgr(player));
         spawnMgr.init();
-
-//        mapLoader = new TmxMapLoader();
-//        map = mapLoader.load("level0.tmx");
-//        mapRenderer = new OrthogonalTiledMapRenderer(map);
     }
 
     public void restart() {
         dispose();
-        gameObjects.clear();
 
         init();
     }
 
     /**
-     * The gameloop.
-     * @param delta
+     * 1. The gameloop.
+     * @param dt
      */
-    @Override
-    public void render(float delta) {
+    private void gameLoop(float dt) {
         if (!paused) {
             // process game object updates
             for (GameObject go: gameObjects) {
-                go.update(delta);
+                go.update(dt);
             }
 
             // process collisions
@@ -123,6 +133,11 @@ public class PlayScreen implements Screen {
 
         // process graphics
         RenderEngine.i().tick();
+    }
+
+    @Override
+    public void render(float dt) {
+        gameLoop(dt);
     }
 
     @Override
@@ -155,5 +170,10 @@ public class PlayScreen implements Screen {
         for (GameObject go: gameObjects) {
             go.finalize();
         }
+        gameObjects.clear();
+    }
+
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
     }
 }

@@ -10,7 +10,6 @@ android:
     - tools
     - platform-tools
 
-
     # The BuildTools version used by your project
     #- build-tools-19.1.0
     - build-tools-25.0.1

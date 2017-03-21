@@ -1,16 +1,27 @@
 package com.boliao.eod;
 
+import com.badlogic.gdx.Gdx;
+import com.boliao.eod.components.Health;
+
 /**
  * Created by mrboliao on 16/1/17.
  */
 
 public class GameState {
+    private static final String TAG = "GameState";
+
     private static GameState instance = new GameState();
+
+    private boolean isServiceStarted = false;
+    private boolean isAppActive = true;
 
     private int steps;
     private int timer;
     private int numNights;
     private boolean canSpawn;
+    private boolean canNotify;
+
+    private Health playerHealth = null;
 
     private GameState() {
         reset();
@@ -31,16 +42,27 @@ public class GameState {
         return timer;
     }
 
-    public void setTimer(int timer) {
-        this.timer = timer;
-    }
-
+    /**
+     *
+     * @return whether can spawn
+     */
     public void decTimer() {
+        //Gdx.app.log(TAG, "decTimer()");
         --timer;
         if (timer == 0) {
             incNumNights();
-            canSpawn = true;
+            canSpawn = canNotify = true;
             timer = SETTINGS.SECS_IN_DAY;
+        }
+    }
+
+    public boolean isCanNotify() {
+        if (canNotify) {
+            canNotify = false; // reset whenever return true
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -60,17 +82,38 @@ public class GameState {
 
     public void incSteps(int inc) {
         steps += inc;
+
+        // todo: should send a message to all subscribers and they can do their callback
+        if (playerHealth != null) {
+            playerHealth.heal(SETTINGS.HP_HEAL_AMT_STEPS);
+        }
     }
 
     public int getNumNights() {
         return numNights;
     }
 
-    public void setNumNights(int numNights) {
-        this.numNights = numNights;
-    }
-
     public void incNumNights() {
         ++numNights;
+    }
+
+    public void setPlayerHealth(GameObject player) {
+        playerHealth = (Health) player.getComponent("Health");
+    }
+
+    public boolean isServiceStarted() {
+        return isServiceStarted;
+    }
+
+    public void setServiceStarted(boolean serviceStarted) {
+        isServiceStarted = serviceStarted;
+    }
+
+    public boolean isAppActive() {
+        return isAppActive;
+    }
+
+    public void setAppActive(boolean appActive) {
+        isAppActive = appActive;
     }
 }
