@@ -33,4 +33,5 @@ script:
     - "./gradlew build"
 
 notifications:
-  slack: ict2105:PPashTqf4BqaHFvPDxxkEpcO
+  # slack: ict2105:PPashTqf4BqaHFvPDxxkEpcO
+  slack: sit-chek:ZmHblJMPtVfSCmpK7kAemrDs

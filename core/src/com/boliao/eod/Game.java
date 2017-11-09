@@ -23,7 +23,7 @@ public class Game extends com.badlogic.gdx.Game {
 	@Override
 	public void create () {
         // this is a new comment
-        
+
         // init engines
         RenderEngine.i().init();
         CollisionEngine.i().init();
