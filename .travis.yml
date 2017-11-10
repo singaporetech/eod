@@ -34,4 +34,5 @@ script:
 
 notifications:
   # slack: ict2105:PPashTqf4BqaHFvPDxxkEpcO
+  # my own channel
   slack: sit-chek:ZmHblJMPtVfSCmpK7kAemrDs
