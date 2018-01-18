@@ -5,11 +5,12 @@ An attempt to gamify exercise with **real** game mechanics.
 
 ## workflow
 
-This project uses "pseudo"-agile:
+This project implements Agile through Scrum and Kanban principles.
 
 | **AGILE**       | **GITHUB**                                            |
 | --------------- | ----------------------------------------------------- |
 | user stories    | issues                                                |
+| other PBIs      | issues                                                |
 | sprints         | milestones                                            |
 | project backlog | unmilestoned/unassigned issues                        |
 | sprint backlog  | milestoned/unassigned issues                          |
