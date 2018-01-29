@@ -3,6 +3,7 @@
 
 An attempt to gamify exercise with **real** game mechanics.
 
+
 ## workflow
 
 This project implements Agile through Scrum and Kanban principles.
@@ -17,3 +18,6 @@ This project implements Agile through Scrum and Kanban principles.
 | in progress     | branches working on milestoned/assigned issues        |
 | in review       | PR-ed branches working on milestoned/assigned issues  |
 | closed          | merged branches with closed issues                    |
+
+## the game
+At the end of each day, BUGs will spawn and kill you if you're not fit enough...
