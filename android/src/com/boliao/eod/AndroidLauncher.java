@@ -53,7 +53,7 @@ public class AndroidLauncher extends AndroidApplication {
      */
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "Destroying activity and service");
+        Log.i(TAG, "Destroying activity only ");
         super.onDestroy();
         //stopService(intent);
 

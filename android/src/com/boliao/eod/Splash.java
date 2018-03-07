@@ -50,34 +50,17 @@ public class Splash extends AppCompatActivity {
                     msgTxtView.setText("starting game, pls wait...");
 
                     // TODO 2: what if this needs some intensive processing
-//                    try {
-//                        // imagine the below is some crazy processing
-//                        sleep(3000);
-//                    } catch (InterruptedException e) {
-//                        Log.i(TAG, "Sleep interrupted");
-//                    }
+                    // encrypt the username using some funky algo
 
-//                    for (int i=0; i<100000000; ++i) {
-//                        int arr[] = new int[100];
-//                    }
-//
-//                    // store the username
-//                    prefEditor.putString(usernameStr, usernameStr);
-//                    prefEditor.commit();
-//
-//                    // start the game activity
-//                    Intent intent = new Intent(v.getContext(), AndroidLauncher.class);
-//                    startActivity(intent);
-
-                    // start the service
-                    UserNameService.startActionStoreName(v.getContext(), usernameStr);
+                    // defer the encryption to a background service
+                    UserEncryptionService.startActionEncrypt(v.getContext(), usernameStr);
 
                     // start the game activity
                     Intent intent = new Intent(v.getContext(), AndroidLauncher.class);
                     startActivity(intent);
                 }
 
-                // try 3: WHAT IF need to check if username exists and come back to UI
+                // TODO 3: WHAT IF need to check if username is banned from server and come back to UI
             }
         });
     }

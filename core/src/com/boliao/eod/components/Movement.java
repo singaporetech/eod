@@ -1,6 +1,5 @@
 package com.boliao.eod.components;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.SETTINGS;

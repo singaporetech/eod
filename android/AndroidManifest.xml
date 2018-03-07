@@ -11,28 +11,22 @@
     <!-- only show app in store to users with the following -->
     <!-- <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" /> -->
 
-
-    <!-- TODO in LECTURE -->
-    <!-- demo the big 4 tags -->
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme">
+
+        <!-- TODO SERVICES -->
+        <!-- demo the big 4 tags -->
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -43,6 +37,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -52,17 +47,28 @@
             android:enabled="true"
             android:exported="true" />
 
-        <!-- TODO in LECTURE -->
+        <!-- TODO SERVICES -->
         <!-- exported="false" limits access to within app -->
-        <service
-            android:name=".UserNameService"
-            android:exported="false" />
 
         <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
         <service
             android:name=".ReminderJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".UserEncryptionService"
             android:exported="false" />
+
+        <!-- TODO BROADCAST-RECEIVERS -->
+        <receiver
+            android:name=".ScreenOnReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SCREEN_ON" />-->
+            <!--</intent-filter>-->
+        </receiver>
+
     </application>
 
 </manifest>

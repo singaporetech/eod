@@ -15,20 +15,19 @@ import static java.lang.Thread.sleep;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class UserNameService extends IntentService {
-    private static final String TAG = "UserNameService";
-
+public class UserEncryptionService extends IntentService {
+    private static final String TAG = "UserEncryptionService";
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_STORENAME = "com.boliao.eod.action.STORENAME";
+    private static final String ACTION_ENCRYPT = "com.boliao.eod.action.ENCRYPT";
     private static final String ACTION_BAZ = "com.boliao.eod.action.BAZ";
 
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "com.boliao.eod.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "com.boliao.eod.extra.PARAM2";
 
-    public UserNameService() {
-        super("UserNameService");
+    public UserEncryptionService() {
+        super("UserEncryptionService");
     }
 
     /**
@@ -38,10 +37,10 @@ public class UserNameService extends IntentService {
      * @see IntentService
      */
     // TODO: Customize helper method
-    public static void startActionStoreName(Context context, String username) {
-        Intent intent = new Intent(context, UserNameService.class);
-        intent.setAction(ACTION_STORENAME);
-        intent.putExtra(EXTRA_PARAM1, username);
+    public static void startActionEncrypt(Context context, String userNameStr) {
+        Intent intent = new Intent(context, UserEncryptionService.class);
+        intent.setAction(ACTION_ENCRYPT);
+        intent.putExtra(EXTRA_PARAM1, userNameStr);
         context.startService(intent);
     }
 
@@ -53,7 +52,7 @@ public class UserNameService extends IntentService {
      */
     // TODO: Customize helper method
     public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, UserNameService.class);
+        Intent intent = new Intent(context, UserEncryptionService.class);
         intent.setAction(ACTION_BAZ);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
@@ -64,9 +63,9 @@ public class UserNameService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_STORENAME.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                handleActionFoo(param1);
+            if (ACTION_ENCRYPT.equals(action)) {
+                final String userNameStr = intent.getStringExtra(EXTRA_PARAM1);
+                handleActionEncrypt(userNameStr);
             } else if (ACTION_BAZ.equals(action)) {
                 final String param1 = intent.getStringExtra(EXTRA_PARAM1);
                 final String param2 = intent.getStringExtra(EXTRA_PARAM2);
@@ -79,22 +78,17 @@ public class UserNameService extends IntentService {
      * Handle action Foo in the provided background thread with the provided
      * parameters.
      */
-    private void handleActionFoo(String usernameStr) {
-        // TODO: Handle action Foo
-
-        // do some crazy processing (imagine)
+    private void handleActionEncrypt(String usernameStr) {
         try {
-            sleep(8000);
-        } catch (InterruptedException e) {
-            Log.i(TAG, "Sleep interrupted");
+            sleep(5000);
+        } catch (Exception e) {
+            Log.i(TAG, "pls catch this lah...");
         }
-
-        // save username
-        SharedPreferences pref = getSharedPreferences(Splash.PREF_FILENAME, MODE_PRIVATE);
-        SharedPreferences.Editor prefEditor = pref.edit();
+        // store the username
+        SharedPreferences prefs = getSharedPreferences(Splash.PREF_FILENAME, MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = prefs.edit();
         prefEditor.putString(usernameStr, usernameStr);
         prefEditor.commit();
-
     }
 
     /**

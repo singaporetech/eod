@@ -3,8 +3,8 @@ package com.boliao.eod.components.render;
 import com.badlogic.gdx.math.Rectangle;
 import com.boliao.eod.GameObject;
 import com.boliao.eod.RenderEngine;
-import com.boliao.eod.SETTINGS;
 import com.boliao.eod.components.Component;
+
 import com.boliao.eod.components.Transform;
 
 /**

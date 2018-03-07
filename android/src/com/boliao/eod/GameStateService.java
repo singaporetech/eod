@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -50,6 +51,9 @@ public class GameStateService extends Service implements SensorEventListener {
 
     // notifications
     NotificationManager notificationManager;
+
+    // broadcast receivers
+    private ScreenOnReceiver screenOnReceiver = new ScreenOnReceiver();
 
     public GameStateService() {}
 
@@ -98,6 +102,10 @@ public class GameStateService extends Service implements SensorEventListener {
                     NotificationManager.IMPORTANCE_HIGH
             ));
         }
+
+        // TODO BROADCAST-RECEIVERS
+        // register receiver
+        registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
     }
 
     /**
@@ -142,10 +150,10 @@ public class GameStateService extends Service implements SensorEventListener {
                                     .setContentTitle("Exercise Or Die")
                                     .setColor(Color.RED)
                                     .setVisibility(VISIBILITY_PUBLIC)
-                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                    .setPriority(NotificationCompat.PRIORITY_HIGH) // for android 7.1 and below
                                     .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
                                     .setAutoCancel(true)
-                                    //.setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
+                                    .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
                                     .setLights(Color.RED, 3000, 3000)
                                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                                     .setContentIntent(pi);
@@ -169,6 +177,12 @@ public class GameStateService extends Service implements SensorEventListener {
         super.onDestroy();
 
         sensorManager.unregisterListener(this, stepDetector);
+
+        // TODO BROADCAST-RECEIVERS
+        // unregister receiver
+        // - note that this is only unregister in a service's destroy because you want the app
+        //   to keep listening to broadcasts
+        unregisterReceiver(screenOnReceiver);
     }
 
     // TODO SENSORS 2
