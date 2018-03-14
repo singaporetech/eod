@@ -15,6 +15,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <!-- TODO NETWORKING -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -50,6 +55,7 @@
         <!-- TODO SERVICES -->
         <!-- exported="false" limits access to within app -->
 
+
         <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
         <service
             android:name=".ReminderJobService"
@@ -64,11 +70,17 @@
             android:name=".ScreenOnReceiver"
             android:enabled="true"
             android:exported="false">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.SCREEN_ON" />-->
-            <!--</intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.SCREEN_ON" /> -->
+            <!-- </intent-filter> -->
         </receiver>
 
+        <!-- TODO NETWORKING -->
+        <service
+            android:name=".WeatherService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

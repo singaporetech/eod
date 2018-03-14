@@ -7,6 +7,21 @@
     tools:context="com.boliao.eod.Splash">
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/weather_txtview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="casual"
+        android:text="weather today"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_orange_light"
+        android:textAlignment="gravity"
+        android:gravity="center"
+        />
+
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/msg_txtview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
