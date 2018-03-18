@@ -9,7 +9,11 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
+//            jniLibs.srcDirs = ['libs']
+
+            // TODO NDK
+            // link the jniLibs dir
+            jniLibs.srcDirs = ['jniLibs']
         }
 
         instrumentTest.setRoot('tests')
@@ -21,6 +25,13 @@ android {
         applicationId "com.boliao.eod"
         minSdkVersion 26
         targetSdkVersion 26
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-frtti -fexceptions"
+                abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips', 'mips64'
+            }
+        }
     }
     buildTypes {
         release {
@@ -116,4 +127,8 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.+'
     implementation 'com.google.android.gms:play-services-location:11.+'
+
+    // TODO NDK
+    // add dependency on OpenCV module
+    implementation project(':openCVLibrary341')
 }

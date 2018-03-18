@@ -21,6 +21,14 @@
         android:gravity="center"
         />
 
+    <!-- TODO NDK -->
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/camview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            />
+        <!--app:layout_constraintTop_toBottomOf="@+id/weather_txtview"/>-->
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/msg_txtview"
         android:layout_width="match_parent"

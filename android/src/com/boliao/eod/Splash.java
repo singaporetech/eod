@@ -15,16 +15,23 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
 
 import static java.lang.Thread.sleep;
 
 /**
  * This is the splash screen that records who is playing.
  */
-public class Splash extends AppCompatActivity {
+public class Splash extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private static final String TAG = "Splash";
 
     /**
@@ -62,6 +69,9 @@ public class Splash extends AppCompatActivity {
         // TODO NDK
         // setup camera
         Toast.makeText(this, stringFromJNI(), Toast.LENGTH_SHORT).show();
+        camView = findViewById(R.id.camview);
+        camView.setVisibility(SurfaceView.VISIBLE);
+        camView.setCvCameraViewListener(this);
 
         // TODO NETWORKING
         // getting permissions for location services
@@ -170,5 +180,69 @@ public class Splash extends AppCompatActivity {
                 // TODO SERVICES 3: WHAT IF need to check if username is banned from server and come back to UI
             }
         });
+
+
+    }
+
+    /**
+     * TODO NDK
+     * implement cam callbacks
+     */
+    @Override
+    public void onCameraViewStarted(int width, int height) {
+
+    }
+    @Override
+    public void onCameraViewStopped() {
+
+    }
+    @Override
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        return null;
+    }
+
+    CameraBridgeViewBase camView;
+    private BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                    Log.i(TAG, "OpenCV loaded");
+                    camView.enableView();
+                    break;
+
+                default:
+                    super.onManagerConnected(status);
+            }
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, baseLoaderCallback);
+        } else {
+            Log.d(TAG, "OpenCV library found inside package. Using it!");
+            baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
+    }
+
+    private void disableCam() {
+        if (camView != null)
+            camView.disableView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disableCam();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disableCam();
     }
 }
