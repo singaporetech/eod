@@ -27,6 +27,20 @@ import static java.lang.Thread.sleep;
 public class Splash extends AppCompatActivity {
     private static final String TAG = "Splash";
 
+    /**
+     * TODO NDK
+     * load native lib
+     */
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    /**
+     * TODO NDK
+     * declare native function
+     */
+    public native String stringFromJNI();
+
     // shared preferences setup
     public final static String PREF_FILENAME = "com.boliao.eod.prefs";
     SharedPreferences pref;
@@ -44,6 +58,10 @@ public class Splash extends AppCompatActivity {
         // setup shared preferences
         pref = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
         prefEditor = pref.edit();
+
+        // TODO NDK
+        // setup camera
+        Toast.makeText(this, stringFromJNI(), Toast.LENGTH_SHORT).show();
 
         // TODO NETWORKING
         // getting permissions for location services
