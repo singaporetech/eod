@@ -6,11 +6,10 @@ cmake_minimum_required(VERSION 3.4.1)
 
 # TODO NDK
 # set vars
-set (PATH_OPENCV ~/repos/OpenCV-android-sdk)
-set (PATH_PROJECT ~/repos/eod)
-include_directories(${PATH_OPENCV}/sdk/native/jni/include)
+# set (PATH_OPENCV ~/repos/OpenCV-android-sdk)
+include_directories(${CMAKE_SOURCE_DIR}/libs/include)
 add_library( lib_opencv SHARED IMPORTED )
-set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${PATH_PROJECT}/android/libs/${ANDROID_ABI}/libopencv_java3.so)
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/libs/${ANDROID_ABI}/libopencv_java3.so)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
