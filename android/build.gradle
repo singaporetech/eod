@@ -9,11 +9,7 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-//            jniLibs.srcDirs = ['libs']
-
-            // TODO NDK
-            // link the jniLibs dir
-            jniLibs.srcDirs = ['jniLibs']
+            jniLibs.srcDirs = ['libs']
         }
 
         instrumentTest.setRoot('tests')

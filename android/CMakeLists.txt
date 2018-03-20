@@ -10,7 +10,7 @@ set (PATH_OPENCV ~/repos/OpenCV-android-sdk)
 set (PATH_PROJECT ~/repos/eod)
 include_directories(${PATH_OPENCV}/sdk/native/jni/include)
 add_library( lib_opencv SHARED IMPORTED )
-set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${PATH_PROJECT}/android/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${PATH_PROJECT}/android/libs/${ANDROID_ABI}/libopencv_java3.so)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
