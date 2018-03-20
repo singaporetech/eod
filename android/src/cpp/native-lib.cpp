@@ -36,6 +36,7 @@ Java_com_boliao_eod_Splash_stringFromJNI(
 /**
  * TODO NDK
  * 1. create face detection helper code
+ * - best ref so far http://www.jayrambhia.com/blog/android-opencv-facedetection
  * @param cascadePath
  * @param rgbaInput
  */
