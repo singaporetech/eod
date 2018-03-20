@@ -52,18 +52,19 @@ public class Splash extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
     /**
      * TODO NDK
-     * declare native function
+     * 1. test the default stringFromJNI template from Android Studio
+     * 2. create a native face detection method to link to C++ code
      */
     public native String stringFromJNI();
-    public native int convertToGrayscale(long rgbaAddrInput, long rbgaAddrResult);
-    public native void detectFace(String cascadePath, long rgbaAddrInput);
+    public native void detectFace(String cascadePath, long rgbaAddr);
 
     // TODO NDK
     // init cv matrix
-    Mat rgbaT, rgbaF;
-    Mat rgbaInput, rgbaOutput;
+    Mat rgba;
+
+    // opencv face detection training files
     File cascadeFile;
-    String cascadeFileName = "haarcascade_frontalface_alt.xml";
+    String cascadeFileName = "haarcascade_frontalface_alt2.xml";
 
     // shared preferences setup
     public final static String PREF_FILENAME = "com.boliao.eod.prefs";
@@ -79,6 +80,9 @@ public class Splash extends AppCompatActivity implements CameraBridgeViewBase.Cv
         final AppCompatTextView msgTxtView = findViewById(R.id.msg_txtview);
         final AppCompatTextView weatherTxtView = findViewById(R.id.weather_txtview);
 
+        // check that app has the required permissions from user
+        checkPermissions();
+
         // setup shared preferences
         pref = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
         prefEditor = pref.edit();
@@ -90,6 +94,163 @@ public class Splash extends AppCompatActivity implements CameraBridgeViewBase.Cv
         camView.setVisibility(SurfaceView.VISIBLE);
         camView.setCvCameraViewListener(this);
 
+        // TODO NETWORKING
+        // start the bounded service for networking
+        startService(new Intent(this, WeatherService.class));
+
+        // TODO NETWORKING
+        // register local broadcast receiver to receive push data from weather service
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String forecastStr = intent.getStringExtra(WeatherService.WEATHER_BROADCAST_EXTRAS_FORECAST);
+                Log.i(TAG, "RECEIVED forecast = " + forecastStr);
+
+                // update UI here
+                weatherTxtView.setText(forecastStr);
+            }
+        }, new IntentFilter(WeatherService.WEATHER_BROADCAST_ACTION));
+
+		// start game on click "PLAY"
+		playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO SERVICES 1
+                // 1: just store in preferences
+                String usernameStr = usernameEdtTxt.getText().toString();
+                String existingStr = pref.getString(usernameStr, "-----");
+                if (usernameStr.equals(existingStr)) {
+                    msgTxtView.setText("player exists, please choose another name");
+                }
+                else {
+                    msgTxtView.setText("starting game, pls wait...");
+
+                    // TODO SERVICES 2: what if this needs some intensive processing
+                    // encrypt the username using some funky algo
+
+                    // defer the encryption to a background service
+                    UserEncryptionService.startActionEncrypt(v.getContext(), usernameStr);
+
+                    // start the game activity
+                    Intent intent = new Intent(v.getContext(), AndroidLauncher.class);
+                    startActivity(intent);
+                }
+
+                // TODO SERVICES 3: WHAT IF need to check if username is banned from server and come back to UI
+            }
+        });
+
+
+    }
+
+    /**
+     * TODO NDK
+     * implement the 3 cam callbacks
+     */
+    @Override
+    public void onCameraViewStarted(int width, int height) {
+        rgba = new Mat(height, width, CvType.CV_8UC4);
+    }
+    @Override
+    public void onCameraViewStopped() {
+        rgba.release();
+    }
+    @Override
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        // get rgba matrix from inputframe
+        rgba = inputFrame.rgba();
+
+        // do face detection
+        detectFace(cascadeFile.getAbsolutePath(), rgba.getNativeObjAddr());
+
+        return rgba;
+    }
+
+    // opencv callback to run when camera is ready
+    CameraBridgeViewBase camView;
+    private BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                    Log.i(TAG, "OpenCV loaded");
+                    camView.enableView();
+                    break;
+
+                default:
+                    super.onManagerConnected(status);
+            }
+        }
+    };
+
+    /**
+     * Helper method to disable opencv cam.
+     */
+    private void disableCam() {
+        if (camView != null)
+            camView.disableView();
+    }
+
+    /**
+     * Load opencv lib on resume.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (OpenCVLoader.initDebug()) {
+            Log.d(TAG, "OpenCV library found inside package. Using it!");
+            baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+            loadCascadeFile();
+        } else {
+            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, baseLoaderCallback);
+        }
+    }
+
+    /**
+     * Disable opencv cam on pause and destroy.
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disableCam();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disableCam();
+    }
+
+    /**
+     * Load opencv cascade file from asset folder
+     */
+    private void loadCascadeFile() {
+        final InputStream is;
+        FileOutputStream os;
+        try {
+            is = getResources().getAssets().open("data/" + cascadeFileName);
+            File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+            cascadeFile = new File(cascadeDir, "face_frontal.xml");
+
+            os = new FileOutputStream(cascadeFile);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            Log.i(TAG, "face cascade not found");
+        }
+    }
+
+    /**
+     * Check all permissions from user.
+     */
+    private void checkPermissions() {
         // getting permissions for camera
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
@@ -181,159 +342,6 @@ public class Splash extends AppCompatActivity implements CameraBridgeViewBase.Cv
         } else {
             // Permission has already been granted
             Log.i(TAG, "LOCATION PERMISSION GRANTED");
-        }
-
-        // TODO NETWORKING
-        // start the bounded service for networking
-        startService(new Intent(this, WeatherService.class));
-
-        // TODO NETWORKING
-        // register local broadcast receiver to receive push data from weather service
-        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String forecastStr = intent.getStringExtra(WeatherService.WEATHER_BROADCAST_EXTRAS_FORECAST);
-                Log.i(TAG, "RECEIVED forecast = " + forecastStr);
-
-                // update UI here
-                weatherTxtView.setText(forecastStr);
-            }
-        }, new IntentFilter(WeatherService.WEATHER_BROADCAST_ACTION));
-
-		// start game on click "PLAY"
-		playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO SERVICES 1
-                // 1: just store in preferences
-                String usernameStr = usernameEdtTxt.getText().toString();
-                String existingStr = pref.getString(usernameStr, "-----");
-                if (usernameStr.equals(existingStr)) {
-                    msgTxtView.setText("player exists, please choose another name");
-                }
-                else {
-                    msgTxtView.setText("starting game, pls wait...");
-
-                    // TODO SERVICES 2: what if this needs some intensive processing
-                    // encrypt the username using some funky algo
-
-                    // defer the encryption to a background service
-                    UserEncryptionService.startActionEncrypt(v.getContext(), usernameStr);
-
-                    // start the game activity
-                    Intent intent = new Intent(v.getContext(), AndroidLauncher.class);
-                    startActivity(intent);
-                }
-
-                // TODO SERVICES 3: WHAT IF need to check if username is banned from server and come back to UI
-            }
-        });
-
-
-    }
-
-    /**
-     * TODO NDK
-     * implement cam callbacks
-     */
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-        rgbaInput = new Mat(height, width, CvType.CV_8UC4);
-        rgbaOutput = new Mat(height, width, CvType.CV_8UC4);
-        rgbaF = new Mat(height, width, CvType.CV_8UC4);
-        rgbaT = new Mat(width, width, CvType.CV_8UC4);
-    }
-    @Override
-    public void onCameraViewStopped() {
-        rgbaInput.release();
-        rgbaOutput.release();
-        rgbaF.release();
-        rgbaT.release();
-    }
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        rgbaInput = inputFrame.rgba();
-
-        // flip the pixel orientation
-//        Core.transpose(rgba, rgbaT);
-//        Imgproc.resize(rgbaT, rgbaF, rgbaF.size(), 0, 0, 0);
-//        Core.flip(rgbaF, rgba, 1);
-
-        // do convert to grayscale
-//        convertToGrayscale(rgbaInput.getNativeObjAddr(), rgbaOutput.getNativeObjAddr());
-
-        // do face detection
-        detectFace(cascadeFile.getAbsolutePath(), rgbaInput.getNativeObjAddr());
-
-        return rgbaInput;
-    }
-
-    CameraBridgeViewBase camView;
-    private BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS:
-                    Log.i(TAG, "OpenCV loaded");
-                    camView.enableView();
-                    break;
-
-                default:
-                    super.onManagerConnected(status);
-            }
-        }
-    };
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, baseLoaderCallback);
-        } else {
-            Log.d(TAG, "OpenCV library found inside package. Using it!");
-            baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-            loadCascadeFile();
-        }
-    }
-
-    private void disableCam() {
-        if (camView != null)
-            camView.disableView();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disableCam();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        disableCam();
-    }
-
-    private void loadCascadeFile() {
-        final InputStream is;
-        FileOutputStream os;
-        try {
-            is = getResources().getAssets().open("data/" + cascadeFileName);
-            File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
-            cascadeFile = new File(cascadeDir, "face_frontal.xml");
-
-            os = new FileOutputStream(cascadeFile);
-
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
-
-            is.close();
-            os.close();
-        } catch (IOException e) {
-            Log.i(TAG, "face cascade not found");
         }
     }
 }
