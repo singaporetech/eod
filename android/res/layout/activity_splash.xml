@@ -22,60 +22,54 @@
         />
 
     <!-- TODO NDK -->
-    <org.opencv.android.JavaCameraView
-        android:id="@+id/camview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-            />
-        <!--app:layout_constraintTop_toBottomOf="@+id/weather_txtview"/>-->
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/msg_txtview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_margin="10dp"
         android:fontFamily="casual"
-        android:text="@string/welcome_note"
-        android:textSize="18sp"
-        android:textColor="@android:color/holo_orange_light"
         android:gravity="center"
+        android:text="@string/welcome_note"
         android:textAlignment="gravity"
-        app:layout_constraintBottom_toTopOf="@+id/name_edtxt"
+        android:textColor="@android:color/holo_orange_light"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/name_edtxt"
-        app:layout_constraintStart_toStartOf="@+id/name_edtxt" />
+        app:layout_constraintStart_toStartOf="@+id/name_edtxt"
+        app:layout_constraintTop_toBottomOf="@+id/weather_txtview" />
+
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/camview"
+        android:layout_width="wrap_content"
+        android:layout_height="210dp"
+        android:layout_margin="10dp"
+        android:tooltipText="this is the camera view"
+        app:camera_id="any"
+        app:layout_constraintTop_toBottomOf="@+id/msg_txtview" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/name_edtxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_margin="16dp"
         android:backgroundTint="@android:color/holo_orange_light"
         android:fontFamily="casual"
         android:hint="your name"
         android:singleLine="true"
         android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/camview" />
 
     <Button
         android:id="@+id/play_btn"
         style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_margin="16dp"
         android:background="@android:color/holo_orange_light"
         android:text="PLAY"
         android:textSize="24sp"
         android:fontFamily="casual"
-        app:layout_constraintEnd_toEndOf="@+id/name_edtxt"
-        app:layout_constraintStart_toStartOf="@+id/name_edtxt"
+        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/name_edtxt" />
 
 </android.support.constraint.ConstraintLayout>
