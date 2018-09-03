@@ -21,3 +21,5 @@ This project implements Agile through Scrum and Kanban principles.
 
 ## the game
 At the end of each day, BUGs will spawn and kill you if you're not fit enough...
+
+__NDK Sample__
