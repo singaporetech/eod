@@ -12,11 +12,11 @@ This project implements Agile through Scrum and Kanban principles.
 | --------------- | ----------------------------------------------------- |
 | user stories    | issues                                                |
 | other PBIs      | issues                                                |
-| sprints         | milestones                                            |
-| project backlog | unmilestoned/unassigned issues                        |
-| sprint backlog  | milestoned/unassigned issues                          |
-| in progress     | branches working on milestoned/assigned issues        |
-| in review       | PR-ed branches working on milestoned/assigned issues  |
+| sprints         | projects                                              |
+| product backlog | unassigned issues not in a project                    |
+| sprint backlog  | unassigned issues in a project                        |
+| in progress     | branches working on assigned issues in the project     |
+| in review       | PR-ed branches working on assigned issues in the project   |
 | closed          | merged branches with closed issues                    |
 
 ## the game
