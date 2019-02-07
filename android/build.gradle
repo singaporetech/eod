@@ -1,5 +1,5 @@
 android {
-//    buildToolsVersion '26.0.2'
+//    buildToolsVersion '28.0.3'
     compileSdkVersion 28
     sourceSets {
         main {
@@ -19,6 +19,12 @@ android {
         applicationId "com.boliao.eod"
         minSdkVersion 26
         targetSdkVersion 28
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 }
 
@@ -49,6 +55,12 @@ task copyAndroidNatives() {
     }
 }
 
+tasks.whenTaskAdded { packageTask ->
+    if (packageTask.name.contains("package")) {
+        packageTask.dependsOn 'copyAndroidNatives'
+    }
+}
+
 task run(type: Exec) {
     def path
     def localProperties = project.file("../local.properties")
@@ -71,32 +83,33 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.boliao.eod/AndroidLauncher'
 }
 
-// sets up the Android Idea project, using the old Ant based build.
-idea {
-    module {
-        sourceDirs += file("src" );scopes =[ COMPILE: [plus: [project.configurations.compile]]]        
-
-        iml {
-            withXml {
-                def node = it.asNode()
-                def builder = NodeBuilder.newInstance();
-                builder.current = node;
-                builder.component(name: "FacetManager") {
-                    facet(type: "android", name: "Android") {
-                        configuration {
-                            option(name:"UPDATE_PROPERTY_FILES" , value:"true")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+//// sets up the Android Idea project, using the old Ant based build.
+//idea {
+//    module {
+//        sourceDirs += file("src" );scopes =[ COMPILE: [plus: [project.configurations.compile]]]
+//
+//        iml {
+//            withXml {
+//                def node = it.asNode()
+//                def builder = NodeBuilder.newInstance();
+//                builder.current = node;
+//                builder.component(name: "FacetManager") {
+//                    facet(type: "android", name: "Android") {
+//                        configuration {
+//                            option(name:"UPDATE_PROPERTY_FILES" , value:"true")
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 dependencies {
-    implementation 'com.android.support:support-annotations:26.+'
-    implementation 'com.android.support:support-compat:26.+'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'com.android.support:animated-vector-drawable:28.0.0'
+    implementation 'com.android.support:support-media-compat:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.+'
     implementation 'com.google.android.gms:play-services-location:11.+'
