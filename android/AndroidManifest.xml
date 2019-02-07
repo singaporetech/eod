@@ -4,15 +4,32 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- only show app in store to users with the following -->
+    <!-- only show app in store to users with the following -->
     <!-- <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" /> -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- TODO NETWORKING -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme">
+
+        <!-- TODO SERVICES -->
+        <!-- demo the big 4 tags -->
+        <activity android:name=".Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".AndroidLauncher"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
@@ -27,6 +44,36 @@
 
         <service
             android:name=".GameStateService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <!-- TODO SERVICES -->
+        <!-- exported="false" limits access to within app -->
+
+
+        <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
+        <service
+            android:name=".ReminderJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".UserEncryptionService"
+            android:exported="false" />
+
+        <!-- TODO BROADCAST-RECEIVERS -->
+        <receiver
+            android:name=".ScreenOnReceiver"
+            android:enabled="true"
+            android:exported="false">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.SCREEN_ON" /> -->
+            <!-- </intent-filter> -->
+        </receiver>
+
+        <!-- TODO NETWORKING -->
+        <service
+            android:name=".WeatherService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

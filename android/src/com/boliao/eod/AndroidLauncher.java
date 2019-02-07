@@ -1,5 +1,8 @@
 package com.boliao.eod;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,13 +12,25 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 public class AndroidLauncher extends AndroidApplication {
     private static final String TAG = "AndroidLauncher";
+    private static final int REMINDER_JOB_ID = 0;
     private Intent intent;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        // init game state service
+	    // schedule a job service to remind about stuffs
+        JobScheduler js = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        JobInfo ji = new JobInfo.Builder(
+                REMINDER_JOB_ID,
+                new ComponentName(this, ReminderJobService.class))
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPeriodic(5*1000)
+                .build();
+        js.schedule(ji);
+
+        // start game state service
+        // - may already be running from a previous run, so pls check
         intent = new Intent(this, GameStateService.class);
         if (GameState.i().isServiceStarted()) {
             Log.i(TAG, "GameStateService already started.");
@@ -37,7 +52,7 @@ public class AndroidLauncher extends AndroidApplication {
      */
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "Destroying activity and service");
+        Log.i(TAG, "Destroying activity only ");
         super.onDestroy();
         //stopService(intent);
 

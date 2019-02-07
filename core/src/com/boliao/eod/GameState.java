@@ -1,12 +1,11 @@
 package com.boliao.eod;
 
-import com.badlogic.gdx.Gdx;
 import com.boliao.eod.components.Health;
 
 /**
  * Created by mrboliao on 16/1/17.
+ * - a singleton class representing the entire game state
  */
-
 public class GameState {
     private static final String TAG = "GameState";
 
@@ -42,10 +41,6 @@ public class GameState {
         return timer;
     }
 
-    /**
-     *
-     * @return whether can spawn
-     */
     public void decTimer() {
         //Gdx.app.log(TAG, "decTimer()");
         --timer;

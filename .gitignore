@@ -1,5 +1,7 @@
-## Java
+# vim
+*session.vim
 
+## Java
 *.class
 *.war
 *.ear
@@ -33,6 +35,8 @@ android/gen/
 *.iml
 out/
 com_crashlytics_export_strings.xml
+.ExternalNativeBuild/
+.undodir/
 
 ## Eclipse
 .classpath
@@ -60,7 +64,6 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
-
 .gradle
 gradle-app.setting
 build/
