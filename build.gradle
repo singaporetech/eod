@@ -15,8 +15,8 @@ allprojects {
     version = '1.0'
     ext {
         appName = "eod"
-        gdxVersion = '1.9.5'
-        roboVMVersion = '2.3.0'
+        gdxVersion = '1.9.9'
+        roboVMVersion = '2.3.5'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
@@ -71,7 +71,7 @@ project(":core") {
         implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-ai:1.8.0"
+        implementation "com.badlogicgames.gdx:gdx-ai:$aiVersion"
     }
 }
 
