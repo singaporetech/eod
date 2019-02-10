@@ -1,6 +1,7 @@
+## dev branch
+
 # eod
 **e**nd-**o**f-**d**ay a.k.a. **e**xercise-**o**r-**d**ie
-asas
 
 An attempt to gamify exercise with **real** game mechanics.
 
