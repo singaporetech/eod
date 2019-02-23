@@ -26,7 +26,7 @@ import static android.app.Notification.VISIBILITY_PUBLIC;
 
 /**
  * TODO SERVICES 1
- * Create a service to collect sensor data and send these updates to GameState in game core component
+ * create a service to collect sensor data and send these updates to GameState in game core component
  * - both a started (collect sensor data) and bounded service (update UI continuously)
  * - this background service will persist until the app is explicitly closed
  */
@@ -34,12 +34,16 @@ public class GameStateService extends Service implements SensorEventListener {
     private static final String TAG = "GameStateService";
 
     // TODO NOTIFICATIONS
-    // add ID vars for notifications
+    // - add var for NotificationManager
+    // - add ID vars for notifications
+    NotificationManager notificationManager;
     private static final String NOTIFICATION_CHANNEL_ID = "EOD CHANNEL";
     private static final int NOTIFY_ID = 0;
     private static final int PENDINGINTENT_ID = 1;
 
-    // binder interface helper
+    // TODO SERVICES
+    // create GameStateBinder class that extends Binder
+    // - init an IBinder interface var to hold class
     public class GameStateBinder extends Binder {
         public GameStateService getService() {
             return GameStateService.this;
@@ -47,20 +51,35 @@ public class GameStateService extends Service implements SensorEventListener {
     }
     private final IBinder binder = new GameStateBinder();
 
-    // sensors
+    // TODO SENSORS
+    // create SensorManager and Sensor vars to interface with phone sensors
     private SensorManager sensorManager;
     private Sensor stepDetector;
 
-    // notifications
-    NotificationManager notificationManager;
-
+    /**
+     * Empty Ctor
+     */
     public GameStateService() {}
 
+    /**
+     * TODO SERVICES
+     * implement onBind to return the binder interface
+     * @param intent
+     * @return IBinder to obtain a handle to the service
+     */
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
     }
 
+    /**
+     * TODO SERVICES
+     * override onCreate of this Service to initialize various things
+     * - get handle to SensorManager from a System Service
+     * - get list of available sensors from the sensorManager
+     * - get handle to step detector from sensorManager
+     * - init NotificationManager and NotificationChannel
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -105,11 +124,17 @@ public class GameStateService extends Service implements SensorEventListener {
     }
 
     /**
-     * The method that implements what the service should do.
+     * TODO SERVICES
+     * implement onStartCommand to define what the service will actually keep doing
+     * - register this class as a SensorListener (extend this Service) using sensorManager
+     * - add a thread to manage spawning of bugs based on a countdown
+     *      - spawn bug when GameState.i().isCanNotify() && !GameState.i().isAppActive()
+     *      - create pending intent to launch AndroidLauncher
+     *      - use NotificationCompat.Builder to make notification
      * @param intent
      * @param flags
      * @param startId
-     * @return this int controls what happens when this service is auto killed, e.g., sticky or not
+     * @return an int that controls what happens when this service is auto killed, e.g., sticky or not
      *         - see https://goo.gl/shXLoy
      */
     @Override
@@ -168,6 +193,8 @@ public class GameStateService extends Service implements SensorEventListener {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    // TODO SENSORS
+    // - onDestroy of service, unregister this listener from the sensorManager
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -176,8 +203,10 @@ public class GameStateService extends Service implements SensorEventListener {
     }
 
     // TODO SENSORS 2
-    // Implementing SensorEventListener callbacks.
-    // - callback when sensor has new values
+    // implement onSensorChanged callback, system will call this back when sensor has new vals
+    // - simply call GameState.i().incSteps(event.values[0])
+    //   if event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR
+    // - log value for debugging
     // - do as minimal as possible (this is called VERY frequently)
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -192,7 +221,9 @@ public class GameStateService extends Service implements SensorEventListener {
         }
     }
 
-    // callback when accuracy changes
+    // TODO SENSORS 2
+    // implement onSensorChanged callback, system will call this back when sensor accuracy changed
+    // - just show a log msg
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.i(TAG, "Sensor accuracy changed to " + accuracy);
