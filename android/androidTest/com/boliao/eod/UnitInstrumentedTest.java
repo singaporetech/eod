@@ -106,16 +106,21 @@ public class UnitInstrumentedTest {
         onView(withClassName(endsWith("GLSurfaceView20"))).check(matches(isDisplayed()));
     }
 
+    /**
+     * UNINSTALL prev ver to clear shared prefs before running this test
+     */
     @Test
     public void onExistingUsername_failedStart() {
         final String name1 = "chektien";
+        final String name2 = "chek";
         final String errMsg = "Name already exists!";
         Log.i(TAG, "### On Splash View" +
-                "\n- input " + name1 + "" + " and click PLAY" +
+                "\n- click PLAY with alternating inputs " + name1 + " amd " + name2 +
                 "\n- expected see a view of type GLSurfaceView20" +
                 "\n- then input same name again and click PLAY" +
                 "\n- expected to see " + errMsg + "");
 
+        // check base case
         onView(withId(R.id.name_edtxt))
                 .perform(clearText(), typeText(name1), closeSoftKeyboard());
         onView(withText(equalToIgnoringCase("PLAY"))).perform(click());
@@ -125,9 +130,19 @@ public class UnitInstrumentedTest {
         onView(withId(R.id.name_edtxt))
                 .perform(clearText(), typeText(name1), closeSoftKeyboard());
         onView(withText(equalToIgnoringCase("PLAY"))).perform(click());
-        onView(withText(equalToIgnoringCase(errMsg))).check(matches(isDisplayed()));
         onView(withId(R.id.msg_txtview)).check(matches(withText(containsString(errMsg))));
 
+        // now check if it is not simply storing the last username
+        onView(withId(R.id.name_edtxt))
+                .perform(clearText(), typeText(name2), closeSoftKeyboard());
+        onView(withText(equalToIgnoringCase("PLAY"))).perform(click());
+        onView(withClassName(endsWith("GLSurfaceView20"))).check(matches(isDisplayed()));
+
+        pressBack();
+        onView(withId(R.id.name_edtxt))
+                .perform(clearText(), typeText(name1), closeSoftKeyboard());
+        onView(withText(equalToIgnoringCase("PLAY"))).perform(click());
+        onView(withId(R.id.msg_txtview)).check(matches(withText(containsString(errMsg))));
     }
 
     /**
