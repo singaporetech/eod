@@ -61,8 +61,8 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4ClassRunner.class)
 @LargeTest
-public class IntegrationInstrumentedTest {
-    private static final String TAG = "IntegrationInstrumentedTest";
+public class UnitInstrumentedTest {
+    private static final String TAG = "UnitInstrumentedTest";
     protected static final boolean LAUNCH_ACTIVITY_PER_TEST = true;
     protected static final int REPORT_ITEM_MAX_LENGTH = 100;
 
