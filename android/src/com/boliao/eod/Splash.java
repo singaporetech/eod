@@ -70,6 +70,7 @@ public class Splash extends AppCompatActivity {
 
                     // TODO SERVICES 2: what if this needs some intensive processing
                     // - e.g., pseudo-encrypt the username using some funky algo
+                    // - store the encrypted username in shared prefs
                     // - UI should not lag or ANR
 
                     // SOLN: defer processing to an IntentService: do some heavy lifting w/o
