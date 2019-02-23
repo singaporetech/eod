@@ -21,6 +21,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         supportVer = '28.0.0'
+        mainVer = '1.1.0'
     }
 
     repositories {

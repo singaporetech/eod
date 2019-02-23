@@ -11,6 +11,9 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
         }
+        androidTest {
+            java.srcDirs = ['androidTest']
+        }
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
@@ -19,6 +22,7 @@ android {
         applicationId "com.boliao.eod"
         minSdkVersion 26
         targetSdkVersion 28
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -94,4 +98,33 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:16.0.0") {
         exclude group: 'com.android.support'
     }
+
+    // core tests
+    androidTestImplementation "androidx.test:core:$mainVer"
+    androidTestImplementation "androidx.test:runner:$mainVer"
+    androidTestImplementation "androidx.test:rules:$mainVer"
+
+    // Espresso
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:3.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:3.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-web:3.1.1"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:3.1.1"
+
+    // Assertions
+    androidTestImplementation "androidx.test.ext:junit:$mainVer"
+    androidTestImplementation "androidx.test.ext:truth:$mainVer"
+    androidTestImplementation 'com.google.truth:truth:0.42'
+//    testImplementation 'junit:junit:4.12'
+
+    // The following Espresso dependency can be either "implementation"
+    // or "androidTestImplementation", depending on whether you want the
+    // dependency to appear on your APK's compile classpath or the test APK
+    // classpath.
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.1.0'
+}
+repositories {
+    mavenCentral()
 }

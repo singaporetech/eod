@@ -19,8 +19,8 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// TODO SERVICES
-	    // - schedule a job service to remind about stuffs
+		// TODO SERVICES 3: create a reminder for user to charge phone periodically
+        // - e.g., test a time of 5 secs
         JobScheduler js = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         JobInfo ji = new JobInfo.Builder(
                 REMINDER_JOB_ID,
@@ -30,7 +30,11 @@ public class AndroidLauncher extends AndroidApplication {
                 .build();
         js.schedule(ji);
 
-        // TODO SERVICES
+        // TODO SERVICES 4: manage game state changes
+        // - track and update steps
+        // - track countdown timer to spawn bugs
+        // - everything should be done in the background (even when app not visible)
+
         // start game state service
         // - may already be running from a previous run, so pls check
         intent = new Intent(this, GameStateService.class);

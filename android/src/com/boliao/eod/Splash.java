@@ -19,8 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import static java.lang.Thread.sleep;
-
 /**
  * This is the splash screen that records who is playing.
  */
@@ -36,6 +34,8 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        // get refs to UI components
 		final Button playBtn = findViewById(R.id.play_btn);
         final AppCompatEditText usernameEdtTxt = findViewById(R.id.name_edtxt);
         final AppCompatTextView msgTxtView = findViewById(R.id.msg_txtview);
@@ -128,8 +128,9 @@ public class Splash extends AppCompatActivity {
 		playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO SERVICES 1
-                // 1: just store in preferences
+                // TODO SERVICES 1: check if username is already taken
+                // - if username exists, set msgTxtView to "player exists..."
+                // - else, set msgTxtView to "starting game, pls wait"
                 String usernameStr = usernameEdtTxt.getText().toString();
                 String existingStr = pref.getString(usernameStr, "-----");
                 if (usernameStr.equals(existingStr)) {
@@ -139,7 +140,8 @@ public class Splash extends AppCompatActivity {
                     msgTxtView.setText("starting game, pls wait...");
 
                     // TODO SERVICES 2: what if this needs some intensive processing
-                    // encrypt the username using some funky algo
+                    // - e.g., pseudo-encrypt the username using some funky algo
+                    // - UI should not lag or ANR
 
                     // defer the encryption to a background service
                     UserEncryptionService.startActionEncrypt(v.getContext(), usernameStr);
@@ -149,7 +151,7 @@ public class Splash extends AppCompatActivity {
                     startActivity(intent);
                 }
 
-                // TODO SERVICES 3: WHAT IF need to check if username is banned from server and come back to UI
+                // TODO SERVICES n: goto AndroidLauncher
             }
         });
     }
