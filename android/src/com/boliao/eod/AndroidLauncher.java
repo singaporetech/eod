@@ -19,7 +19,8 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-	    // schedule a job service to remind about stuffs
+		// TODO SERVICES
+	    // - schedule a job service to remind about stuffs
         JobScheduler js = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         JobInfo ji = new JobInfo.Builder(
                 REMINDER_JOB_ID,
@@ -29,6 +30,7 @@ public class AndroidLauncher extends AndroidApplication {
                 .build();
         js.schedule(ji);
 
+        // TODO SERVICES
         // start game state service
         // - may already be running from a previous run, so pls check
         intent = new Intent(this, GameStateService.class);

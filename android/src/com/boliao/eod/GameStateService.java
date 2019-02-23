@@ -20,19 +20,21 @@ import android.support.v4.app.NotificationCompat;
 //import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
-import com.badlogic.gdx.utils.Timer;
-
 import java.util.List;
 
 import static android.app.Notification.VISIBILITY_PUBLIC;
 
 /**
- * A service to collect sensor data and send these updates to GameState in game core component
+ * TODO SERVICES 1
+ * Create a service to collect sensor data and send these updates to GameState in game core component
  * - both a started (collect sensor data) and bounded service (update UI continuously)
  * - this background service will persist until the app is explicitly closed
  */
 public class GameStateService extends Service implements SensorEventListener {
     private static final String TAG = "GameStateService";
+
+    // TODO NOTIFICATIONS
+    // add ID vars for notifications
     private static final String NOTIFICATION_CHANNEL_ID = "EOD CHANNEL";
     private static final int NOTIFY_ID = 0;
     private static final int PENDINGINTENT_ID = 1;
@@ -51,9 +53,6 @@ public class GameStateService extends Service implements SensorEventListener {
 
     // notifications
     NotificationManager notificationManager;
-
-    // broadcast receivers
-    private ScreenOnReceiver screenOnReceiver = new ScreenOnReceiver();
 
     public GameStateService() {}
 
@@ -94,7 +93,8 @@ public class GameStateService extends Service implements SensorEventListener {
         // init notification manager
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // only from Android Oreo, now need to set notification channels before it will appear
+        // set notification channels before it will appear
+        // - channels started from Oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(new NotificationChannel(
                     NOTIFICATION_CHANNEL_ID,
@@ -102,10 +102,6 @@ public class GameStateService extends Service implements SensorEventListener {
                     NotificationManager.IMPORTANCE_HIGH
             ));
         }
-
-        // TODO BROADCAST-RECEIVERS
-        // register receiver
-        registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
     }
 
     /**
@@ -177,12 +173,6 @@ public class GameStateService extends Service implements SensorEventListener {
         super.onDestroy();
 
         sensorManager.unregisterListener(this, stepDetector);
-
-        // TODO BROADCAST-RECEIVERS
-        // unregister receiver
-        // - note that this is only unregister in a service's destroy because you want the app
-        //   to keep listening to broadcasts
-        unregisterReceiver(screenOnReceiver);
     }
 
     // TODO SENSORS 2
