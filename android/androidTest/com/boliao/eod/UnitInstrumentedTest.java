@@ -80,14 +80,6 @@ public class UnitInstrumentedTest {
         device = UiDevice.getInstance(getInstrumentation());
     }
 
-    @Test
-    public void onInputUsername_successfulLogin() {
-        Log.i(TAG,"\n### LoginActivity layout and UI elements are similar to screenshot" +
-                "\n- has editTextPassport, editTextPassword, and imageViewLogo elements and LOGIN and CLEAR buttons");
-
-        assert(true);
-    }
-
     /**
      * Internal unit test for the isNumeric test.
      * - uncomment @Test if wanna use this
