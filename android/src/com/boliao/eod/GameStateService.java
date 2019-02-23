@@ -25,10 +25,11 @@ import java.util.List;
 import static android.app.Notification.VISIBILITY_PUBLIC;
 
 /**
- * TODO SERVICES 1
- * create a service to collect sensor data and send these updates to GameState in game core component
+ * TODO SERVICES: a background service to manage game state
+ * - collect sensor data and send these updates to GameState in game core component
+ * - determine time to spawn bugs
  * - both a started (collect sensor data) and bounded service (update UI continuously)
- * - this background service will persist until the app is explicitly closed
+ * - this background service will try to persist until the app is explicitly closed
  */
 public class GameStateService extends Service implements SensorEventListener {
     private static final String TAG = "GameStateService";
@@ -74,7 +75,7 @@ public class GameStateService extends Service implements SensorEventListener {
 
     /**
      * TODO SERVICES
-     * override onCreate of this Service to initialize various things
+     * - override onCreate of this Service to initialize various things
      * - get handle to SensorManager from a System Service
      * - get list of available sensors from the sensorManager
      * - get handle to step detector from sensorManager
@@ -108,7 +109,7 @@ public class GameStateService extends Service implements SensorEventListener {
             Log.e(TAG, "No step sensors on device!");
         }
 
-        // TODO NOTIFICATIONS 1
+        // TODO NOTIFICATIONS
         // init notification manager
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -202,7 +203,7 @@ public class GameStateService extends Service implements SensorEventListener {
         sensorManager.unregisterListener(this, stepDetector);
     }
 
-    // TODO SENSORS 2
+    // TODO SENSORS
     // implement onSensorChanged callback, system will call this back when sensor has new vals
     // - simply call GameState.i().incSteps(event.values[0])
     //   if event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR
@@ -221,7 +222,7 @@ public class GameStateService extends Service implements SensorEventListener {
         }
     }
 
-    // TODO SENSORS 2
+    // TODO SENSORS
     // implement onSensorChanged callback, system will call this back when sensor accuracy changed
     // - just show a log msg
     @Override
