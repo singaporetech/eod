@@ -65,14 +65,21 @@ public class Splash extends AppCompatActivity {
                 }
                 else {
                     msgTxtView.setText("Starting game...");
-                    prefEditor.putString(username, username);
-                    prefEditor.commit();
+//                    prefEditor.putString(username, username);
+//                    prefEditor.commit();
+
+                    // TODO SERVICES 2: what if this needs some intensive processing
+                    // - e.g., pseudo-encrypt the username using some funky algo
+                    // - UI should not lag or ANR
+
+                    // SOLN: defer processing to an IntentService: do some heavy lifting w/o
+                    // UI then shutdown the service
+                    NameCryptionService.startActionFoo(Splash.this, username);
+
                     startActivity(startAndroidLauncher);
                 }
 
-                // TODO SERVICES 2: what if this needs some intensive processing
-                // - e.g., pseudo-encrypt the username using some funky algo
-                // - UI should not lag or ANR
+
 
                 // TODO SERVICES n: goto AndroidLauncher
             }

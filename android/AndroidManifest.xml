@@ -16,17 +16,19 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme">
-
+        <service
+            android:name=".NameCryptionService"
+            android:exported="false"></service>
         <!-- TODO SERVICES -->
         <!-- Q: What are the big 4 tags? -->
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".AndroidLauncher"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
@@ -34,6 +36,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -41,17 +44,13 @@
         <service
             android:name=".GameStateService"
             android:enabled="true"
-            android:exported="true" />
-
-        <!-- TODO SERVICES -->
+            android:exported="true" /> <!-- TODO SERVICES -->
         <!-- exported="false" limits access to within app -->
-
         <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
         <service
             android:name=".ReminderJobService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <service
             android:name=".UserEncryptionService"
             android:exported="false" />
