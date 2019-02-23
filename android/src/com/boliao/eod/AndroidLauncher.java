@@ -20,15 +20,8 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 
 		// TODO SERVICES 3: create a reminder for user to charge phone periodically
+        // - even when app is not running
         // - e.g., test a time of 5 secs
-        JobScheduler js = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        JobInfo ji = new JobInfo.Builder(
-                REMINDER_JOB_ID,
-                new ComponentName(this, ReminderJobService.class))
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .setPeriodic(5*1000)
-                .build();
-        js.schedule(ji);
 
         // TODO SERVICES 4: manage game state changes
         // - track and update steps

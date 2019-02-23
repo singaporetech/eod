@@ -47,14 +47,6 @@
         <!-- exported="false" limits access to within app -->
 
         <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
-        <service
-            android:name=".ReminderJobService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <service
-            android:name=".UserEncryptionService"
-            android:exported="false" />
     </application>
 
 </manifest>
