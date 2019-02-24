@@ -12,13 +12,13 @@ This project implements Agile through Scrum and Kanban principles.
 
 | **AGILE**       | **GITHUB**                                            |
 | --------------- | ----------------------------------------------------- |
-| user stories    | issues                                                |
-| other PBIs      | issues                                                |
-| sprints         | milestones                                            |
-| project backlog | unmilestoned/unassigned issues                        |
-| sprint backlog  | milestoned/unassigned issues                          |
-| in progress     | branches working on milestoned/assigned issues        |
-| in review       | PR-ed branches working on milestoned/assigned issues  |
+| user stories    | ISSUESs with "user story" label                       |
+| other PBIs      | ISSUESs with "task" label                             |
+| sprints         | scrum boards in PROJECT                               |
+| project backlog | ISSUEs not in any PROJECT scrum boards                |
+| sprint backlog  | ISSUEs in "To Do" col of PROJECT scrum board          |
+| in progress     | ISSUEs in "In Progress" col of PROJECT scrum board    |
+| in review       | ISSUEs in "In Review" col of PROJECT scrum board      |
 | closed          | merged branches with closed issues                    |
 
 ## the game
