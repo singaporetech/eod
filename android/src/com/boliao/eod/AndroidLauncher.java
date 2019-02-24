@@ -28,16 +28,20 @@ public class AndroidLauncher extends AndroidApplication {
 
 		// TODO SERVICES 3: create a reminder for user to charge phone periodically
         // - note that periodic tasks cannot be < 15mins
+
+        // build a set of constraints, e.g., battery low and device idle
         Constraints workConstraints = new Constraints.Builder()
                 .setRequiresBatteryNotLow(false)
                 .setRequiresDeviceIdle(false)
                 .build();
 
+        // build a work request from a Worker.class that fires periodically with the constraints above
         PeriodicWorkRequest pwr = new PeriodicWorkRequest.Builder(ReminderWorker.class,
                 15, TimeUnit.MINUTES)
                 .setConstraints(workConstraints)
                 .build();
 
+        // enqueue the work request with the WorkManager singleton
         WorkManager.getInstance().enqueue(pwr);
 
         // TODO SERVICES 4: manage game state changes

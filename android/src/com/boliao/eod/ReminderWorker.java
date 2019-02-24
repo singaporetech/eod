@@ -44,8 +44,8 @@ public class ReminderWorker extends Worker {
         // - note the builder pattern is a common design pattern used for creating objs in the api
         Notification n = new NotificationCompat.Builder(super.getApplicationContext(), NCID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle("EOD REMINDER to charge")
-                .setContentText("GO AND CHARGE LAH")
+                .setContentTitle("eod REMINDER to charge")
+                .setContentText("How to fight bugs if ur phone juice run out...")
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVibrate(new long[]{1000,1000,1000})
