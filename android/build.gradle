@@ -98,6 +98,8 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:16.0.0") {
         exclude group: 'com.android.support'
     }
+    implementation "android.arch.work:work-runtime:1.0.0-rc02"
+//    implementation "androidx.media:media:1.0.0"
 
     // core tests
     androidTestImplementation "androidx.test:core:$mainVer"

@@ -10,6 +10,13 @@ import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.Constraints;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 public class AndroidLauncher extends AndroidApplication {
     private static final String TAG = "AndroidLauncher";
     private static final int REMINDER_JOB_ID = 0;
@@ -20,7 +27,18 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 
 		// TODO SERVICES 3: create a reminder for user to charge phone periodically
-        // - e.g., test a time of 5 secs
+        // - note that periodic tasks cannot be < 15mins
+        Constraints workConstraints = new Constraints.Builder()
+                .setRequiresBatteryNotLow(false)
+                .setRequiresDeviceIdle(false)
+                .build();
+
+        PeriodicWorkRequest pwr = new PeriodicWorkRequest.Builder(ReminderWorker.class,
+                15, TimeUnit.MINUTES)
+                .setConstraints(workConstraints)
+                .build();
+
+        WorkManager.getInstance().enqueue(pwr);
 
         // TODO SERVICES 4: manage game state changes
         // - track and update steps
