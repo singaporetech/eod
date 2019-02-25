@@ -51,15 +51,27 @@ public class Splash extends AppCompatActivity {
             public void onClick(View v) {
                 // dummy action
                 Intent startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
-                startActivity(startAndroidLauncher);
 
                 // TODO SERVICES 1: check if username is already taken
                 // - if username exists, set msgTxtView to "player exists..."
                 // - else, set msgTxtView to "starting game, pls wait"
+                String username = usernameEdtTxt.getText().toString();
+
+                if (pref.contains(username)) {
+                    msgTxtView.setText("player exists...");
+                }
+                else {
+                    msgTxtView.setText("starting game, pls wait");
+
+                    EncryptNameIntentService.startActionEncrypt(Splash.this, username);
+
+                    startActivity(startAndroidLauncher);
+                }
 
                 // TODO SERVICES 2: what if this needs some intensive processing
                 // - e.g., pseudo-encrypt the username using some funky algo
                 // - UI should not lag or ANR
+
 
                 // TODO SERVICES n: goto AndroidLauncher
             }

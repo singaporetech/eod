@@ -31,6 +31,9 @@ public class AndroidLauncher extends AndroidApplication {
         // - build a work request from a Worker.class that fires periodically with the constraints above
         // - enqueue the work request with the WorkManager singleton
 
+        Constraints c = new Constraints.Builder()
+                .setRequiresBatteryNotLow(true)
+                .setRequiresDeviceIdle(false)
 
         // TODO SERVICES 4: manage game state changes
         // - track and update steps

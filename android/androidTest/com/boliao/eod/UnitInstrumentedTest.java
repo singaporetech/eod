@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 
 import androidx.test.uiautomator.*;
 
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -77,6 +78,62 @@ public class UnitInstrumentedTest {
     @Before
     public void setupUiAutomator() {
         device = UiDevice.getInstance(getInstrumentation());
+    }
+
+    @Test
+    public void onAppOpen_uiValid() {
+        Log.i(TAG, "# Expected UI elements exist");
+
+        // check whether a view component with id = name_edttxt exists
+        onView(withId(R.id.name_edtxt)).check(matches(isDisplayed()));
+        onView(withId(R.id.msg_txtview)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void onLoginWithNewUsername_startGame() {
+        final String username = "chek";
+        Log.i(TAG, "# Valid login" +
+                "- input correct username" + username + "" +
+                "- expect to see game activity started");
+
+
+        // input a username
+        onView(withId(R.id.name_edtxt)).perform(clearText(), typeText(username), closeSoftKeyboard());
+
+        onView(withText(equalToIgnoringCase("PLAY"))).perform(click());
+
+        // see whether game activity started
+        onView(withClassName(containsString("GLSurfaceView20"))).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void onLoginWithDupeUsername_showErrMsg() {
+        final String username = "chek1";
+        final String errMsg = "player existssss...";
+        Log.i(TAG, "# Valid login" +
+                "- input same username" + username + "" +
+                "- expect to see err msg \"player exists...\"");
+
+
+        // input a username
+        onView(withId(R.id.name_edtxt)).perform(clearText(), typeText(username), closeSoftKeyboard());
+        onView(withText(equalToIgnoringCase("PLAY"))).perform(click());
+
+        // see whether game activity started
+        onView(withClassName(containsString("GLSurfaceView20"))).check(matches(isDisplayed()));
+
+        pressBack();
+
+        // try to login with DUPE usernam
+        // input a username
+        onView(withId(R.id.name_edtxt)).perform(clearText(), typeText(username), closeSoftKeyboard());
+        onView(withText(equalToIgnoringCase("PLAY"))).perform(click());
+
+        // see whether game activity started
+        onView(withClassName(containsString("GLSurfaceView20"))).check(doesNotExist());
+        onView(withText(containsString(errMsg))).check(matches(isDisplayed()));
     }
 
     /**
