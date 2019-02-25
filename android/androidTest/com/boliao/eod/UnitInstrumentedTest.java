@@ -63,7 +63,6 @@ import static org.junit.Assert.assertEquals;
 @LargeTest
 public class UnitInstrumentedTest {
     private static final String TAG = "UnitInstrumentedTest";
-    protected static final boolean LAUNCH_ACTIVITY_PER_TEST = true;
     protected static final int REPORT_ITEM_MAX_LENGTH = 100;
 
     // UiAutomator device
@@ -73,7 +72,7 @@ public class UnitInstrumentedTest {
     public TestLogger testLogger = new TestLogger();
 
     @Rule
-    public ActivityTestRule<Splash> activityRule = new ActivityTestRule<>(Splash.class, false, LAUNCH_ACTIVITY_PER_TEST);
+    public ActivityTestRule<Splash> activityRule = new ActivityTestRule<>(Splash.class, false, true);
 
     @Before
     public void setupUiAutomator() {
@@ -107,29 +106,6 @@ public class UnitInstrumentedTest {
             protected boolean matchesSafely(TextView item) {
                 try {
                     return is7Numeric(item.getText().toString());
-                } catch (Exception e) {
-                    return false;
-                }
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("is numeric");
-            }
-        };
-    }
-
-    /**
-     * Custom ViewMatcher to check if text is 4 digits
-     */
-    public Matcher<View> isEqualsNum(final int num) {
-        return new BoundedMatcher<View, TextView>(TextView.class) {
-            @Override
-            protected boolean matchesSafely(TextView item) {
-                try {
-                    String str = item.getText().toString().replaceAll("\\D+","");
-                    int input = Integer.parseInt(str);
-                    return input == num;
                 } catch (Exception e) {
                     return false;
                 }

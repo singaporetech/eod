@@ -168,7 +168,7 @@ public class GameStateService extends Service implements SensorEventListener {
 
                             // build the notification
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(GameStateService.this, NOTIFICATION_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.ic_launcher)
+                                    .setSmallIcon(R.drawable.ic_stat_name)
                                     .setContentTitle("Exercise Or Die")
                                     .setColor(Color.RED)
                                     .setVisibility(VISIBILITY_PUBLIC)
@@ -191,7 +191,9 @@ public class GameStateService extends Service implements SensorEventListener {
             }
         }.start();
 
-        return super.onStartCommand(intent, flags, startId);
+//        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
+
     }
 
     // TODO SENSORS
