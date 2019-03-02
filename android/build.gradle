@@ -98,7 +98,7 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:16.0.0") {
         exclude group: 'com.android.support'
     }
-    implementation "android.arch.work:work-runtime:1.0.0-rc02"
+    implementation "android.arch.work:work-runtime:$workVer"
 //    implementation "androidx.media:media:1.0.0"
 
     // core tests
@@ -115,6 +115,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-web:$espressoVer"
     androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVer"
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espressoVer"
+    androidTestImplementation "android.arch.work:work-testing:$workVer"
 
     // Assertions
     androidTestImplementation "androidx.test.ext:junit:$mainVer"
