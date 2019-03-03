@@ -19,7 +19,7 @@ public class ReminderWorker extends Worker {
 //    private NotificationManagerCompat notMgr;
     private NotificationManager notMgr;
     private final int NID = 8;
-    private final String NCID = "1";
+    private final String NCID = "2";
     private final String NNAME = "My Channel Name";
     private final String NDESC = "This is testing channel";
 
@@ -27,12 +27,12 @@ public class ReminderWorker extends Worker {
         super(context, workerParams);
 
         // init notification channel
-//        NotificationChannel chan = new NotificationChannel(NCID, NNAME, NotificationManager.IMPORTANCE_HIGH);
-//        chan.setDescription(NDESC);
+        NotificationChannel chan = new NotificationChannel(NCID, NNAME, NotificationManager.IMPORTANCE_HIGH);
+        chan.setDescription(NDESC);
 
         // init notification manager
         notMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//        notMgr.createNotificationChannel(chan);
+        notMgr.createNotificationChannel(chan);
     }
 
     @NonNull
