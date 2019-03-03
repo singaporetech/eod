@@ -83,7 +83,7 @@ public class NameCryptionService extends IntentService {
      * parameters.
      */
     private void handleActionFoo(String param1) {
-        // encrypt username
+        // encrypt username using some ultra modern 5s technique
         try {
             sleep(5000);
         } catch (InterruptedException e) {

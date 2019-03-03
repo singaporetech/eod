@@ -142,7 +142,9 @@ public class RenderEngine implements Engine{
     @Override
     public void finalize() {
         clearRenderables();
-        spriteBatch.dispose();
-        shapeRenderer.dispose();
+
+        // BUG says already disposed
+//        spriteBatch.dispose();
+//        shapeRenderer.dispose();
     }
 }

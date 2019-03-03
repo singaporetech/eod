@@ -65,8 +65,13 @@ public class Splash extends AppCompatActivity {
                 }
                 else {
                     msgTxtView.setText("Starting game...");
-//                    prefEditor.putString(username, username);
-//                    prefEditor.commit();
+
+                    // Store  username  to survive app destruction
+                    // DEPRECATED due to encryption below
+                    /*
+                    prefEditor.putString(username, username);
+                    prefEditor.commit();
+                    */
 
                     // TODO SERVICES 2: what if this needs some intensive processing
                     // - e.g., pseudo-encrypt the username using some funky algo
@@ -75,12 +80,15 @@ public class Splash extends AppCompatActivity {
 
                     // SOLN: defer processing to an IntentService: do some heavy lifting w/o
                     // UI then shutdown the service
+                    // - note that the WorkManager can also accomplish this
                     NameCryptionService.startActionFoo(Splash.this, username);
-
                     startActivity(startAndroidLauncher);
+
+                    // TODO THREADING 1: what if now, I want this result to be shown on UI
+                    // - I know know this encryption the most takes 5secs
+                    // - user needs to know result of what happened to his name anyway
+                    // SOLN: use AsyncTask
                 }
-
-
 
                 // TODO SERVICES n: goto AndroidLauncher
             }
