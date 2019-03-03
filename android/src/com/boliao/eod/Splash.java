@@ -9,8 +9,10 @@
  */
 package com.boliao.eod;
 
+import android.content.AsyncQueryHandler;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
@@ -25,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 import androidx.work.Constraints;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+
+import static java.lang.Thread.sleep;
 
 /**
  * This is the splash view that records who is playing.
@@ -74,7 +78,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // dummy action
-                Intent startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
+                final Intent startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
 
                 // TODO SERVICES 1: check if username is already taken
                 // - if username exists, set msgTxtView to "player exists..."
@@ -85,7 +89,7 @@ public class Splash extends AppCompatActivity {
                     msgTxtView.setText("Name already exists!");
                 }
                 else {
-                    msgTxtView.setText("Starting game...");
+//                    msgTxtView.setText("Starting game...");
 
                     // Store  username  to survive app destruction
                     // DEPRECATED due to encryption below
@@ -108,9 +112,32 @@ public class Splash extends AppCompatActivity {
                     // - I know know this encryption the most takes 5secs
                     // - user needs to know result of what happened to his name anyway
                     // SOLN: use AsyncTask
+                    new AsyncTask<String, Void, Boolean>() {
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected Boolean doInBackground(String... strings) {
+                            try {
+                                sleep(3000);
+                                // do something to the strings
+                            } catch (InterruptedException e) {
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean b) {
+                            super.onPostExecute(b);
+                            msgTxtView.setText("The encryption is:" + b);
+                            startActivity(startAndroidLauncher);
+                        }
+                    }.execute(username);
 
                     // launch the game
-                    startActivity(startAndroidLauncher);
                 }
 
                 // TODO SERVICES n: goto AndroidLauncher
