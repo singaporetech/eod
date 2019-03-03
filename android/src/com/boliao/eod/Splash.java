@@ -74,15 +74,8 @@ public class Splash extends AppCompatActivity {
         msgTxtView.setText(R.string.welcome_note);
 
         // TODO THREADING 1: create a persistent weather widget
-        // - always updating regularly (confirm < 15min) from online API
-        // - not expecting to pause it at any point until user logs in, where we'll stop it manually
-        // - ideally want updates even if navigate away (or even destroyed)
-        // SOLN: use a Started Service driven by a HandlerThread
-        //  - Recurring WM cannot as min 15 mins interval
-        //  - IntentService not ideal as we need always on
-        //  - ThreadPoolExecutor overkill as we only need one series of sequential work
-        //  - pure AsyncTask too much creation/destroying
-        //  - pure HandlerThread in VM will be killed when view killed
+        // - WeatherRepo is already nicely linked up in MVVM with SplashViewModel
+        // - implement changes in WeatherRepo
         ViewModel splashViewModel = ViewModelProviders.of(this).get(SplashViewModel.class);
         ((SplashViewModel) splashViewModel).getWeatherData().observe(this, new Observer<String>() {
             @Override

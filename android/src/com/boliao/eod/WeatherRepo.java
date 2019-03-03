@@ -15,7 +15,7 @@ public class WeatherRepo {
     // singleton
     private static WeatherRepo instance;
 
-    private Runnable r;
+    private Runnable weatherRunner;
 
     // weather live data
     @NonNull
@@ -42,8 +42,17 @@ public class WeatherRepo {
     }
 
     /**
-     * Background continuous task to fetch weather data
-     * - Spawn a HandlerThread
+     * TODO THREADING 2: override this method to fetch weather data
+     * - Background continuous task to fetch weather data
+     * - always updating regularly (confirm < 15min) from online API
+     * - not expecting to pause it at any point until user logs in, where we'll stop it manually
+     * - ideally want updates even if navigate away (or even destroyed)
+     * - Q: what primitive should we use?
+     * - Recurring WorkManager?
+     * - IntentService?
+     * - ThreadPoolExecutor?
+     * - AsyncTask?
+     * - A: Spawn a HandlerThread
      * - Q: Should you use a service to wrap the thread?
      * - A: Depends on whether you want it running beyond visible lifecycle
      */
@@ -52,13 +61,13 @@ public class WeatherRepo {
        weatherWorkerThread.start();
        weatherWorkerThread.prepareHandler();
 
-       r = new Runnable() {
+       weatherRunner = new Runnable() {
            @Override
            public void run() {
                weatherData.postValue("Weather now is: " + count++);
-               weatherWorkerThread.postTaskDelayed(r, FETCH_INTERVAL_MILLIS);
+               weatherWorkerThread.postTaskDelayed(weatherRunner, FETCH_INTERVAL_MILLIS);
            }
        };
-       weatherWorkerThread.postTask(r);
+       weatherWorkerThread.postTask(weatherRunner);
     }
 }
