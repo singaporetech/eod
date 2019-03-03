@@ -65,6 +65,9 @@ public class Splash extends AppCompatActivity {
         //  - pure AsyncTask too much creation/destroying
         //  - pure HandlerThread in VM will be killed when view killed
 
+        // make a periodic reminder worker
+        makeChargingReminder();
+
 		// start game on click "PLAY"
 		playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +124,7 @@ public class Splash extends AppCompatActivity {
         Constraints workConstraints = new Constraints.Builder()
                 .setRequiresBatteryNotLow(false)
                 .setRequiresDeviceIdle(false)
+                .setTriggerContentUpdateDelay(6, TimeUnit.SECONDS)
                 .build();
 
         // build a work request from a Worker.class that fires periodically with the constraints above
