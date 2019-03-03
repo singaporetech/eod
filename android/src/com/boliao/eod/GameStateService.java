@@ -47,7 +47,6 @@ public class GameStateService extends Service implements SensorEventListener {
     private static final int NOTIFY_ID = 888;
     private static final int PENDINGINTENT_ID = 1;
 
-
     // TODO SENSORS
     // create SensorManager and Sensor vars to interface with phone sensors
     private SensorManager sensorManager;
