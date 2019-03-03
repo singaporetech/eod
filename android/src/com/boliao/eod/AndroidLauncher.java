@@ -9,7 +9,6 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 public class AndroidLauncher extends AndroidApplication {
     private static final String TAG = "AndroidLauncher";
-    private static final int REMINDER_JOB_ID = 0;
     private Intent intent;
 
 	@Override

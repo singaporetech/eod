@@ -13,10 +13,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +26,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;
 
+import androidx.lifecycle.ViewModelProviders;
 import androidx.work.Constraints;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -45,9 +46,14 @@ public class Splash extends AppCompatActivity {
 
     private Intent startAndroidLauncher;
 
+    /**
+     * Helper method to start Android Launcher activity
+     * - easier for AsyncTask to call
+     */
     public void launchGame() {
         startActivity(startAndroidLauncher);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +75,9 @@ public class Splash extends AppCompatActivity {
         // show splash text
         msgTxtView.setText(R.string.welcome_note);
 
+        // make a periodic reminder worker
+        makeChargingReminder();
+
         // TODO THREADING 1: create a persistent weather widget
         // - always updating regularly (confirm < 15min) from online API
         // - not expecting to pause it at any point until user logs in, where we'll stop it manually
@@ -79,9 +88,7 @@ public class Splash extends AppCompatActivity {
         //  - ThreadPoolExecutor overkill as we only need one series of sequential work
         //  - pure AsyncTask too much creation/destroying
         //  - pure HandlerThread in VM will be killed when view killed
-
-        // make a periodic reminder worker
-        makeChargingReminder();
+        SplashViewModel splashViewModel = ViewModelProviders.of(this).get(SplashViewModel.class);
 
 		// start game on click "PLAY"
 		playBtn.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +132,6 @@ public class Splash extends AppCompatActivity {
                     new Splash.EncryptTask(Splash.this).execute(username);
                     // launch the game
                 }
-
 
                 // TODO SERVICES n: goto AndroidLauncher
             }

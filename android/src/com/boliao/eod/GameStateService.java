@@ -17,8 +17,8 @@ import android.media.RingtoneManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-//import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
+//import androidx.core.app.INotificationSideChannel;
 import android.util.Log;
 
 import java.util.List;
@@ -28,6 +28,7 @@ import static android.app.Notification.VISIBILITY_PUBLIC;
 /**
  * TODO SERVICES 5: a background service to manage game state
  * - collect sensor data and send these updates to GameState in game core component
+ * - game states have to update beyond the life of the app
  * - determine time to spawn bugs
  * - both a Started (collect sensor data) and Bound Service (update UI continuously)
  * - this background Service will try to persist until the app is explicitly closed

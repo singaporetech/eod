@@ -5,7 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
+//import android.support.v4.app.NotificationCompat;
 //import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
@@ -42,13 +42,10 @@ public class ReminderWorker extends Worker {
 
         // TODO notification to remind charge
         // - note the builder pattern is a common design pattern used for creating objs in the api
-        Notification n = new NotificationCompat.Builder(super.getApplicationContext(), NCID)
+        Notification n = new Notification.Builder(super.getApplicationContext(), NCID)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle("eod REMINDER to charge")
                 .setContentText("How to fight bugs if ur phone juice run out...")
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVibrate(new long[]{1000,1000,1000})
                 .setAutoCancel(true)
                 .build();
 
