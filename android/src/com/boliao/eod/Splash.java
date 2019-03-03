@@ -13,10 +13,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
+//import androidx.appcompat.app.appcompatactivity;
+//import androidx.appcompat.widget.appcompatedittext;
+//import androidx.appcompat.widget.appcompattextview;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -88,7 +91,7 @@ public class Splash extends AppCompatActivity {
         //  - ThreadPoolExecutor overkill as we only need one series of sequential work
         //  - pure AsyncTask too much creation/destroying
         //  - pure HandlerThread in VM will be killed when view killed
-        SplashViewModel splashViewModel = ViewModelProviders.of(this).get(SplashViewModel.class);
+//        SplashViewModel splashViewModel = ViewModelProviders.of(this).get(SplashViewModel.class);
 
 		// start game on click "PLAY"
 		playBtn.setOnClickListener(new View.OnClickListener() {
