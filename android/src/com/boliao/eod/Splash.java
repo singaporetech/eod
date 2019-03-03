@@ -19,6 +19,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.Constraints;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 /**
  * This is the splash view that records who is playing.
  */
@@ -104,5 +110,27 @@ public class Splash extends AppCompatActivity {
                 // TODO SERVICES n: goto AndroidLauncher
             }
         });
+    }
+
+    /**
+     * TODO SERVICES 3: create a reminder for user to charge phone periodically
+     *
+     */
+    private void makeChargingReminder() {
+        // build a set of constraints, e.g., battery low and device idle
+        Constraints workConstraints = new Constraints.Builder()
+                .setRequiresBatteryNotLow(false)
+                .setRequiresDeviceIdle(false)
+                .build();
+
+        // build a work request from a Worker.class that fires periodically with the constraints above
+        // - note that periodic tasks cannot be < 15mins
+        PeriodicWorkRequest pwr = new PeriodicWorkRequest.Builder(ReminderWorker.class,
+                15, TimeUnit.MINUTES)
+                .setConstraints(workConstraints)
+                .build();
+
+        // enqueue the work request with the WorkManager singleton
+        WorkManager.getInstance().enqueue(pwr);
     }
 }

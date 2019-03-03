@@ -124,31 +124,6 @@ public class GameStateService extends Service implements SensorEventListener {
                     NOTIFICATION_CHANNEL_ID,
                     getString(R.string.channel_name),
                     NotificationManager.IMPORTANCE_HIGH));
-
-
-       // TODO SERVICES 11: create pending intent to open app from notification
-        Intent intent2 = new Intent(GameStateService.this, AndroidLauncher.class);
-        PendingIntent pi = PendingIntent.getActivity(GameStateService.this, PENDINGINTENT_ID, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // build the notification
-        Notification noti =new Notification.Builder(GameStateService.this, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle("Exercise Or Die")
-                .setColor(Color.RED)
-                .setVisibility(VISIBILITY_PUBLIC)
-                .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
-                .setAutoCancel(true)
-                .setContentIntent(pi)
-                .build();
-
-        // activate the notification
-//      notificationManager.notify(NOTIFY_ID, noti);
-
-        // TODO SERVICES 12: upgrade this service to foreground
-        // - need to startForegroundService from caller context
-        // - activate the ongoing notification using startForeground (needs to be called within 5s of above
-        // - move the notification to become a one time and change the premise
-        startForeground(NOTIFY_ID, noti);
     }
 
     /**
@@ -187,6 +162,30 @@ public class GameStateService extends Service implements SensorEventListener {
                         // notify user when bug is spawning
                         if (GameState.i().isCanNotify() && !GameState.i().isAppActive()) {
                             Log.i(TAG, "The NIGHT has come: a bug will spawn...");
+
+                           // TODO SERVICES 11: create pending intent to open app from notification
+                            Intent intent2 = new Intent(GameStateService.this, AndroidLauncher.class);
+                            PendingIntent pi = PendingIntent.getActivity(GameStateService.this, PENDINGINTENT_ID, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            // build the notification
+                            Notification noti =new Notification.Builder(GameStateService.this, NOTIFICATION_CHANNEL_ID)
+                                    .setSmallIcon(R.drawable.ic_stat_name)
+                                    .setContentTitle("Exercise Or Die")
+                                    .setColor(Color.RED)
+                                    .setVisibility(VISIBILITY_PUBLIC)
+                                    .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
+                                    .setAutoCancel(true)
+                                    .setContentIntent(pi)
+                                    .build();
+
+                            // activate the notification
+                            notificationManager.notify(NOTIFY_ID, noti);
+
+                            // TODO SERVICES 12: upgrade this service to foreground
+                            // - need to startForegroundService from caller context
+                            // - activate the ongoing notification using startForeground (needs to be called within 5s of above
+                            // - move the notification to become a one time and change the premise
+                            // startForeground(NOTIFY_ID, noti);
                         }
                     }
                 }
