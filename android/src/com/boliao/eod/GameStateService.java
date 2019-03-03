@@ -44,7 +44,7 @@ public class GameStateService extends Service implements SensorEventListener {
     // - add ID vars for notifications
     NotificationManager notificationManager;
     private static final String NOTIFICATION_CHANNEL_ID = "EOD CHANNEL";
-    private static final int NOTIFY_ID = 0;
+    private static final int NOTIFY_ID = 888;
     private static final int PENDINGINTENT_ID = 1;
 
 
@@ -91,6 +91,7 @@ public class GameStateService extends Service implements SensorEventListener {
     public void onCreate() {
         super.onCreate();
 
+
         // TODO SENSORS 1: get handle to sensor device
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -123,6 +124,31 @@ public class GameStateService extends Service implements SensorEventListener {
                     NOTIFICATION_CHANNEL_ID,
                     getString(R.string.channel_name),
                     NotificationManager.IMPORTANCE_HIGH));
+
+
+       // TODO SERVICES 11: create pending intent to open app from notification
+        Intent intent2 = new Intent(GameStateService.this, AndroidLauncher.class);
+        PendingIntent pi = PendingIntent.getActivity(GameStateService.this, PENDINGINTENT_ID, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // build the notification
+        Notification noti =new Notification.Builder(GameStateService.this, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle("Exercise Or Die")
+                .setColor(Color.RED)
+                .setVisibility(VISIBILITY_PUBLIC)
+                .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
+                .setAutoCancel(true)
+                .setContentIntent(pi)
+                .build();
+
+        // activate the notification
+//      notificationManager.notify(NOTIFY_ID, noti);
+
+        // TODO SERVICES 12: upgrade this service to foreground
+        // - need to startForegroundService from caller context
+        // - activate the ongoing notification using startForeground (needs to be called within 5s of above
+        // - move the notification to become a one time and change the premise
+        startForeground(NOTIFY_ID, noti);
     }
 
     /**
@@ -140,6 +166,7 @@ public class GameStateService extends Service implements SensorEventListener {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         // TODO SENSORS 3: Registering listener to listen for sensor events.
         // - note that the DELAY is the max, and system normally lower
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
@@ -160,28 +187,6 @@ public class GameStateService extends Service implements SensorEventListener {
                         // notify user when bug is spawning
                         if (GameState.i().isCanNotify() && !GameState.i().isAppActive()) {
                             Log.i(TAG, "The NIGHT has come: a bug will spawn...");
-
-                            // TODO SERVICES 11: create pending intent to open app from notification
-                            Intent intent = new Intent(GameStateService.this, AndroidLauncher.class);
-                            PendingIntent pi = PendingIntent.getActivity(GameStateService.this, PENDINGINTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                            // build the notification
-                            Notification noti =new NotificationCompat.Builder(GameStateService.this, NOTIFICATION_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.ic_stat_name)
-                                    .setContentTitle("Exercise Or Die")
-                                    .setColor(Color.RED)
-                                    .setVisibility(VISIBILITY_PUBLIC)
-                                    .setPriority(NotificationCompat.PRIORITY_HIGH) // for android 7.1 and below
-                                    .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
-                                    .setAutoCancel(true)
-                                    .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
-                                    .setLights(Color.RED, 3000, 3000)
-                                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                                    .setContentIntent(pi)
-                                    .build();
-
-                            // activate the notification
-                            notificationManager.notify(NOTIFY_ID, noti);
                         }
                     }
                 }
@@ -192,15 +197,17 @@ public class GameStateService extends Service implements SensorEventListener {
         };
         bgThread.start();
 
-        // TODO SERVICE 11: return appropriate flag to indicate what happens when killed
+        // TODO SERVICE 13: return appropriate flag to indicate what happens when killed
         return START_STICKY;
     }
 
-    // TODO SERVICE 12: override Service's onDestroy to destroy any background activity if desired
+    // TODO SERVICE 14: override Service's onDestroy to destroy any background activity if desired
     // - also destroy any manual threads
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        stopForeground(true);
 
         // TODO SENSORS 4: unregister listeners from the sensorManager as appropriate
         sensorManager.unregisterListener(this, stepDetector);
@@ -212,7 +219,6 @@ public class GameStateService extends Service implements SensorEventListener {
 
         // TODO THREADING n: go to Splash
     }
-
 
     // TODO SENSORS 5: implement onSensorChanged callback
     // - system will call this back when sensor has new vals

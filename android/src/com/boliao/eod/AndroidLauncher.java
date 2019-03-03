@@ -58,8 +58,9 @@ public class AndroidLauncher extends AndroidApplication {
         else {
             Log.i(TAG, "Starting GameStateService...");
             GameState.i().setServiceStarted(true);
-            startService(intent);
-        }
+//            startService(intent);
+            startForegroundService(intent); // TODO SERVICE 13:
+         }
 
         // init game
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
