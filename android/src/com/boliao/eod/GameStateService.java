@@ -145,7 +145,7 @@ public class GameStateService extends Service implements SensorEventListener {
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME);
 
-        // control the spawn timer in a thread
+        // TODO THREADING 0: control the spawn timer in a thread
         // O.M.G. a raw java thread
         bgThread = new Thread()  {
             @Override
@@ -197,17 +197,20 @@ public class GameStateService extends Service implements SensorEventListener {
     }
 
     // TODO SERVICE 12: override Service's onDestroy to destroy any background activity if desired
-    // TODO SENSORS 4: override Service's onDestroy to unregister listeners from the sensorManager
     // - also destroy any manual threads
     @Override
     public void onDestroy() {
         super.onDestroy();
 
+        // TODO SENSORS 4: unregister listeners from the sensorManager as appropriate
         sensorManager.unregisterListener(this, stepDetector);
 
+        // TODO THREADING 0: "stop" raw threads?
         // here's an example of the iffiniess of using raw threads: no good way to stop it
         // bgThread.stop(); // has been deprecated
         // bgThread.interrupt();
+
+        // TODO THREADING n: go to Splash
     }
 
 
