@@ -103,12 +103,14 @@ public class Splash extends AppCompatActivity {
                     // UI then shutdown the service
                     // - note that the WorkManager can also accomplish this
                     NameCryptionService.startActionFoo(Splash.this, username);
-                    startActivity(startAndroidLauncher);
 
                     // TODO THREADING 1: what if now, I want this result to be shown on UI
                     // - I know know this encryption the most takes 5secs
                     // - user needs to know result of what happened to his name anyway
                     // SOLN: use AsyncTask
+
+                    // launch the game
+                    startActivity(startAndroidLauncher);
                 }
 
                 // TODO SERVICES n: goto AndroidLauncher
