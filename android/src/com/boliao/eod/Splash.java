@@ -9,7 +9,7 @@
  */
 package com.boliao.eod;
 
-import android.content.AsyncQueryHandler;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -20,8 +20,10 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;
 
 import androidx.work.Constraints;
@@ -41,10 +43,18 @@ public class Splash extends AppCompatActivity {
     SharedPreferences pref;
     SharedPreferences.Editor prefEditor;
 
+    private Intent startAndroidLauncher;
+
+    public void launchGame() {
+        startActivity(startAndroidLauncher);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        // init launch game intent
+        startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
 
         // get refs to UI components
 		final Button playBtn = findViewById(R.id.play_btn);
@@ -78,7 +88,6 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // dummy action
-                final Intent startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
 
                 // TODO SERVICES 1: check if username is already taken
                 // - if username exists, set msgTxtView to "player exists..."
@@ -112,37 +121,63 @@ public class Splash extends AppCompatActivity {
                     // - I know know this encryption the most takes 5secs
                     // - user needs to know result of what happened to his name anyway
                     // SOLN: use AsyncTask
-                    new AsyncTask<String, Void, Boolean>() {
-                        @Override
-                        protected void onPreExecute() {
-                            super.onPreExecute();
-                        }
 
-                        @Override
-                        protected Boolean doInBackground(String... strings) {
-                            try {
-                                sleep(3000);
-                                // do something to the strings
-                            } catch (InterruptedException e) {
-                                return false;
-                            }
-                            return true;
-                        }
-
-                        @Override
-                        protected void onPostExecute(Boolean b) {
-                            super.onPostExecute(b);
-                            msgTxtView.setText("The encryption is:" + b);
-                            startActivity(startAndroidLauncher);
-                        }
-                    }.execute(username);
-
+                    new Splash.EncryptTask(Splash.this).execute(username);
                     // launch the game
                 }
+
 
                 // TODO SERVICES n: goto AndroidLauncher
             }
         });
+    }
+
+    /**
+     * AsyncTask to "encrypt" username
+     * - heavy lifting in the background to be posted back to UI
+     * - static class so as to prevent leaks
+     * - need a ref to update UI thread, so use WeakReference (a.k.a. shared_ptr)
+     * - onProgressUpdate(Integer... progress) left as an exercise
+     * - note: publishProgress(Integer) is in built to pass progress to above from doInBackground
+     */
+    private static class EncryptTask extends AsyncTask<String, Void, Boolean> {
+        // this is to get all the UI elements
+        // - use weak reference so that it does not leak mem when activity gets killed
+        WeakReference<Activity> wr_act;
+
+        public EncryptTask(Activity act) {
+            this.wr_act = new WeakReference<Activity>(act);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Activity act = wr_act.get();
+            if (act != null) {
+                ((TextView)act.findViewById(R.id.msg_txtview)).setText("encrypting");
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            try {
+                sleep(3000);
+                // do something to the strings
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+            Activity act = wr_act.get();
+            if (act != null) {
+                ((TextView)act.findViewById(R.id.msg_txtview)).setText("The encryption is:" + b);
+                ((Splash)act).launchGame();
+            }
+        }
     }
 
     /**
