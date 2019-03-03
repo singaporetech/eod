@@ -10,11 +10,15 @@
 package com.boliao.eod;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
@@ -79,9 +83,17 @@ public class Splash extends AppCompatActivity {
         //  - ThreadPoolExecutor overkill as we only need one series of sequential work
         //  - pure AsyncTask too much creation/destroying
         //  - pure HandlerThread in VM will be killed when view killed
+        ViewModel splashViewModel = ViewModelProviders.of(this).get(SplashViewModel.class);
+        ((SplashViewModel) splashViewModel).getWeatherData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                weatherTxtView.setText(s);
+            }
+        });
+        WeatherRepo.getInstance().fetchOnlineWeatherData();
 
         // make a periodic reminder worker
-        makeChargingReminder();
+//        makeChargingReminder();
 
 		// start game on click "PLAY"
 		playBtn.setOnClickListener(new View.OnClickListener() {

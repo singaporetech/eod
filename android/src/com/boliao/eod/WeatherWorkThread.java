@@ -11,7 +11,7 @@ public class WeatherWorkThread extends HandlerThread {
     private Handler handler;
 
     public WeatherWorkThread() {
-        super("WeatherWorkerThread");
+        super("WeatherWorkThread");
     }
 
     public void postTask(Runnable r) {

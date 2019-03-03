@@ -90,16 +90,22 @@ task run(type: Exec) {
 dependencies {
 //    implementation "com.android.support:support-annotations:$supportVer"
 //    implementation "com.android.support:animated-vector-drawable:$supportVer"
-//    implementation "androidx.appcompat:appcompat:1.0.0"
 //    implementation "com.android.support:support-media-compat:$supportVer"
+//    implementation "androidx.media:media:1.0.0"
+//    implementation "androidx.appcompat:appcompat:1.0.0"
+
     implementation "com.android.support:appcompat-v7:$supportVer"
     implementation "com.android.support.constraint:constraint-layout:1.1.3"
     implementation "com.firebase:firebase-jobdispatcher:0.8.6"
     implementation ("com.google.android.gms:play-services-location:16.0.0") {
         exclude group: 'com.android.support'
     }
+
+    // architecture components
     implementation "android.arch.work:work-runtime:$workVer"
-//    implementation "androidx.media:media:1.0.0"
+    implementation "android.arch.lifecycle:viewmodel"
+    implementation "android.arch.lifecycle:livedata"
+    implementation "android.arch.lifecycle:extensions"
 
     // core tests
     androidTestImplementation "androidx.test:core:$mainVer"
