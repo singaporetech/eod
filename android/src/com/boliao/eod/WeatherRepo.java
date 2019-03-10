@@ -5,23 +5,29 @@ package com.boliao.eod;
 import android.support.annotation.NonNull;
 import android.arch.lifecycle.MutableLiveData;
 
+/**
+ * Where most of the hard work gets done... at the lower levels...
+ */
 public class WeatherRepo {
-    // Test var
+    // Mocking var
     private static int count = 0;
 
     // interval between fetching data
     private static final int FETCH_INTERVAL_MILLIS = 2000;
 
-    // singleton
-    private static WeatherRepo instance;
-
+    // threading
     private Runnable weatherRunner;
 
-    // weather live data
+    // weather live data (writable)
     @NonNull
     private MutableLiveData<String> weatherData = new MutableLiveData<>();
+    @NonNull
+    public MutableLiveData<String> getWeatherData() {
+        return weatherData;
+    }
 
-    // get singleton
+    // singleton pattern boilerplate
+    private static WeatherRepo instance;
     public static WeatherRepo getInstance() {
         if (instance == null) {
             synchronized (WeatherRepo.class) {
@@ -32,21 +38,19 @@ public class WeatherRepo {
         return instance;
     }
 
-    @NonNull
-    public MutableLiveData<String> getWeatherData() {
-        return weatherData;
-    }
-
+    /**
+     * Mock live data.
+     */
     public void mockOnlineWeatherData() {
         weatherData.postValue("Mock Weather Data");
     }
 
     /**
-     * TODO THREADING 2: override this method to fetch weather data
-     * - Background continuous task to fetch weather data
+     * TODO THREADING 2: override method to fetch weather data
+     * - background continuous task to fetch weather data
      * - always updating regularly (confirm < 15min) from online API
-     * - not expecting to pause it at any point until user logs in, where we'll stop it manually
-     * - ideally want updates even if navigate away (or even destroyed)
+     * - not expecting to pause it at any point
+     * - ideally want updates even if navigate away
      * - Q: what primitive should we use?
      * - Recurring WorkManager?
      * - IntentService?

@@ -39,6 +39,9 @@ public class GameStateService extends Service implements SensorEventListener {
 
     Thread bgThread;
 
+    public static final String BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT";
+    public static final String STEP_KEY = "com.boliao.eod.STEP_KEY";
+
     // TODO NOTIFICATIONS
     // - add var for NotificationManager
     // - add ID vars for notifications
@@ -90,7 +93,6 @@ public class GameStateService extends Service implements SensorEventListener {
     public void onCreate() {
         super.onCreate();
 
-
         // TODO SENSORS 1: get handle to sensor device
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -123,11 +125,6 @@ public class GameStateService extends Service implements SensorEventListener {
                     NOTIFICATION_CHANNEL_ID,
                     getString(R.string.channel_name),
                     NotificationManager.IMPORTANCE_HIGH));
-
-        // TODO BROADCAST-RECEIVERS
-        // register receiver
-//        registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-
     }
 
     /**
@@ -222,11 +219,6 @@ public class GameStateService extends Service implements SensorEventListener {
 
         // TODO THREADING n: go to Splash
 
-        // TODO BROADCAST-RECEIVERS
-        // unregister receiver
-        // - note that this is only unregister in a service's destroy because you want the app
-        //   to keep listening to broadcasts
-//        unregisterReceiver(screenOnReceiver);
     }
 
     // TODO SENSORS 5: implement onSensorChanged callback
@@ -244,6 +236,8 @@ public class GameStateService extends Service implements SensorEventListener {
             if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
                 Log.d(TAG, "Step detector:" + val);
                 GameState.i().incSteps(val);
+
+                sendBroadcast(GameState.i().getSteps());
             }
         }
     }
@@ -254,5 +248,16 @@ public class GameStateService extends Service implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.i(TAG, "Sensor accuracy changed to " + accuracy);
+    }
+
+    /**
+     * TODO BROADCASTRECEIVERS 2: Send broadcast to apps that wish to get step count
+     * TODO BROADCASTRECEIVERS 3: Receive broadcast in another separate app
+     */
+    private void sendBroadcast(int steps) {
+        Intent intent = new Intent(BROADCAST_ACTION);
+        intent.putExtra(STEP_KEY, steps);
+        Log.i(TAG, "Sending broadcast steps=" + steps);
+        sendBroadcast(intent);
     }
 }

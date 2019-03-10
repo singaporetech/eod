@@ -29,7 +29,9 @@
 
         <service
             android:name=".NameCryptionService"
-            android:exported="false" /> <!-- TODO SERVICES -->
+            android:exported="false" />
+
+        <!-- TODO SERVICES -->
         <!-- Q: What are the big 4 tags? -->
         <activity android:name=".Splash">
             <intent-filter>

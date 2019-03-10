@@ -12,6 +12,11 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+/**
+ * TODO BROADCASTRECEIVER 1: statically triggered receiver that sets off scheduled services
+ * - WorkManagers for deferrable but guaranteed work
+ * - AlarmManagers for exact timed jobs but no guarantee on network
+ */
 public class OnBootReceiver extends BroadcastReceiver {
     private static final String TAG = "OnBootReceiver";
     @Override

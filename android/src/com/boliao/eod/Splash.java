@@ -1,11 +1,10 @@
 /**
- * WEEK08 LECTURE:
- * 1. background services: started and bound
- * 2. foreground services
- * 3. scheduled services: workmanager
- * 4. raw java threads
- * 5. asynctask
- * 6. handlerthread
+ * WEEK09 LECTURE:
+ * 1. revise asynctask
+ * 2. revise viewmodel
+ * 3. handlerthread
+ * 4. static broadcast receiver
+ * 5. dynamic broadcast receiver
  */
 package com.boliao.eod;
 
@@ -67,9 +66,10 @@ public class Splash extends AppCompatActivity {
         // show splash text
         msgTxtView.setText(R.string.welcome_note);
 
-        // TODO THREADING 1: create a persistent weather widget
+        // TODO THREADING 2: create a persistent weather widget
         // - WeatherRepo is already nicely linked up in MVVM with SplashViewModel
-        // - implement changes in WeatherRepo
+        // - implement background weather fetching in WeatherRepo
+        // Q: Do I (Splash Activity) need to know about WeatherRepo?
         ViewModel splashViewModel = ViewModelProviders.of(this).get(SplashViewModel.class);
         ((SplashViewModel) splashViewModel).getWeatherData().observe(this, new Observer<String>() {
             @Override
@@ -77,17 +77,11 @@ public class Splash extends AppCompatActivity {
                 weatherTxtView.setText(s);
             }
         });
-        WeatherRepo.getInstance().fetchOnlineWeatherData();
-
-        // make a periodic reminder worker
-//        makeChargingReminder();
 
 		// start game on click "PLAY"
 		playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // dummy action
-
                 // TODO SERVICES 1: check if username is already taken
                 // - if username exists, set msgTxtView to "player exists..."
                 // - else, set msgTxtView to "starting game, pls wait"
@@ -97,11 +91,10 @@ public class Splash extends AppCompatActivity {
                     msgTxtView.setText("Name already exists!");
                 }
                 else {
-//                    msgTxtView.setText("Starting game...");
-
-                    // Store  username  to survive app destruction
+                    // Store  username to survive app destruction
                     // DEPRECATED due to encryption below
                     /*
+                    msgTxtView.setText("Starting game...");
                     prefEditor.putString(username, username);
                     prefEditor.commit();
                     */
@@ -110,7 +103,6 @@ public class Splash extends AppCompatActivity {
                     // - e.g., pseudo-encrypt the username using some funky algo
                     // - store the encrypted username in shared prefs
                     // - UI should not lag or ANR
-
                     // SOLN: defer processing to an IntentService: do some heavy lifting w/o
                     // UI then shutdown the service
                     // - note that the WorkManager can also accomplish this
