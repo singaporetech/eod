@@ -164,7 +164,7 @@ public class GameStateService extends Service implements SensorEventListener {
                         if (GameState.i().isCanNotify() && !GameState.i().isAppActive()) {
                             Log.i(TAG, "The NIGHT has come: a bug will spawn...");
 
-                           // TODO SERVICES 11: create pending intent to open app from notification
+                            // TODO SERVICES 11: create pending intent to open app from notification
                             Intent intent2 = new Intent(GameStateService.this, AndroidLauncher.class);
                             PendingIntent pi = PendingIntent.getActivity(GameStateService.this, PENDINGINTENT_ID, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
