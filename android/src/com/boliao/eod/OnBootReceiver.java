@@ -22,7 +22,7 @@ public class OnBootReceiver extends BroadcastReceiver {
          * TODO SERVICES 3: create a reminder for user to charge phone periodically
          * - not to be confused, this is not detecting battery low
          * - this is simply reminding to charge battery
-         *
+         * - remember: WorkManager cannot guarantees it will run, but not exact time
          */
         // a. build a set of constraints, e.g., network connected and enough batt
         Constraints workConstraints = new Constraints.Builder()
@@ -39,7 +39,7 @@ public class OnBootReceiver extends BroadcastReceiver {
                 .setConstraints(workConstraints)
                 .build();
 
-        // c.enqueue the work request with the WorkManager singleton
+        // c. enqueue the work request with the WorkManager singleton
         WorkManager.getInstance().enqueue(pwr);
     }
 }

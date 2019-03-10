@@ -25,14 +25,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.TimeUnit;
-
-import androidx.work.Constraints;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import static java.lang.Thread.sleep;
 
@@ -127,7 +121,7 @@ public class Splash extends AppCompatActivity {
                     // - user needs to know result of what happened to his name anyway
                     // SOLN: use AsyncTask
 
-                    new Splash.EncryptTask(Splash.this).execute(username);
+                    new EncryptTask(Splash.this).execute(username);
                     // launch the game
                 }
 
