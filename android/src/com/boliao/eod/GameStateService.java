@@ -123,6 +123,11 @@ public class GameStateService extends Service implements SensorEventListener {
                     NOTIFICATION_CHANNEL_ID,
                     getString(R.string.channel_name),
                     NotificationManager.IMPORTANCE_HIGH));
+
+        // TODO BROADCAST-RECEIVERS
+        // register receiver
+//        registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+
     }
 
     /**
@@ -216,6 +221,12 @@ public class GameStateService extends Service implements SensorEventListener {
         // bgThread.interrupt();
 
         // TODO THREADING n: go to Splash
+
+        // TODO BROADCAST-RECEIVERS
+        // unregister receiver
+        // - note that this is only unregister in a service's destroy because you want the app
+        //   to keep listening to broadcasts
+//        unregisterReceiver(screenOnReceiver);
     }
 
     // TODO SENSORS 5: implement onSensorChanged callback

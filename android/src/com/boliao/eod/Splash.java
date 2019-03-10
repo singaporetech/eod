@@ -183,29 +183,4 @@ public class Splash extends AppCompatActivity {
             }
         }
     }
-
-    /**
-     * TODO SERVICES 3: create a reminder for user to charge phone periodically
-     * - not to be confused, this is not detecting battery low
-     * - this is simply reminding to charge battery
-     *
-     */
-    private void makeChargingReminder() {
-        // build a set of constraints, e.g., battery low and device idle
-        Constraints workConstraints = new Constraints.Builder()
-                .setRequiresBatteryNotLow(false)
-                .setRequiresDeviceIdle(false)
-                .setTriggerContentUpdateDelay(6, TimeUnit.SECONDS)
-                .build();
-
-        // build a work request from a Worker.class that fires periodically with the constraints above
-        // - note that periodic tasks cannot be < 15mins
-        PeriodicWorkRequest pwr = new PeriodicWorkRequest.Builder(ReminderWorker.class,
-                15, TimeUnit.MINUTES)
-                .setConstraints(workConstraints)
-                .build();
-
-        // enqueue the work request with the WorkManager singleton
-        WorkManager.getInstance().enqueue(pwr);
-    }
 }
