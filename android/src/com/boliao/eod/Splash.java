@@ -131,7 +131,6 @@ public class Splash extends AppCompatActivity {
                     // launch the game
                 }
 
-
                 // TODO SERVICES n: goto AndroidLauncher
             }
         });
@@ -187,6 +186,8 @@ public class Splash extends AppCompatActivity {
 
     /**
      * TODO SERVICES 3: create a reminder for user to charge phone periodically
+     * - not to be confused, this is not detecting battery low
+     * - this is simply reminding to charge battery
      *
      */
     private void makeChargingReminder() {

@@ -19,7 +19,7 @@
         android:theme="@style/GdxTheme">
         <service
             android:name=".NameCryptionService"
-            android:exported="false"></service>
+            android:exported="false" />
         <!-- TODO SERVICES -->
         <!-- Q: What are the big 4 tags? -->
         <activity android:name=".Splash">

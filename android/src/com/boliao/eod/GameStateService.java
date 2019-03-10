@@ -237,7 +237,7 @@ public class GameStateService extends Service implements SensorEventListener {
         }
     }
 
-    // TODO SENSORS: implement onSensorChanged callback
+    // TODO SENSORS: implement onAccuracyChanged callback
     // - system will call this back when sensor accuracy changed
     // - just show a log msg
     @Override
