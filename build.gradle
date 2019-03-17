@@ -39,6 +39,11 @@ project(":android") {
 
     dependencies {
         implementation project(":core")
+
+        // TODO NDK
+        // add dependency on internal OpenCV module
+        implementation project(':openCVLibrary341')
+
         implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -64,6 +69,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
         implementation "com.badlogicgames.gdx:gdx-ai:1.8.0"
+
     }
 }
 

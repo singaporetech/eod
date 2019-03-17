@@ -4,24 +4,41 @@
  */
 package com.boliao.eod;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import static java.lang.Thread.sleep;
@@ -29,7 +46,7 @@ import static java.lang.Thread.sleep;
 /**
  * This is the splash view that records who is playing.
  */
-public class Splash extends AppCompatActivity {
+public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.CvCameraViewListener2 {
     private static final String TAG = "Splash";
     // TODO NDK 0: install required dependencies (from Android Studio SDK Tools)
     // - NDK: Android toolset to communicate with native code
@@ -52,8 +69,23 @@ public class Splash extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
     public native String getNativeString();
+    public native int convertToGrayscale(long rgbaAddrInput, long rbgaAddrResult);
+    public native void detectFace(String cascadePath, long rgbaAddrInput);
 
     // TODO NDK 3: use OpenCV C lib to do face recognition
+    // - add openCVLibrary341 as a module
+    // - check it is included in settings
+    // - add openCVLibrary341 as a module
+    // - check it is included in settings.gradle
+    // - add as an implementation under module :android's gradle
+
+    // TODO NDK
+    // init cv matrix
+    CameraBridgeViewBase camView;
+    Mat rgbaT, rgbaF;
+    Mat rgbaInput, rgbaOutput;
+    File cascadeFile;
+    String cascadeFileName = "haarcascade_frontalface_alt.xml";
 
     // shared preferences setup
     public final static String PREF_FILENAME = "com.boliao.eod.prefs";
@@ -73,6 +105,41 @@ public class Splash extends AppCompatActivity {
         // TODO NDK 2: show the string from native
         Toast.makeText(this, getNativeString(), Toast.LENGTH_SHORT).show();
 
+        // TODO NDK 3:setup camera
+        camView = findViewById(R.id.camview);
+        camView.setVisibility(SurfaceView.VISIBLE);
+        camView.setCvCameraViewListener(this);
+
+        // getting permissions for camera
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Toast.makeText(this, "we need your permission lah deh", Toast.LENGTH_SHORT).show();
+
+                Log.i(TAG, "CAMERA PERMISSION");
+            } else {
+
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},0);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+            Log.i(TAG, "CAMERA PERMISSION GRANTED");
+        }
         // init launch game intent
         startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
 
@@ -145,6 +212,109 @@ public class Splash extends AppCompatActivity {
         });
     }
 
+    /**
+     * TODO NDK
+     * implement cam callbacks
+     */
+    @Override
+    public void onCameraViewStarted(int width, int height) {
+        rgbaInput = new Mat(height, width, CvType.CV_8UC4);
+        rgbaOutput = new Mat(height, width, CvType.CV_8UC4);
+        rgbaF = new Mat(height, width, CvType.CV_8UC4);
+        rgbaT = new Mat(width, width, CvType.CV_8UC4);
+    }
+    @Override
+    public void onCameraViewStopped() {
+        rgbaInput.release();
+        rgbaOutput.release();
+        rgbaF.release();
+        rgbaT.release();
+    }
+    @Override
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        rgbaInput = inputFrame.rgba();
+
+        // flip the pixel orientation
+//        Core.transpose(rgba, rgbaT);
+//        Imgproc.resize(rgbaT, rgbaF, rgbaF.size(), 0, 0, 0);
+//        Core.flip(rgbaF, rgba, 1);
+
+        // do convert to grayscale
+//        convertToGrayscale(rgbaInput.getNativeObjAddr(), rgbaOutput.getNativeObjAddr());
+
+        // do face detection
+        detectFace(cascadeFile.getAbsolutePath(), rgbaInput.getNativeObjAddr());
+
+        return rgbaInput;
+    }
+
+    private BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                    Log.i(TAG, "OpenCV loaded");
+                    camView.enableView();
+                    break;
+
+                default:
+                    super.onManagerConnected(status);
+            }
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, baseLoaderCallback);
+        } else {
+            Log.d(TAG, "OpenCV library found inside package. Using it!");
+            baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+            loadCascadeFile();
+        }
+    }
+
+    private void disableCam() {
+        if (camView != null)
+            camView.disableView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disableCam();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disableCam();
+    }
+
+    private void loadCascadeFile() {
+        final InputStream is;
+        FileOutputStream os;
+        try {
+            is = getResources().getAssets().open("data/" + cascadeFileName);
+            File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+            cascadeFile = new File(cascadeDir, "face_frontal.xml");
+
+            os = new FileOutputStream(cascadeFile);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            Log.i(TAG, "face cascade not found");
+        }
+    }
     /**
      * AsyncTask to "encrypt" username
      * - heavy lifting in the background to be posted back to UI

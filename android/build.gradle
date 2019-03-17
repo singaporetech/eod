@@ -23,6 +23,13 @@ android {
         minSdkVersion 26
         targetSdkVersion 28
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-frtti -fexceptions -std=gnu++11"
+                arguments '-DANDROID_STL=c++_shared'
+            }
+        }
     }
     buildTypes {
         release {
