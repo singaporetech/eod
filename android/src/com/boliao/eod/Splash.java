@@ -41,13 +41,14 @@ public class Splash extends AppCompatActivity {
     // - create a CMake build script called CMakeLists.txt (https://developer.android.com/studio/projects/configure-cmake.html)
     // - add CMake path in gradle
 
-    // TODO NDK 2: load native lib and declare native methods
-    static {
-        System.loadLibrary("native-lib");
-    }
+    // TODO NDK 2: create a test method in native to receive a string and show it
+    // - write the method in C
+    // - load native lib and declare native methods
+//    static {
+//        System.loadLibrary("native-lib");
+//    }
 
-
-
+    // TODO NDK 3: use OpenCV C lib to do face recognition
 
     // shared preferences setup
     public final static String PREF_FILENAME = "com.boliao.eod.prefs";
