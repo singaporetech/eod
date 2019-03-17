@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
@@ -39,14 +40,14 @@ public class Splash extends AppCompatActivity {
     // - create a src/cpp directory
     // - create a new .cpp file
     // - create a CMake build script called CMakeLists.txt (https://developer.android.com/studio/projects/configure-cmake.html)
-    // - add CMake path in gradle
+    // - add CMake path in gradle (you can right click on folder and let IDE do it)
 
     // TODO NDK 2: create a test method in native to receive a string and show it
-    // - write the method in C
+    // - declare a native function you want to write in C/C++
+    // - write the method in a cpp file
     // - load native lib and declare native methods
-//    static {
-//        System.loadLibrary("native-lib");
-//    }
+    // - receive string from native function and display it in a toast
+    // - try and debug within native using <android/log.h>
 
     // TODO NDK 3: use OpenCV C lib to do face recognition
 
@@ -64,6 +65,8 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        // TODO NDK 2: show the string from native
 
         // init launch game intent
         startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
