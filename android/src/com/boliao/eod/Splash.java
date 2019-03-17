@@ -79,11 +79,12 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
     // - check it is included in settings.gradle
     // - add as an implementation under module :android's gradle
 
-    // TODO NDK
-    // init cv matrix
+    // TODO NDK 3: init cv view and matrices
     CameraBridgeViewBase camView;
     Mat rgbaT, rgbaF;
     Mat rgbaInput, rgbaOutput;
+
+    // TODO NDK 3: set the face model
     File cascadeFile;
     String cascadeFileName = "haarcascade_frontalface_alt.xml";
 
@@ -105,14 +106,13 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         // TODO NDK 2: show the string from native
         Toast.makeText(this, getNativeString(), Toast.LENGTH_SHORT).show();
 
-        // TODO NDK 3:setup camera
+        // TODO NDK 3: setup camera ui
         camView = findViewById(R.id.camview);
         camView.setVisibility(SurfaceView.VISIBLE);
         camView.setCvCameraViewListener(this);
 
-        // getting permissions for camera
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
+        // TODO NDK 3: get permissions for camera
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
@@ -140,6 +140,7 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
             // Permission has already been granted
             Log.i(TAG, "CAMERA PERMISSION GRANTED");
         }
+
         // init launch game intent
         startAndroidLauncher = new Intent(Splash.this, AndroidLauncher.class);
 
@@ -213,8 +214,8 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
     }
 
     /**
-     * TODO NDK
-     * implement cam callbacks
+     * TODO NDK 3: implement cam callbacks
+     * - init matrices on cam view start
      */
     @Override
     public void onCameraViewStarted(int width, int height) {
@@ -223,6 +224,11 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         rgbaF = new Mat(height, width, CvType.CV_8UC4);
         rgbaT = new Mat(width, width, CvType.CV_8UC4);
     }
+
+    /**
+     * TODO NDK 3: implement cam callbacks
+     * - release matrices on cam view start
+     */
     @Override
     public void onCameraViewStopped() {
         rgbaInput.release();
@@ -230,6 +236,12 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         rgbaF.release();
         rgbaT.release();
     }
+
+    /**
+     * TODO NDK 3: implement cam callbacks
+     * - detect face every frame
+     * - return frame to display every frame
+     */
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         rgbaInput = inputFrame.rgba();
@@ -248,6 +260,9 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         return rgbaInput;
     }
 
+    /**
+     * TODO NDK 3: opencv loader
+     */
     private BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -263,6 +278,9 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         }
     };
 
+    /**
+     * TODO NDK 3: Load OpenCV if required
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -276,23 +294,19 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         }
     }
 
-    private void disableCam() {
+    /**
+     * TODO NDK 3: disable cam ui on pause
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
         if (camView != null)
             camView.disableView();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disableCam();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        disableCam();
-    }
-
+    /**
+     * TODO NDK 3: load model file
+     */
     private void loadCascadeFile() {
         final InputStream is;
         FileOutputStream os;
@@ -315,6 +329,7 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
             Log.i(TAG, "face cascade not found");
         }
     }
+
     /**
      * AsyncTask to "encrypt" username
      * - heavy lifting in the background to be posted back to UI
