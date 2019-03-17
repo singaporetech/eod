@@ -17,13 +17,12 @@ extern "C" {
 
 static const char* TAG = "NATIVE-LIB";
 
-JNIEXPORT jstring JNICALL
-Java_com_boliao_eod_Splash_getNativeString(JNIEnv* env, jobject /* this */) {
-    std::string msg = "THIS IS FROM C++";
-    __android_log_print(ANDROID_LOG_DEBUG, TAG, "msg = %s", msg.c_str());
-    return env->NewStringUTF(msg.c_str()); // note sometimes autocomplete will lag for C++
-}
-
+/**
+ * Convert rgba values to grayscale.
+ * @param rgbaInput
+ * @param rgbaOutput
+ * @return
+ */
 int convertRGBA2Gray(Mat& rgbaInput, Mat& rgbaOutput) {
     cvtColor(rgbaInput, rgbaOutput, COLOR_RGBA2GRAY);
 
@@ -33,38 +32,63 @@ int convertRGBA2Gray(Mat& rgbaInput, Mat& rgbaOutput) {
     return 0;
 }
 
+/**
+ * Draw bounding regions around detected objects.
+ * @param cascadePath
+ * @param rgbaInput passed by ref and regions will be drawn onto it
+ */
 void detectFace(const std::string& cascadePath, Mat& rgbaInput) {
     // Load Face cascade (.xml file)
-    // TODO change to file within project
-    CascadeClassifier face_cascade; //( "/sdcard/opencv/haarcascade_eye_tree_eyeglasses.xml" );
+    CascadeClassifier face_cascade;
 
-    face_cascade.load(cascadePath);
-//    if (face_cascade.load(cascadePath))
-//        __android_log_print(ANDROID_LOG_DEBUG, TAG, "face cascade loaded");
-//    else
-//        __android_log_print(ANDROID_LOG_DEBUG, TAG, "face cascade loading error");
+    // load file
+    if (!face_cascade.load(cascadePath))
+        __android_log_print(ANDROID_LOG_DEBUG, TAG, "face cascade loading error");
 
-    // Detect faces
-    std::vector<Rect> faces;
+    // to collect regions detected
+    std::vector<Rect> regions;
 
     // convert input to grayscale
-    cvtColor(rgbaInput, rgbaInput, COLOR_RGBA2GRAY);
+    Mat rgbaOutput;
+    cvtColor(rgbaInput, rgbaOutput, COLOR_RGBA2GRAY);
 
     // detect the face and store in faces
-    face_cascade.detectMultiScale( rgbaInput,
-                                   faces,
-                                   1.2,
-                                   2,
+    face_cascade.detectMultiScale( rgbaOutput,
+                                   regions,
+                                   1.35,
+                                   1,
                                    CASCADE_FIND_BIGGEST_OBJECT|CASCADE_SCALE_IMAGE,
                                    Size(30, 30));
 
     // Draw circles on the detected faces
-    for( size_t i = 0; i < faces.size(); ++i ) {
-        Point center( faces[i].x + faces[i].width*0.5, faces[i].y + faces[i].height*0.5 );
-        ellipse( rgbaInput, center, Size( faces[i].width*0.5, faces[i].height*0.5), 0, 0, 360, Scalar( 255, 0, 255 ), 4, 8, 0 );
+    for( size_t i = 0; i < regions.size(); ++i ) {
+        Point2d center( regions[i].x + regions[i].width*0.7, regions[i].y + regions[i].height*0.7 );
+        ellipse( rgbaInput, center, Size2d( regions[i].width*0.5, regions[i].height*0.5), 0, 0, 360, Scalar( 255, 0, 255 ), 4, 8, 0 );
     }
+
+    // flip the pixel orientation to display correctly
+    flip(rgbaInput, rgbaInput, 0);
 }
 
+/**
+ * JNI func to get bogus string to test NDK communication.
+ * @param env
+ * @return
+ */
+JNIEXPORT jstring JNICALL
+Java_com_boliao_eod_Splash_getNativeString(JNIEnv* env, jobject /* this */) {
+    std::string msg = "THIS IS FROM C++";
+    __android_log_print(ANDROID_LOG_DEBUG, TAG, "msg = %s", msg.c_str());
+    return env->NewStringUTF(msg.c_str()); // note sometimes autocomplete will lag for C++
+}
+
+/**
+ * JNI func to convert image to grayscale.
+ * @param env
+ * @param rgbaAddrInput
+ * @param rgbaAddrOutput
+ * @return
+ */
 JNIEXPORT jint JNICALL
 Java_com_boliao_eod_Splash_convertToGrayscale(
         JNIEnv *env,
@@ -82,6 +106,12 @@ Java_com_boliao_eod_Splash_convertToGrayscale(
     return convertRGBA2Gray(rgbaInput, rgbaOutput);
 }
 
+/**
+ * JNI func to detect objects on screen.
+ * @param env
+ * @param cascadePath
+ * @param rgbaAddrInput
+ */
 JNIEXPORT void JNICALL
 Java_com_boliao_eod_Splash_detectFace(
         JNIEnv *env,

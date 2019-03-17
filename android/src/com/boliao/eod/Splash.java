@@ -88,7 +88,7 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
 
     // TODO NDK 3: set the face model
     File cascadeFile;
-    String cascadeFileName = "haarcascade_frontalface_alt.xml";
+    String cascadeFileName = "haarcascade_eye_tree_eyeglasses.xml";
 
     // shared preferences setup
     public final static String PREF_FILENAME = "com.boliao.eod.prefs";
@@ -112,6 +112,7 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         camView = findViewById(R.id.camview);
         camView.setVisibility(SurfaceView.VISIBLE);
         camView.setCvCameraViewListener(this);
+        camView.setUserRotation(180);
 
         // TODO NDK 3: get permissions for camera
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -241,38 +242,19 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
 
     /**
      * TODO NDK 3: implement cam callbacks
-     * - detect face every frame
-     * - return frame to display every frame
+     * - detect face and demarcate on the image to draw every frame
      */
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         rgbaInput = inputFrame.rgba();
 
-        // flip the pixel orientation
-//        Core.transpose(rgbaInput, rgbaT);
-//        Core.flip(rgbaT, rgbaF, 1);
-//        Imgproc.resize(rgbaF, rgbaInput, rgbaInput.size(), 0, 0, 0);
-
-//        rgbaT = rgbaInput.t();
-//        Core.flip(rgbaInput.t(), rgbaT, 1);
-//        Imgproc.resize(rgbaT, rgbaT, rgbaInput.size());
-//
-//        detectFace(cascadeFile.getAbsolutePath(), rgbaT.getNativeObjAddr());
-//
-//        rgbaInput.release();
-//        return rgbaT;
-
-//        mRgba = inputFrame.rgba();
-//        Mat mRgbaT = mRgba.t();
-//        Core.flip(mRgba.t(), mRgbaT, 1);
-//        Imgproc.resize(mRgbaT, mRgbaT, mRgba.size());
-//        return mRgbaT;
-
         // do convert to grayscale
 //        convertToGrayscale(rgbaInput.getNativeObjAddr(), rgbaOutput.getNativeObjAddr());
 
         // do face detection
+        // - pass the object by reference so C++ can edit the same object
         detectFace(cascadeFile.getAbsolutePath(), rgbaInput.getNativeObjAddr());
+
         return rgbaInput;
     }
 
