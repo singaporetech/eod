@@ -32,8 +32,10 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -227,7 +229,7 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
 
     /**
      * TODO NDK 3: implement cam callbacks
-     * - release matrices on cam view start
+     * - release matrices on cam view stop
      */
     @Override
     public void onCameraViewStopped() {
@@ -247,16 +249,30 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         rgbaInput = inputFrame.rgba();
 
         // flip the pixel orientation
-//        Core.transpose(rgba, rgbaT);
-//        Imgproc.resize(rgbaT, rgbaF, rgbaF.size(), 0, 0, 0);
-//        Core.flip(rgbaF, rgba, 1);
+//        Core.transpose(rgbaInput, rgbaT);
+//        Core.flip(rgbaT, rgbaF, 1);
+//        Imgproc.resize(rgbaF, rgbaInput, rgbaInput.size(), 0, 0, 0);
+
+//        rgbaT = rgbaInput.t();
+//        Core.flip(rgbaInput.t(), rgbaT, 1);
+//        Imgproc.resize(rgbaT, rgbaT, rgbaInput.size());
+//
+//        detectFace(cascadeFile.getAbsolutePath(), rgbaT.getNativeObjAddr());
+//
+//        rgbaInput.release();
+//        return rgbaT;
+
+//        mRgba = inputFrame.rgba();
+//        Mat mRgbaT = mRgba.t();
+//        Core.flip(mRgba.t(), mRgbaT, 1);
+//        Imgproc.resize(mRgbaT, mRgbaT, mRgba.size());
+//        return mRgbaT;
 
         // do convert to grayscale
 //        convertToGrayscale(rgbaInput.getNativeObjAddr(), rgbaOutput.getNativeObjAddr());
 
         // do face detection
         detectFace(cascadeFile.getAbsolutePath(), rgbaInput.getNativeObjAddr());
-
         return rgbaInput;
     }
 
@@ -286,7 +302,7 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, baseLoaderCallback);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, baseLoaderCallback);
         } else {
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);

@@ -1,1 +1,1 @@
-include 'android', 'core', 'openCVLibrary341'
+include 'android', 'core', ':opencv'

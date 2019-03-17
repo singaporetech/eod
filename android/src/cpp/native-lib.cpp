@@ -38,10 +38,11 @@ void detectFace(const std::string& cascadePath, Mat& rgbaInput) {
     // TODO change to file within project
     CascadeClassifier face_cascade; //( "/sdcard/opencv/haarcascade_eye_tree_eyeglasses.xml" );
 
-    if (face_cascade.load(cascadePath))
-        __android_log_print(ANDROID_LOG_DEBUG, TAG, "face cascade loaded");
-    else
-        __android_log_print(ANDROID_LOG_DEBUG, TAG, "face cascade loading error");
+    face_cascade.load(cascadePath);
+//    if (face_cascade.load(cascadePath))
+//        __android_log_print(ANDROID_LOG_DEBUG, TAG, "face cascade loaded");
+//    else
+//        __android_log_print(ANDROID_LOG_DEBUG, TAG, "face cascade loading error");
 
     // Detect faces
     std::vector<Rect> faces;
