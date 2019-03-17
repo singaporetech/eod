@@ -25,7 +25,7 @@ Java_com_boliao_eod_Splash_getNativeString(JNIEnv* env, jobject /* this */) {
 }
 
 int convertRGBA2Gray(Mat& rgbaInput, Mat& rgbaOutput) {
-    cvtColor(rgbaInput, rgbaOutput, CV_RGBA2GRAY);
+    cvtColor(rgbaInput, rgbaOutput, COLOR_RGBA2GRAY);
 
     // determine if success
     if (rgbaOutput.rows == rgbaInput.rows && rgbaOutput.cols == rgbaInput.cols)
@@ -47,14 +47,14 @@ void detectFace(const std::string& cascadePath, Mat& rgbaInput) {
     std::vector<Rect> faces;
 
     // convert input to grayscale
-    cvtColor(rgbaInput, rgbaInput, CV_RGBA2GRAY);
+    cvtColor(rgbaInput, rgbaInput, COLOR_RGBA2GRAY);
 
     // detect the face and store in faces
     face_cascade.detectMultiScale( rgbaInput,
                                    faces,
                                    1.2,
                                    2,
-                                   CV_HAAR_FIND_BIGGEST_OBJECT|CV_HAAR_SCALE_IMAGE,
+                                   CASCADE_FIND_BIGGEST_OBJECT|CASCADE_SCALE_IMAGE,
                                    Size(30, 30));
 
     // Draw circles on the detected faces

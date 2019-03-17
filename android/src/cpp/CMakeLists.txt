@@ -7,11 +7,11 @@ cmake_minimum_required(VERSION 3.4.1)
 
 # OpenCV vars
 # TODO investigate why only FULL absolute paths work here...
-set (PATH_OPENCV /Users/mrboliao/repos/OpenCV-android-sdk)
-set (PATH_PROJECT /Users/mrboliao/repos/eod)
-include_directories(${PATH_OPENCV}/sdk/native/jni/include)
-add_library( lib_opencv SHARED IMPORTED )
-set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${PATH_PROJECT}/android/libs/${ANDROID_ABI}/libopencv_java3.so)
+#set (PATH_OPENCV /Users/mrboliao/repos/OpenCV-android-sdk)
+#set (PATH_PROJECT /Users/mrboliao/repos/eod)
+#include_directories(${PATH_OPENCV}/sdk/native/jni/include)
+#add_library( lib_opencv SHARED IMPORTED )
+#set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${PATH_PROJECT}/android/libs/${ANDROID_ABI}/libopencv_java3.so)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -44,12 +44,20 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
-target_link_libraries( # Specifies the target library.
-        native-lib
+#target_link_libraries( # Specifies the target library.
+#        native-lib
+#
+#        # Links the target library to the log library
+#        # included in the NDK.
+#        ${log-lib}
+#        )
 
-        # Links the target library to the log library
-        # included in the NDK.
-        ${log-lib}
 
-        # opencv
-        lib_opencv)
+set( OpenCV_DIR "~/repos/OpenCV-android-sdk/sdk/native/jni" )
+find_package( OpenCV REQUIRED )
+target_link_libraries(native-lib opencv_java ${log-lib})
+
+get_target_property(__src opencv_java IMPORTED_LOCATION_RELEASE )
+add_custom_command(TARGET native-lib POST_BUILD COMMAND
+        ${CMAKE_COMMAND} -E copy ${__src} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+        )

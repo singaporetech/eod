@@ -22,6 +22,17 @@
         android:gravity="center"
         />
 
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/camview"
+        android:layout_width="wrap_content"
+        android:layout_height="210dp"
+        android:layout_margin="10dp"
+        android:tooltipText="this is the camera view"
+        app:camera_id="front"
+        app:layout_constraintTop_toBottomOf="@+id/weather_txtview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/msg_txtview"
         android:layout_width="match_parent"
@@ -39,15 +50,6 @@
         app:layout_constraintEnd_toEndOf="@+id/name_edtxt"
         app:layout_constraintStart_toStartOf="@+id/name_edtxt" />
 
-    <org.opencv.android.JavaCameraView
-        android:id="@+id/camview"
-        android:layout_width="wrap_content"
-        android:layout_height="210dp"
-        android:layout_margin="10dp"
-        android:tooltipText="this is the camera view"
-        app:camera_id="any"
-        app:layout_constraintTop_toBottomOf="@+id/msg_txtview"
-        app:layout_constraintStart_toStartOf="@+id/name_edtxt" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/name_edtxt"
