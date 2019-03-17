@@ -30,6 +30,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    externalNativeBuild {
+        cmake {
+            path file('src/cpp/CMakeLists.txt')
+        }
+    }
 }
 
 // called every time gradle gets executed, takes the native dependencies of
