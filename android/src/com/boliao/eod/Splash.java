@@ -1,10 +1,6 @@
 /**
- * WEEK09 LECTURE:
- * 1. revise asynctask
- * 2. revise viewmodel
- * 3. handlerthread
- * 4. static broadcast receiver
- * 5. dynamic broadcast receiver
+ * WEEK11 LECTURE:
+ * 1. demo NDK face detection
  */
 package com.boliao.eod;
 
@@ -34,6 +30,24 @@ import static java.lang.Thread.sleep;
  */
 public class Splash extends AppCompatActivity {
     private static final String TAG = "Splash";
+    // TODO NDK 0: install required dependencies (from Android Studio SDK Tools)
+    // - NDK: Android toolset to communicate with native code
+    // - CMake: native build tool
+    // - LLDB: native code debugger
+
+    // TODO NDK 1: create the native code and build configuration
+    // - create a src/cpp directory
+    // - create a new .cpp file
+    // - create a CMake build script called CMakeLists.txt (https://developer.android.com/studio/projects/configure-cmake.html)
+    // - add CMake path in gradle
+
+    // TODO NDK 2: load native lib and declare native methods
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+
+
 
     // shared preferences setup
     public final static String PREF_FILENAME = "com.boliao.eod.prefs";
