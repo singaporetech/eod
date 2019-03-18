@@ -22,6 +22,7 @@
         android:gravity="center"
         />
 
+    <!-- TODO NDK 3: opencv ui element for camera view -->
     <org.opencv.android.JavaCameraView
         android:id="@+id/camview"
         android:layout_width="wrap_content"

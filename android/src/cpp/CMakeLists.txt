@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 3.4.1)
 
 # OpenCV vars
 # TODO investigate why only FULL absolute paths work here...
+set( OpenCV_DIR "~/repos/OpenCV-android-sdk/sdk/native/jni" )
 #set (PATH_OPENCV /Users/mrboliao/repos/OpenCV-android-sdk)
 #set (PATH_PROJECT /Users/mrboliao/repos/eod)
 #include_directories(${PATH_OPENCV}/sdk/native/jni/include)
@@ -40,24 +41,19 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
+# Search for the opencv package
+
+find_package( OpenCV REQUIRED )
+
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
-#target_link_libraries( # Specifies the target library.
-#        native-lib
-#
-#        # Links the target library to the log library
-#        # included in the NDK.
-#        ${log-lib}
-#        )
-
-
-set( OpenCV_DIR "~/repos/OpenCV-android-sdk/sdk/native/jni" )
-find_package( OpenCV REQUIRED )
-target_link_libraries(native-lib opencv_java ${log-lib})
+target_link_libraries(
+        native-lib
+        opencv_java
+        ${log-lib})
 
 get_target_property(__src opencv_java IMPORTED_LOCATION_RELEASE )
 add_custom_command(TARGET native-lib POST_BUILD COMMAND
-        ${CMAKE_COMMAND} -E copy ${__src} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-        )
+        ${CMAKE_COMMAND} -E copy ${__src} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})

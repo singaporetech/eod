@@ -40,8 +40,8 @@ project(":android") {
     dependencies {
         implementation project(":core")
 
-        // TODO NDK
-        // add dependency on internal OpenCV module
+        // TODO NDK 3: add dependency on internal OpenCV module
+        // - see directory structure
         implementation project(':opencv')
 
         implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"

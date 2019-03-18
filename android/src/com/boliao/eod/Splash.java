@@ -1,6 +1,7 @@
 /**
  * WEEK11 LECTURE:
- * 1. demo NDK face detection
+ * 1. demo adding NDK to existing proj
+ * 2. demo interfacing with a large C lib
  */
 package com.boliao.eod;
 
@@ -50,6 +51,7 @@ import static java.lang.Thread.sleep;
  */
 public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.CvCameraViewListener2 {
     private static final String TAG = "Splash";
+
     // TODO NDK 0: install required dependencies (from Android Studio SDK Tools)
     // - NDK: Android toolset to communicate with native code
     // - CMake: native build tool
@@ -75,9 +77,7 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
     public native void detectFace(String cascadePath, long rgbaAddrInput);
 
     // TODO NDK 3: use OpenCV C lib to do face recognition
-    // - add openCVLibrary341 as a module
-    // - check it is included in settings
-    // - add openCVLibrary341 as a module
+    // - add OpenCV-android-sdk as a module
     // - check it is included in settings.gradle
     // - add as an implementation under module :android's gradle
 
@@ -90,16 +90,23 @@ public class Splash extends AppCompatActivity  implements CameraBridgeViewBase.C
     File cascadeFile;
     String cascadeFileName = "haarcascade_eye_tree_eyeglasses.xml";
 
-    // shared preferences setup
+    // shared preferences vars
     public final static String PREF_FILENAME = "com.boliao.eod.prefs";
     SharedPreferences pref;
     SharedPreferences.Editor prefEditor;
 
+    /**
+     * Helper to simply launch game with intent.
+     */
     private Intent startAndroidLauncher;
-
     public void launchGame() {
         startActivity(startAndroidLauncher);
     }
+
+    /**
+     * All the necessary boot up stuff on the splash screen
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
