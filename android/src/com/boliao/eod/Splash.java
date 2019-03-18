@@ -1,6 +1,7 @@
 /**
  * WEEK11 LECTURE:
- * 1. demo NDK face detection
+ * 1. demo adding NDK to existing proj
+ * 2. demo interfacing with a large C lib
  */
 package com.boliao.eod;
 
