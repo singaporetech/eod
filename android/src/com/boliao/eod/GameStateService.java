@@ -50,8 +50,7 @@ public class GameStateService extends Service implements SensorEventListener {
     private static final int NOTIFY_ID = 888;
     private static final int PENDINGINTENT_ID = 1;
 
-    // TODO SENSORS
-    // create SensorManager and Sensor vars to interface with phone sensors
+    // TODO SENSORS 0: create vars to interface with hardware sensors
     private SensorManager sensorManager;
     private Sensor stepDetector;
 
@@ -93,7 +92,7 @@ public class GameStateService extends Service implements SensorEventListener {
     public void onCreate() {
         super.onCreate();
 
-        // TODO SENSORS 1: get handle to sensor device
+        // TODO SENSORS 1: get handle to sensor device and list all sensors
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         // get list of all available sensors, along with some capability data
@@ -112,9 +111,8 @@ public class GameStateService extends Service implements SensorEventListener {
         // TODO SENSORS 2: get handles only for required sensors
         // - if you want to show app only if user has the sensor, then do <uses-feature> in manifest
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        if (stepDetector == null) {
+        if (stepDetector == null)
             Log.e(TAG, "No step sensors on device!");
-        }
 
         // TODO SERVICES 9: obtain and init notification manager with a channel
         // - notification channels introduced in Android Oreo
@@ -201,8 +199,10 @@ public class GameStateService extends Service implements SensorEventListener {
         return START_STICKY;
     }
 
-    // TODO SERVICE 14: override Service's onDestroy to destroy any background activity if desired
-    // - also destroy any manual threads
+    /**
+     * TODO SERVICE 14: override Service's onDestroy to destroy any background activity if desired
+     * - also destroy any manual threads
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -218,15 +218,17 @@ public class GameStateService extends Service implements SensorEventListener {
         // bgThread.interrupt();
 
         // TODO THREADING n: go to Splash
-
     }
 
-    // TODO SENSORS 5: implement onSensorChanged callback
-    // - system will call this back when sensor has new vals
-    // - simply call GameState.i().incSteps(event.values[0])
-    //   if event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR
-    // - log value for debugging
-    // - do as minimal as possible (this is called VERY frequently)
+    /**
+     * TODO SENSORS 5: implement onSensorChanged callback
+     * - system will call this back when sensor has new vals
+     * - simply call GameState.i().incSteps(event.values[0])
+     *   if event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR
+     * - log value for debugging
+     * - do as minimal as possible (this is called VERY frequently)
+     *
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.values.length > 0) {
@@ -236,15 +238,16 @@ public class GameStateService extends Service implements SensorEventListener {
             if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
                 Log.d(TAG, "Step detector:" + val);
                 GameState.i().incSteps(val);
-
                 sendBroadcast(GameState.i().getSteps());
             }
         }
     }
 
-    // TODO SENSORS: implement onAccuracyChanged callback
-    // - system will call this back when sensor accuracy changed
-    // - just show a log msg
+    /**
+     * TODO SENSORS 6: implement onAccuracyChanged callback
+     * - system will call this back when sensor accuracy changed
+     * - just show a log msg here but may want to only track steps on HIGH  ACCURACY
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.i(TAG, "Sensor accuracy changed to " + accuracy);
