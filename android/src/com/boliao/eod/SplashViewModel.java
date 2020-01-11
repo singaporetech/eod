@@ -1,11 +1,11 @@
 package com.boliao.eod;
 
-//import androidx.annotation.NonNull;
-//import androidx.lifecycle.LiveData;
-//import androidx.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+//import android.support.annotation.NonNull;
+//import android.arch.lifecycle.ViewModel;
+//import android.arch.lifecycle.LiveData;
 
 public class SplashViewModel extends ViewModel {
     // weather live data (read-only)

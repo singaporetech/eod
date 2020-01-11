@@ -4,7 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 //import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
