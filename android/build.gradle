@@ -93,6 +93,9 @@ dependencies {
 //    implementation "com.android.support:support-media-compat:$supportVer"
 //    implementation "androidx.media:media:1.0.0"
 //    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVer"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
+    implementation "androidx.core:core-ktx:$mainVer"
 
     implementation "androidx.appcompat:appcompat:$mainVer"
 //    implementation "com.android.support:appcompat-v7:$supportVer"
@@ -131,8 +134,11 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$mainVer"
     androidTestImplementation "androidx.test.ext:truth:$mainVer"
     androidTestImplementation 'com.google.truth:truth:0.42'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
 }
 
 repositories {
     mavenCentral()
 }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
