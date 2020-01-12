@@ -50,28 +50,6 @@ public class Combat extends Component{
         disable();
     }
 
-    public Vector2 getTargetPos() {
-        if (targetTransform != null) {
-            return new Vector2(targetTransform.getPos());
-        }
-        else {
-            Gdx.app.log(TAG, "attempting to get targetTransform when no target.");
-            return null;
-        }
-    }
-
-    public void setTarget(GameObject targetGO) {
-        this.targetGO = targetGO;
-        targetTransform = (Transform) targetGO.getComponent("Transform");
-        targetHealth = (Health) targetGO.getComponent("Health");
-    }
-
-    public void releaseTarget() {
-        targetGO = null ;
-        targetTransform = null;
-        targetHealth = null;
-    }
-
     @Override
     public void enable() {
         super.enable();
@@ -82,14 +60,6 @@ public class Combat extends Component{
     public void disable() {
         super.disable();
         spriteBam.disable();
-    }
-
-    public boolean isTargetDestroyed() {
-        return (targetHealth == null) || targetHealth.isEmpty();
-    }
-
-    public boolean hasTarget() {
-        return targetGO != null;
     }
 
     @Override
@@ -111,5 +81,38 @@ public class Combat extends Component{
 
             //Gdx.app.log(TAG, "timeElapsed=" + timeElapsed + " spriteBam active=" + spriteBam.isActive + " alpha=" + spriteBam.getAlpha());
         }
+    }
+
+    public void setTarget(GameObject targetGO) {
+        this.targetGO = targetGO;
+        targetTransform = (Transform) targetGO.getComponent("Transform");
+        targetHealth = (Health) targetGO.getComponent("Health");
+    }
+
+    public boolean isTargetDestroyed() {
+        return (targetHealth == null) || targetHealth.isEmpty();
+    }
+
+    public Vector2 getTargetPos() {
+        if (targetTransform != null) {
+            return new Vector2(targetTransform.getPos());
+        }
+        else {
+            Gdx.app.log(TAG, "attempting to get targetTransform when no target.");
+            return null;
+        }
+    }
+
+
+    public boolean hasTarget() {
+        return targetGO != null;
+    }
+
+
+
+    public void releaseTarget() {
+        targetGO = null ;
+        targetTransform = null;
+        targetHealth = null;
     }
 }

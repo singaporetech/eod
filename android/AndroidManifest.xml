@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.boliao.eod"
+    android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="26" />
-
     <!-- only show app in store to users with the following -->
     <!-- <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" /> -->
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <!-- TODO NETWORKING -->
+    <!-- TODO NETWORK 0: add NETWORK permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- TODO NDK -->
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -33,10 +28,24 @@
         android:label="@string/app_name"
         android:theme="@style/GdxTheme">
 
+        <receiver
+            android:name=".OnBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".NameCryptionService"
+            android:exported="false" />
+
         <!-- TODO SERVICES -->
-        <!-- demo the big 4 tags -->
+        <!-- Q: What are the big 4 tags? -->
         <activity android:name=".Splash">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -58,36 +67,6 @@
             android:name=".GameStateService"
             android:enabled="true"
             android:exported="true" />
-
-        <!-- TODO SERVICES -->
-        <!-- exported="false" limits access to within app -->
-
-
-        <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
-        <service
-            android:name=".ReminderJobService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".UserEncryptionService"
-            android:exported="false" />
-
-        <!-- TODO BROADCAST-RECEIVERS -->
-        <receiver
-            android:name=".ScreenOnReceiver"
-            android:enabled="true"
-            android:exported="false">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.SCREEN_ON" /> -->
-            <!-- </intent-filter> -->
-        </receiver>
-
-        <!-- TODO NETWORKING -->
-        <service
-            android:name=".WeatherService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

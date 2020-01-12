@@ -1,6 +1,6 @@
 android {
-    buildToolsVersion "27.0.3"
-    compileSdkVersion 26
+//    buildToolsVersion '28.0.3'
+    compileSdkVersion 28
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -11,8 +11,9 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
         }
-
-        instrumentTest.setRoot('tests')
+        androidTest {
+            java.srcDirs = ['androidTest']
+        }
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
@@ -20,27 +21,13 @@ android {
     defaultConfig {
         applicationId "com.boliao.eod"
         minSdkVersion 26
-        targetSdkVersion 26
-
-        externalNativeBuild {
-            cmake {
-                cppFlags "-frtti -fexceptions"
-                abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips', 'mips64'
-            }
-        }
+        targetSdkVersion 28
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    // TODO NDK
-    // add cmake build instructions
-    externalNativeBuild {
-        cmake {
-            path 'CMakeLists.txt'
         }
     }
 }
@@ -55,7 +42,7 @@ task copyAndroidNatives() {
     file("libs/x86_64/").mkdirs();
     file("libs/x86/").mkdirs();
 
-    configurations.natives.files.each { jar ->
+    configurations.getByName("natives").copy().files.each { jar ->
         def outputDir = null
         if (jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
         if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")        
@@ -69,6 +56,12 @@ task copyAndroidNatives() {
                 include "*.so"
             }
         }
+    }
+}
+
+tasks.whenTaskAdded { packageTask ->
+    if (packageTask.name.contains("package")) {
+        packageTask.dependsOn 'copyAndroidNatives'
     }
 }
 
@@ -94,37 +87,58 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.boliao.eod/AndroidLauncher'
 }
 
-// sets up the Android Idea project, using the old Ant based build.
-idea {
-    module {
-        sourceDirs += file("src" );scopes =[ COMPILE: [plus: [project.configurations.compile]]]        
-
-        iml {
-            withXml {
-                def node = it.asNode()
-                def builder = NodeBuilder.newInstance();
-                builder.current = node;
-                builder.component(name: "FacetManager") {
-                    facet(type: "android", name: "Android") {
-                        configuration {
-                            option(name:"UPDATE_PROPERTY_FILES" , value:"true")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 dependencies {
-    implementation 'com.android.support:support-annotations:26.+'
-    implementation 'com.android.support:support-compat:26.+'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.firebase:firebase-jobdispatcher:0.8.+'
-    implementation 'com.google.android.gms:play-services-location:11.+'
+//    implementation "com.android.support:support-annotations:$supportVer"
+//    implementation "com.android.support:animated-vector-drawable:$supportVer"
+//    implementation "com.android.support:support-media-compat:$supportVer"
+//    implementation "androidx.media:media:1.0.0"
+//    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVer"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
+    implementation "androidx.core:core-ktx:$mainVer"
 
-    // TODO NDK
-    // add dependency on OpenCV module
-    implementation project(':openCVLibrary341')
+    implementation "androidx.appcompat:appcompat:$mainVer"
+//    implementation "com.android.support:appcompat-v7:$supportVer"
+    implementation "com.android.support.constraint:constraint-layout:1.1.3"
+    implementation "com.firebase:firebase-jobdispatcher:0.8.6"
+    implementation ("com.google.android.gms:play-services-location:16.0.0") {
+        exclude group: 'com.android.support'
+    }
+
+    // architecture components
+    implementation "androidx.work:work-runtime:$workVer"
+    implementation "androidx.lifecycle:lifecycle-extensions:$archVer"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$archVer"
+    implementation "androidx.lifecycle:lifecycle-livedata:$archVer"
+
+    // other libs
+    implementation 'com.android.volley:volley:1.1.1'
+
+    // core tests
+    androidTestImplementation "androidx.test:core:$mainVer"
+    androidTestImplementation "androidx.test:runner:$mainVer"
+    androidTestImplementation "androidx.test:rules:$mainVer"
+
+    // Espresso
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVer"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVer"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVer"
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espressoVer"
+    androidTestImplementation "androidx.test.espresso:espresso-web:$espressoVer"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVer"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espressoVer"
+    androidTestImplementation "androidx.work:work-testing:$workVer"
+
+    // Assertions
+    androidTestImplementation "androidx.test.ext:junit:$mainVer"
+    androidTestImplementation "androidx.test.ext:truth:$mainVer"
+    androidTestImplementation 'com.google.truth:truth:0.42'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
 }
+
+repositories {
+    mavenCentral()
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
