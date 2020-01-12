@@ -18,11 +18,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -55,9 +54,9 @@ public class Splash extends AppCompatActivity {
 
         // get refs to UI components
 		final Button playBtn = findViewById(R.id.play_btn);
-        final AppCompatEditText usernameEdtTxt = findViewById(R.id.name_edtxt);
-        final AppCompatTextView msgTxtView = findViewById(R.id.msg_txtview);
-        final AppCompatTextView weatherTxtView = findViewById(R.id.weather_txtview);
+        final EditText usernameEdtTxt = findViewById(R.id.name_edtxt);
+        final TextView msgTxtView = findViewById(R.id.msg_txtview);
+        final TextView weatherTxtView = findViewById(R.id.weather_txtview);
 
         // setup shared preferences
         pref = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
