@@ -33,6 +33,7 @@ class Splash : AppCompatActivity() {
     var pref: SharedPreferences? = null
     var prefEditor: SharedPreferences.Editor? = null
     private var startAndroidLauncher: Intent? = null
+
     fun launchGame() {
         startActivity(startAndroidLauncher)
     }
@@ -40,13 +41,16 @@ class Splash : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
         // init launch game intent
         startAndroidLauncher = Intent(this@Splash, AndroidLauncher::class.java)
+
         // get refs to UI components
         val playBtn = findViewById<Button>(R.id.play_btn)
         val usernameEdtTxt = findViewById<EditText>(R.id.name_edtxt)
         val msgTxtView = findViewById<TextView>(R.id.msg_txtview)
         val weatherTxtView = findViewById<TextView>(R.id.weather_txtview)
+
         // setup shared preferences
         pref = getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE)
         prefEditor = pref!!.edit() //TODO refactor to safe call
