@@ -1,11 +1,33 @@
 /**
- * WEEK09 LECTURE:
+ * # WEEK08: SERVICES
+ * 1. background services: started and bound
+ * 2. notifications
+ * 3. foreground services
+ * 4. scheduled services: workmanager
+ *
+ * # WEEK09: THREADING
+ * 5. raw java threads
+ * 6. asynctask
+ * 7. handlerthread
+ *
+ * # WEEK10 LECTURE:
  * 1. revise asynctask
  * 2. revise viewmodel
  * 3. handlerthread
  * 4. static broadcast receiver
  * 5. dynamic broadcast receiver
+ *
+ * # WEEK11 LECTURE:
+ * 1. receivers
+ *
+ * # WEEK12 LECTURE:
+ * 1. demo adding NDK to existing proj
+ * 2. demo interfacing with a large C lib
+ *
+ * # WEEK13 LECTURE:
+ * 1. Some industry lecture?
  */
+
 package com.boliao.eod
 
 import android.app.Activity
@@ -22,8 +44,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.boliao.eod.AndroidLauncher
-import com.boliao.eod.Splash
 import java.lang.ref.WeakReference
 
 /**
@@ -77,7 +97,7 @@ class Splash : AppCompatActivity() {
             if (pref!!.contains(username)) {
                 msgTxtView.text = "Name already exists!"
             } else {
-                // Store  username to survive app destruction
+                // Store username to survive app destruction
                 // DEPRECATED due to encryption below
                 /*
                     msgTxtView.setText("Starting game...");
