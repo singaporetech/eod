@@ -7,12 +7,16 @@ import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 
 class AndroidLauncher : AndroidApplication() {
-    private var startServiceIntent: Intent? = null
+    companion object {
+        private val TAG = AndroidLauncher::class.simpleName
+    }
+
+    private lateinit var startServiceIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d(TAG, "onCreate!!!!!!!!l")
+        Log.d(TAG, "onCreate!")
 
         // TODO SERVICES 4: manage game state changes
         // - track and update steps
@@ -21,7 +25,8 @@ class AndroidLauncher : AndroidApplication() {
         // - start game state service
         // - may already be running from a previous run, so pls check
         startServiceIntent = Intent(this, GameStateService::class.java)
-        Log.d(TAG, "config ${startServiceIntent.toString()}")
+        Log.d(TAG, "config $startServiceIntent")
+
         if (GameState.i().isServiceStarted) {
             Log.i(TAG, "GameStateService already started.")
         } else {
@@ -29,9 +34,10 @@ class AndroidLauncher : AndroidApplication() {
             GameState.i().isServiceStarted = true
             startService(startServiceIntent)
         }
+
         // init game
         val config = AndroidApplicationConfiguration()
-        Log.d(TAG, "config ${config.toString()}")
+        Log.d(TAG, "config $config")
         initialize(Game.i(), config)
     }
 
@@ -43,22 +49,20 @@ class AndroidLauncher : AndroidApplication() {
         Log.i(TAG, "Destroying activity only ")
         super.onDestroy()
         //stopService(intent);
-//Game.i().dispose();
+        //Game.i().dispose();
     }
 
     override fun onPause() {
         super.onPause()
+
         // set app to active
         GameState.i().isAppActive = false
     }
 
     override fun onResume() {
         super.onResume()
+
         // set app to active
         GameState.i().isAppActive = true
-    }
-
-    companion object {
-        private val TAG = AndroidLauncher::class.simpleName
     }
 }

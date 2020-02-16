@@ -12,11 +12,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import com.boliao.eod.AndroidLauncher
-import com.boliao.eod.GameStateService
 
-//import androidx.app.NotificationCompat;
-//import androidx.core.app.NotificationCompat;
 /**
  * TODO SERVICES 5: a background service to manage game state
  * - collect sensor data and send these updates to GameState in game core component
@@ -27,15 +23,25 @@ import com.boliao.eod.GameStateService
  * - Q2: what happens when it is killed?
  */
 class GameStateService: Service(), SensorEventListener {
+    companion object {
+        private val TAG = GameStateService::class.simpleName
+        const val BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT"
+        const val STEP_KEY = "com.boliao.eod.STEP_KEY"
+        private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
+        private const val NOTIFY_ID = 888
+        private const val PENDINGINTENT_ID = 1
+    }
+
+    // a raw thread
     private lateinit var bgThread: Thread
 
     // TODO NOTIFICATIONS
     // - add var for NotificationManager
     // - add ID vars for notifications
-    var notificationManager: NotificationManager? = null
+    private lateinit var notificationManager: NotificationManager
 
     // TODO SENSORS 0: create vars to interface with hardware sensors
-    private var sensorManager: SensorManager? = null
+    private lateinit var sensorManager: SensorManager
     private var stepDetector: Sensor? = null
 
     // TODO SERVICES 6: create GameStateBinder class that extends Binder
@@ -66,10 +72,12 @@ class GameStateService: Service(), SensorEventListener {
      */
     override fun onCreate() {
         super.onCreate()
+
         // TODO SENSORS 1: get handle to sensor device and list all sensors
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
         // get list of all available sensors, along with some capability data
-        val sensors = sensorManager!!.getSensorList(Sensor.TYPE_ALL)
+        val sensors = sensorManager.getSensorList(Sensor.TYPE_ALL) // TODO safe call
         var sensorsStr = "available sensors:"
         for (sensor in sensors) {
             sensorsStr += "\n" + sensor.name +
@@ -83,14 +91,14 @@ class GameStateService: Service(), SensorEventListener {
 
         // TODO SENSORS 2: get handles only for required sensors
         // - if you want to show app only if user has the sensor, then do <uses-feature> in manifest
-        stepDetector = sensorManager!!.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+        stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         if (stepDetector == null) Log.e(TAG, "No step sensors on device!")
 
         // TODO SERVICES 9: obtain and init notification manager with a channel
         // - notification channels introduced in Android Oreo
         // - need to initialize a channel before creating actual notifications
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) notificationManager!!.createNotificationChannel(NotificationChannel(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) notificationManager.createNotificationChannel(NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 getString(R.string.channel_name),
                 NotificationManager.IMPORTANCE_HIGH))
@@ -113,7 +121,7 @@ class GameStateService: Service(), SensorEventListener {
         // TODO SENSORS 3: Registering listener to listen for sensor events.
         // - note that the DELAY is the max, and system normally lower
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
-        sensorManager!!.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME)
+        sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME)
 
         // TODO THREADING 0: control the spawn timer in a thread
         // O.M.G. a raw java thread
@@ -140,7 +148,7 @@ class GameStateService: Service(), SensorEventListener {
                                     .setContentIntent(pi)
                                     .build()
                             // activate the notification
-                            notificationManager!!.notify(NOTIFY_ID, noti)
+                            notificationManager.notify(NOTIFY_ID, noti)
 
                             // TODO SERVICES 12: upgrade this service to foreground
                             // - need to startForegroundService from caller context
@@ -168,7 +176,7 @@ class GameStateService: Service(), SensorEventListener {
         stopForeground(true)
 
         // TODO SENSORS 4: unregister listeners from the sensorManager as appropriate
-        sensorManager!!.unregisterListener(this, stepDetector)
+        sensorManager.unregisterListener(this, stepDetector)
 
         // TODO THREADING 0: "stop" raw threads?
         // here's an example of the iffiniess of using raw threads: no good way to stop it
@@ -209,8 +217,8 @@ class GameStateService: Service(), SensorEventListener {
     }
 
     /**
-     * TODO BROADCASTRECEIVERS 2: Send broadcast to apps that wish to get step count
-     * TODO BROADCASTRECEIVERS 3: Receive broadcast in another separate app
+     * TODO RECEIVERS 2: Send broadcast to apps that wish to get step count
+     * TODO RECEIVERS 3: Receive broadcast in another separate app
      */
     private fun sendBroadcast(steps: Int) {
         val intent = Intent(BROADCAST_ACTION)
@@ -219,12 +227,4 @@ class GameStateService: Service(), SensorEventListener {
         sendBroadcast(intent)
     }
 
-    companion object {
-        private val TAG = GameStateService::class.simpleName
-        const val BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT"
-        const val STEP_KEY = "com.boliao.eod.STEP_KEY"
-        private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
-        private const val NOTIFY_ID = 888
-        private const val PENDINGINTENT_ID = 1
-    }
 }

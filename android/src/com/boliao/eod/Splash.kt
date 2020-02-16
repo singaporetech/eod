@@ -18,12 +18,12 @@
  * 5. dynamic broadcast receiver
  *
  * # WEEK11: NETWORKING
- * 1. Networking libs
- * 2. Example using volley
+ * 1. networking libs
+ * 2. using volley
  *
  * # WEEK12: NDK
- * 1. Example adding NDK to existing proj
- * 2. Example interfacing with a large C lib
+ * 1. adding NDK to existing proj
+ * 2. interfacing with a large C lib
  *
  * # WEEK13: Industry
  */
