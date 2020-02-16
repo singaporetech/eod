@@ -5,6 +5,7 @@ import android.os.HandlerThread
 
 class WeatherWorkerThread : HandlerThread("WeatherWorkerThread") {
     private var handler: Handler? = null
+
     fun prepareHandler() {
         handler = Handler(looper)
     }

@@ -3,9 +3,6 @@ package com.boliao.eod
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 
-//import android.support.annotation.NonNull;
-//import android.arch.lifecycle.ViewModel;
-//import android.arch.lifecycle.LiveData;
 class SplashViewModel : ViewModel() {
     // weather live data (read-only)
     var weatherData: LiveData<String>

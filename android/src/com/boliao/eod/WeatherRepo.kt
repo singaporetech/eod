@@ -9,8 +9,6 @@ import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
 
-//import android.support.annotation.NonNull;
-//import android.arch.lifecycle.MutableLiveData;
 /**
  * Where most of the hard work gets done... at the lower levels...
  * - note the kotlin super singleton syntax "object"
@@ -26,6 +24,7 @@ object WeatherRepo {
 
     // threading
     private var weatherRunner: Runnable? = null
+
     // weather live data (writable)
     val weatherData = MutableLiveData<String>()
 
@@ -73,6 +72,7 @@ object WeatherRepo {
         val urlStr = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast?date=" +
                 today
         Log.i(TAG, "Fetching online weather data: url=$urlStr")
+
         // form the network request complete with response listener
         val request = JsonObjectRequest(Request.Method.GET, urlStr, null, Response.Listener { response ->
             Log.i(TAG, "volley fetched \n$response")

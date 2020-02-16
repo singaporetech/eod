@@ -7,9 +7,13 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-
 //import androidx.core.app.NotificationCompat;
+
 class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+    companion object {
+        private const val TAG = "ReminderWorker"
+    }
+
     private var count = 0
     //    private NotificationManagerCompat notMgr;
     private val notMgr: NotificationManager
@@ -17,6 +21,17 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
     private val NCID = "2"
     private val NNAME = "My Channel Name"
     private val NDESC = "This is testing channel"
+
+    init {
+        // init notification channel
+        val chan = NotificationChannel(NCID, NNAME, NotificationManager.IMPORTANCE_HIGH)
+        chan.description = NDESC
+
+        // init notification manager
+        notMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notMgr.createNotificationChannel(chan)
+    }
+
     override fun doWork(): Result {
         Log.i(TAG, "REMINDER TO CHARGE" + count++)
 
@@ -36,16 +51,4 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
         return Result.success()
     }
 
-    companion object {
-        private const val TAG = "ReminderWorker"
-    }
-
-    init {
-        // init notification channel
-        val chan = NotificationChannel(NCID, NNAME, NotificationManager.IMPORTANCE_HIGH)
-        chan.description = NDESC
-        // init notification manager
-        notMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notMgr.createNotificationChannel(chan)
-    }
 }

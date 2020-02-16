@@ -10,22 +10,22 @@
  * 6. asynctask
  * 7. handlerthread
  *
- * # WEEK10 LECTURE:
+ * # WEEK10: RECEIVERS
  * 1. revise asynctask
  * 2. revise viewmodel
  * 3. handlerthread
  * 4. static broadcast receiver
  * 5. dynamic broadcast receiver
  *
- * # WEEK11 LECTURE:
- * 1. receivers
+ * # WEEK11: NETWORKING
+ * 1. Networking libs
+ * 2. Example using volley
  *
- * # WEEK12 LECTURE:
- * 1. demo adding NDK to existing proj
- * 2. demo interfacing with a large C lib
+ * # WEEK12: NDK
+ * 1. Example adding NDK to existing proj
+ * 2. Example interfacing with a large C lib
  *
- * # WEEK13 LECTURE:
- * 1. Some industry lecture?
+ * # WEEK13: Industry
  */
 
 package com.boliao.eod
@@ -50,9 +50,15 @@ import java.lang.ref.WeakReference
  * This is the splash view that records who is playing.
  */
 class Splash : AppCompatActivity() {
-    var pref: SharedPreferences? = null
-    var prefEditor: SharedPreferences.Editor? = null
-    private var startAndroidLauncher: Intent? = null
+    companion object {
+        private const val TAG = "Splash"
+
+        // shared preferences setup
+        const val PREF_FILENAME = "com.boliao.eod.prefs"
+    }
+
+    private lateinit var pref: SharedPreferences
+    private lateinit var startAndroidLauncher: Intent
 
     fun launchGame() {
         startActivity(startAndroidLauncher)
@@ -73,7 +79,6 @@ class Splash : AppCompatActivity() {
 
         // setup shared preferences
         pref = getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE)
-        prefEditor = pref!!.edit() //TODO refactor to safe call
 
         // show splash text
         msgTxtView.setText(R.string.welcome_note)
@@ -94,15 +99,15 @@ class Splash : AppCompatActivity() {
             // - if username exists, set msgTxtView to "player exists..."
             // - else, set msgTxtView to "starting game, pls wait"
             val username = usernameEdtTxt.text.toString()
-            if (pref!!.contains(username)) {
+            if (pref.contains(username)) {
                 msgTxtView.text = "Name already exists!"
             } else {
                 // Store username to survive app destruction
                 // DEPRECATED due to encryption below
                 /*
                     msgTxtView.setText("Starting game...");
-                    prefEditor.putString(username, username);
-                    prefEditor.commit();
+                    prefs.edit().putString(username, username);
+                    prefs.edit().commit();
                     */
 
                 // TODO SERVICES 2: what if this needs some intensive processing
@@ -139,7 +144,12 @@ class Splash : AppCompatActivity() {
     private class EncryptTask(act: Activity) : AsyncTask<String?, Void?, Boolean>() {
         // this is to get all the UI elements
         // - use weak reference so that it does not leak mem when activity gets killed
-        var wr_act: WeakReference<Activity>
+        var wr_act: WeakReference<Activity> = WeakReference(act)
+        /*
+        init {
+            wr_act = WeakReference(act)
+        }
+        */
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -167,15 +177,5 @@ class Splash : AppCompatActivity() {
                 (act as Splash).launchGame()
             }
         }
-
-        init {
-            wr_act = WeakReference(act)
-        }
-    }
-
-    companion object {
-        private const val TAG = "Splash"
-        // shared preferences setup
-        const val PREF_FILENAME = "com.boliao.eod.prefs"
     }
 }
