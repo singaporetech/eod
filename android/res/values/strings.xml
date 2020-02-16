@@ -4,6 +4,8 @@
     <string name="app_name">eod</string>
     <string name="title_activity_login">Sign in</string>
     <string name="weather_emoty"></string>
+    <string name="play_btn_txt">PLAY</string>
+    <string name="name_hint">your name</string>
     <string name="welcome_note">Exercise Or Die at the End Of Day...</string>
     <string name="channel_name">eod</string>
 
