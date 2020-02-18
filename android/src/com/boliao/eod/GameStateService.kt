@@ -25,14 +25,14 @@ import android.util.Log
 class GameStateService: Service(), SensorEventListener {
     companion object {
         private val TAG = GameStateService::class.simpleName
-        const val BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT"
-        const val STEP_KEY = "com.boliao.eod.STEP_KEY"
         private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
         private const val NOTIFY_ID = 888
         private const val PENDINGINTENT_ID = 1
+        const val BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT"
+        const val STEP_KEY = "com.boliao.eod.STEP_KEY"
     }
 
-    // a raw thread
+    // a raw thread for bg work
     private lateinit var bgThread: Thread
 
     // TODO NOTIFICATIONS
@@ -53,6 +53,7 @@ class GameStateService: Service(), SensorEventListener {
     }
 
     private val binder: IBinder = GameStateBinder()
+
     /**
      * TODO SERVICES 7:implement onBind to return the binder interface
      * - boilerplate for Bound Service
@@ -98,7 +99,8 @@ class GameStateService: Service(), SensorEventListener {
         // - notification channels introduced in Android Oreo
         // - need to initialize a channel before creating actual notifications
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) notificationManager.createNotificationChannel(NotificationChannel(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            notificationManager.createNotificationChannel(NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 getString(R.string.channel_name),
                 NotificationManager.IMPORTANCE_HIGH))
@@ -127,16 +129,25 @@ class GameStateService: Service(), SensorEventListener {
         // O.M.G. a raw java thread
         bgThread = Thread( Runnable{
                 try {
-                    while (true) { // decrement countdown every sec
+                    while (true) {
+                        // thread updates every sec
                         Thread.sleep(1000)
+
+                        // decrement countdown every sec
                         GameState.i().decTimer()
+
                         // notify user when bug is spawning
                         if (GameState.i().isCanNotify && !GameState.i().isAppActive) {
                             Log.i(TAG, "The NIGHT has come: a bug will spawn...")
 
                             // TODO SERVICES 11: create pending intent to open app from notification
                             val intent2 = Intent(this@GameStateService, AndroidLauncher::class.java)
-                            val pi = PendingIntent.getActivity(this@GameStateService, PENDINGINTENT_ID, intent2, PendingIntent.FLAG_UPDATE_CURRENT)
+                            val pi = PendingIntent.getActivity(
+                                    this@GameStateService,
+                                    PENDINGINTENT_ID,
+                                    intent2,
+                                    PendingIntent.FLAG_UPDATE_CURRENT)
+
                             // build the notification
                             val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
                                     .setSmallIcon(R.drawable.ic_stat_name)
@@ -147,6 +158,7 @@ class GameStateService: Service(), SensorEventListener {
                                     .setAutoCancel(true)
                                     .setContentIntent(pi)
                                     .build()
+
                             // activate the notification
                             notificationManager.notify(NOTIFY_ID, noti)
 
@@ -161,9 +173,12 @@ class GameStateService: Service(), SensorEventListener {
                     Thread.currentThread().interrupt()
                 }
         })
+
+        // get the thread going
         bgThread.start()
 
         // TODO SERVICE 13: return appropriate flag to indicate what happens when killed
+        // Q: what are the other flags?
         return START_STICKY
     }
 

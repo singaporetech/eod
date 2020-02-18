@@ -69,25 +69,39 @@ object WeatherRepo {
      * - others have used empty Application classes
      */
     fun fetchOnlineWeatherData() {
-        val urlStr = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast?date=" +
-                today
+        val urlStr = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast?date_time=$today"
         Log.i(TAG, "Fetching online weather data: url=$urlStr")
 
         // form the network request complete with response listener
-        val request = JsonObjectRequest(Request.Method.GET, urlStr, null, Response.Listener { response ->
-            Log.i(TAG, "volley fetched \n$response")
-            try { // parse the returned json
-                val forecastStr = response.getJSONArray("items")
-                        .getJSONObject(0)
-                        .getJSONArray("forecasts")
-                        .getJSONObject(0)
-                        .getString("forecast")
-                // post to live data here
-                weatherData.postValue("Weather now is $forecastStr")
-            } catch (e: JSONException) {
-                Log.e(TAG, "json exception: " + e.localizedMessage)
-            }
-        }, Response.ErrorListener { error -> Log.e(TAG, "Volley error while fetching :" + error.localizedMessage) })
+        val request = JsonObjectRequest(
+                Request.Method.GET,
+                urlStr,
+                null,
+                Response.Listener { response ->
+                    Log.i(TAG, "volley fetched \n$response")
+                    try { // parse the returned json
+                        val areaStr = response.getJSONArray("items")
+                                .getJSONObject(0)
+                                .getJSONArray("forecasts")
+                                .getJSONObject(0)
+                                .getString("area")
+                        val forecastStr = response.getJSONArray("items")
+                                .getJSONObject(0)
+                                .getJSONArray("forecasts")
+                                .getJSONObject(0)
+                                .getString("forecast")
+
+                        // post to live data here
+                        weatherData.postValue("Weather at $areaStr is $forecastStr")
+                    } catch (e: JSONException) {
+                        Log.e(TAG, "json exception: " + e.localizedMessage)
+                    }
+                },
+                Response.ErrorListener {
+                    error -> Log.e(TAG, "Volley error while fetching :" + error.localizedMessage)
+                }
+        )
+
         NetworkRequestQueue.getInstance().add(request)
     }
 
@@ -98,7 +112,7 @@ object WeatherRepo {
     val today: String
         get() {
             val time = Calendar.getInstance().time
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH)
             return dateFormat.format(time)
         }
 }

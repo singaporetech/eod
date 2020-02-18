@@ -32,12 +32,14 @@ class NameCryptionService : IntentService("NameCryptionService") {
      * Handle action Foo in the provided background thread with the provided
      * parameters.
      */
-    private fun handleActionFoo(param1: String) { // encrypt username using some ultra modern 5s technique
+    private fun handleActionFoo(param1: String) {
+        // encrypt username using some ultra modern 5s technique
         try {
             Thread.sleep(5000)
         } catch (e: InterruptedException) {
             Log.e(TAG, "Error occurred whilst eating snake: " + e.message)
         }
+
         // store in sharedprefs after "encryption"
         pref = getSharedPreferences(Splash.PREF_FILENAME, Context.MODE_PRIVATE)
         pref.edit().putString(param1, param1).apply()
@@ -62,13 +64,13 @@ class NameCryptionService : IntentService("NameCryptionService") {
         // TODO: Rename parameters
         private const val EXTRA_PARAM1 = "com.boliao.eod.extra.PARAM1"
         private const val EXTRA_PARAM2 = "com.boliao.eod.extra.PARAM2"
+
         /**
          * Starts this service to perform action Foo with the given parameters. If
          * the service is already performing a task this action will be queued.
          *
          * @see IntentService
          */
-
         // TODO: Customize helper method
         fun startActionFoo(context: Context, param1: String?) {
             val intent = Intent(context, NameCryptionService::class.java)
