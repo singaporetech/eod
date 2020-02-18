@@ -102,7 +102,7 @@ object WeatherRepo {
                 }
         )
 
-        NetworkRequestQueue.getInstance().add(request)
+        NetworkRequestQueue.add(request)
     }
 
     /**

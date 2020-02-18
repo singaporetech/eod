@@ -85,7 +85,7 @@ class Splash : AppCompatActivity() {
         msgTxtView.setText(R.string.welcome_note)
 
         // TODO NETWORKING 1: init volley network request queue "singleton"
-        NetworkRequestQueue.init(this)
+        NetworkRequestQueue.setContext(this)
 
         // TODO THREADING 2: create a persistent weather widget
         // - WeatherRepo is already nicely linked up in MVVM with SplashViewModel
