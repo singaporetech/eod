@@ -92,7 +92,7 @@ object WeatherRepo {
                                 .getString("forecast")
 
                         // post to live data here
-                        weatherData.postValue("Weather at $areaStr is $forecastStr")
+                        weatherData.postValue("Weather at $areaStr is $forecastStr at \n${today.substring(11, 19)}")
                     } catch (e: JSONException) {
                         Log.e(TAG, "json exception: " + e.localizedMessage)
                     }
@@ -102,7 +102,19 @@ object WeatherRepo {
                 }
         )
 
-        NetworkRequestQueue.add(request)
+        // use the previous handlerthread pattern to make timed calls to weather API
+        val weatherWorkerThread = WeatherWorkerThread()
+        weatherWorkerThread.start()
+        weatherWorkerThread.prepareHandler()
+        weatherRunner = Runnable {
+
+            // add request (with it's async response) to the volley queue
+            NetworkRequestQueue.add(request)
+
+            weatherWorkerThread.postTaskDelayed(weatherRunner, FETCH_INTERVAL_MILLIS.toLong())
+        }
+        weatherWorkerThread.postTask(weatherRunner)
+
     }
 
     /**

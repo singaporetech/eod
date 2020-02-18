@@ -90,9 +90,16 @@ class Splash : AppCompatActivity() {
         // TODO THREADING 2: create a persistent weather widget
         // - WeatherRepo is already nicely linked up in MVVM with SplashViewModel
         // - implement background weather fetching in WeatherRepo
+        // - set up weatherTextView to observe the weatherData
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
-        val splashViewModel: ViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        (splashViewModel as SplashViewModel).weatherData.observe(this, Observer { s -> weatherTxtView.text = s })
+        val splashViewModel: ViewModel = ViewModelProviders.of(this)
+                .get(SplashViewModel::class.java)
+        (splashViewModel as SplashViewModel).weatherData.observe(
+                this,
+                Observer {
+                    s -> weatherTxtView.text = s
+                }
+        )
 
         // start game on click "PLAY"
         playBtn.setOnClickListener {
