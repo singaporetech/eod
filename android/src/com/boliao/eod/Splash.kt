@@ -92,12 +92,11 @@ class Splash : AppCompatActivity() {
         // - implement background weather fetching in WeatherRepo
         // - set up weatherTextView to observe the weatherData
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
-        val splashViewModel: ViewModel = ViewModelProviders.of(this)
-                .get(SplashViewModel::class.java)
-        (splashViewModel as SplashViewModel).weatherData.observe(
+        val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
+        splashViewModel.weatherData.observe(
                 this,
                 Observer {
-                    s -> weatherTxtView.text = s
+                    weatherTxtView.text = it
                 }
         )
 
