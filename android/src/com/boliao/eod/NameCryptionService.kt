@@ -13,18 +13,20 @@ import android.util.Log
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-class NameCryptionService : IntentService("NameCryptionService") {
+class NameCryptionService : IntentService(NameCryptionService::class.simpleName) {
     private lateinit var pref: SharedPreferences
 
     override fun onHandleIntent(intent: Intent) {
-        val action = intent.action
-        if (ACTION_FOO == action) {
-            val param1 = intent.getStringExtra(EXTRA_PARAM1)
-            handleActionFoo(param1)
-        } else if (ACTION_BAZ == action) {
-            val param1 = intent.getStringExtra(EXTRA_PARAM1)
-            val param2 = intent.getStringExtra(EXTRA_PARAM2)
-            handleActionBaz(param1, param2)
+        when (intent.action) {
+            ACTION_FOO -> {
+                val param1 = intent.getStringExtra(EXTRA_PARAM1)
+                handleActionFoo(param1)
+            }
+            ACTION_BAZ -> {
+                val param1 = intent.getStringExtra(EXTRA_PARAM1)
+                val param2 = intent.getStringExtra(EXTRA_PARAM2)
+                handleActionBaz(param1, param2)
+            }
         }
     }
 
@@ -54,7 +56,7 @@ class NameCryptionService : IntentService("NameCryptionService") {
     }
 
     companion object {
-        private const val TAG = "NameCryptionService"
+        private val TAG = NameCryptionService::class.simpleName
 
         // TODO: Rename actions, choose action names that describe tasks that this
         // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
@@ -73,10 +75,11 @@ class NameCryptionService : IntentService("NameCryptionService") {
          */
         // TODO: Customize helper method
         fun startActionFoo(context: Context, param1: String?) {
-            val intent = Intent(context, NameCryptionService::class.java)
-            intent.action = ACTION_FOO
-            intent.putExtra(EXTRA_PARAM1, param1)
-            context.startService(intent)
+            val intent = Intent(context, NameCryptionService::class.java).apply {
+                action = ACTION_FOO
+                putExtra(EXTRA_PARAM1, param1)
+                context.startService(this)
+            }
         }
 
         /**

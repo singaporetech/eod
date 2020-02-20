@@ -44,19 +44,23 @@ class GameStateService: Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var stepDetector: Sensor? = null
 
-    // TODO SERVICES 6: create GameStateBinder class that extends Binder
-    // - boilerplate for Bound Service
-    // - init an IBinder interface to offer a handle to this class
+    /**
+     * TODO SERVICES 6: create GameStateBinder class to "contain" this service
+     * This is part of the boilerplate for Bound Service. Client can use this object to communicate
+     * with the service. This approach uses the simple Binder class since clients are also in this
+     * app/process. For this service to be used by other apps, use Messenger or AIDL for IPC.
+     * - extends Binder()
+     * - init an IBinder interface to offer a handle to this class
+     * - return this service for clients to access public service methods
+     */
     inner class GameStateBinder : Binder() {
-        val service: GameStateService
-            get() = this@GameStateService
+        fun getService(): GameStateService = this@GameStateService
     }
-
-    private val binder: IBinder = GameStateBinder()
+    private val binder = GameStateBinder()
 
     /**
      * TODO SERVICES 7:implement onBind to return the binder interface
-     * - boilerplate for Bound Service
+     * Part of the boilerplate for Bound Service
      * @param intent to hold any info from caller
      * @return IBinder to obtain a handle to the service class
      */
@@ -78,15 +82,11 @@ class GameStateService: Service(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         // get list of all available sensors, along with some capability data
-        val sensors = sensorManager.getSensorList(Sensor.TYPE_ALL) // TODO safe call
+        val sensors = sensorManager.getSensorList(Sensor.TYPE_ALL)
         var sensorsStr = "available sensors:"
         for (sensor in sensors) {
-            sensorsStr += "\n" + sensor.name +
-                    " madeBy=" + sensor.vendor +
-                    " v" + sensor.version +
-                    " minDelay=" + sensor.minDelay +
-                    " maxRange=" + sensor.maximumRange +
-                    " power=" + sensor.power
+            sensorsStr += "\n$sensor.name madeBy=$sensor.vendor v=$sensor.version " +
+                    "minDelay=$sensor.minDelay maxRange=$sensor.maximumRange power=$sensor.power"
         }
         Log.i(TAG, sensorsStr)
 
@@ -100,10 +100,13 @@ class GameStateService: Service(), SensorEventListener {
         // - need to initialize a channel before creating actual notifications
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            notificationManager.createNotificationChannel(NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                getString(R.string.channel_name),
-                NotificationManager.IMPORTANCE_HIGH))
+            notificationManager.createNotificationChannel(
+                    NotificationChannel(
+                            NOTIFICATION_CHANNEL_ID,
+                            getString(R.string.channel_name),
+                            NotificationManager.IMPORTANCE_HIGH
+                    )
+            )
     }
 
     /**
