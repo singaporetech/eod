@@ -31,7 +31,6 @@
 
 package com.boliao.eod
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -43,7 +42,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import java.lang.ref.WeakReference
 
@@ -51,13 +49,6 @@ import java.lang.ref.WeakReference
  * This is the splash view that records who is playing.
  */
 class Splash : AppCompatActivity() {
-    companion object {
-        private const val TAG = "Splash"
-
-        // shared preferences setup
-        const val PREF_FILENAME = "com.boliao.eod.prefs"
-    }
-
     private lateinit var pref: SharedPreferences
     private lateinit var startAndroidLauncher: Intent
 
@@ -140,48 +131,51 @@ class Splash : AppCompatActivity() {
         }
     }
 
-    /**
-     * AsyncTask to "encrypt" username
-     * - heavy lifting in the background to be posted back to UI
-     * - static class so as to prevent leaks
-     * - need a ref to update UI thread, so use WeakReference (a.k.a. shared_ptr)
-     * - onProgressUpdate(Integer... progress) left as an exercise
-     * - note: publishProgress(Integer) is in built to pass progress to above from doInBackground
-     */
-    private class EncryptTask(act: Activity) : AsyncTask<String?, Void?, Boolean>() {
-        // this is to get all the UI elements
-        // - use weak reference so that it does not leak mem when activity gets killed
-        var wr_act: WeakReference<Activity> = WeakReference(act)
-        /*
-        init {
-            wr_act = WeakReference(act)
-        }
-        */
+    companion object {
+        private const val TAG = "Splash"
 
-        override fun onPreExecute() {
-            super.onPreExecute()
-            val act = wr_act.get()
-            if (act != null) {
-                (act.findViewById<View>(R.id.msg_txtview) as TextView).text = "encrypting"
+        // shared preferences setup
+        const val PREF_FILENAME = "com.boliao.eod.prefs"
+
+        /**
+         * AsyncTask to "encrypt" username
+         * - heavy lifting in the background to be posted back to UI
+         * - static class so as to prevent leaks
+         * - internal ctor to only allow enclosing class to construct
+         * - need a ref to update UI thread, so use WeakReference (a.k.a. shared_ptr)
+         * - onProgressUpdate(Integer... progress) left as an exercise
+         * - note: publishProgress(Integer) is in built to pass progress to above from doInBackground
+         */
+        private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
+            // hold the Activity to get all the UI elements
+            // - use weak reference so that it does not leak mem when activity gets killed
+            var wr_splash: WeakReference<Splash> = WeakReference(act)
+
+            override fun onPreExecute() {
+                super.onPreExecute()
+                val splash = wr_splash.get()
+                if (splash != null) {
+                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "encrypting"
+                }
             }
-        }
 
-        override fun doInBackground(vararg str: String?): Boolean {
-            try {
-                Thread.sleep(3000)
-                // do something to the str
-            } catch (e: InterruptedException) {
-                return false
+            override fun doInBackground(vararg str: String?): Boolean {
+                try {
+                    Thread.sleep(3000)
+                    // do something to the str
+                } catch (e: InterruptedException) {
+                    return false
+                }
+                return true
             }
-            return true
-        }
 
-        override fun onPostExecute(b: Boolean) {
-            super.onPostExecute(b)
-            val act = wr_act.get()
-            if (act != null) {
-                (act.findViewById<View>(R.id.msg_txtview) as TextView).text = "The encryption is:$b"
-                (act as Splash).launchGame()
+            override fun onPostExecute(b: Boolean) {
+                super.onPostExecute(b)
+                val splash = wr_splash.get()
+                if (splash != null) {
+                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "The encryption is:$b"
+                    splash.launchGame()
+                }
             }
         }
     }

@@ -20,7 +20,7 @@ object WeatherRepo {
     private var count = 0
 
     // interval between fetching data
-    private const val FETCH_INTERVAL_MILLIS = 2000
+    private const val FETCH_INTERVAL_MILLIS = 1000
 
     // threading
     private var weatherRunner: Runnable? = null
@@ -92,7 +92,7 @@ object WeatherRepo {
                                 .getString("forecast")
 
                         // post to live data here
-                        weatherData.postValue("Weather at $areaStr is $forecastStr at \n${today.substring(11, 19)}")
+                        weatherData.postValue("Weather in $areaStr \nat\n${today.substring(11, 19)} \nis \n$forecastStr  ")
                     } catch (e: JSONException) {
                         Log.e(TAG, "json exception: " + e.localizedMessage)
                     }
