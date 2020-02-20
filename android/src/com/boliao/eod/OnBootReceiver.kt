@@ -46,7 +46,7 @@ class OnBootReceiver : BroadcastReceiver() {
                     .build()
 
             // c. enqueue the work request with the WorkManager singleton
-            WorkManager.getInstance(context).enqueue(pwr
+            WorkManager.getInstance(context).enqueue(pwr)
         }
     }
 }
