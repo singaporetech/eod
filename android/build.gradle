@@ -1,3 +1,6 @@
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 android {
 //    buildToolsVersion '28.0.3'
     compileSdkVersion 28
@@ -31,6 +34,12 @@ android {
         }
     }
 }
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
@@ -107,6 +116,7 @@ dependencies {
 
     // architecture components
     implementation "androidx.work:work-runtime:$workVer"
+    implementation "androidx.work:work-runtime-ktx:$workVer"
     implementation "androidx.lifecycle:lifecycle-extensions:$archVer"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$archVer"
     implementation "androidx.lifecycle:lifecycle-livedata:$archVer"
@@ -140,5 +150,3 @@ dependencies {
 repositories {
     mavenCentral()
 }
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'

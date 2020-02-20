@@ -6,7 +6,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.work.Constraints
 import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
@@ -41,13 +41,13 @@ class OnBootReceiver : BroadcastReceiver() {
 
             // b. build a work request from a Worker.class that fires periodically with the constraints above
             // (note that periodic tasks cannot be < 15mins)
-            val pwr = PeriodicWorkRequest.Builder(ReminderWorker::class.java,
-                    15, TimeUnit.MINUTES)
+            val pwr = PeriodicWorkRequestBuilder<ReminderWorker>(15, TimeUnit.MINUTES)
                     .setConstraints(workConstraints)
                     .build()
 
             // c. enqueue the work request with the WorkManager singleton
-            WorkManager.getInstance(context).enqueue(pwr)
+            WorkManager.getInstance(context).enqueue(pwr
         }
+        rk
     }
 }
