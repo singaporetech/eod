@@ -57,16 +57,6 @@ object WeatherRepo {
      * - post the Runnable as a delayed task in the thread to time updates
      * - goto SplashViewModel for THREADING 4
      */
-    fun fetchTimedMockWeatherData() {
-        val weatherWorkerThread = WeatherWorkerThread()
-        weatherWorkerThread.start()
-        weatherWorkerThread.prepareHandler()
-        weatherRunner = Runnable {
-            weatherData.postValue("Weather now is: " + count++)
-            weatherWorkerThread.postTaskDelayed(weatherRunner, FETCH_INTERVAL_MILLIS.toLong())
-        }
-        weatherWorkerThread.postTask(weatherRunner)
-    }
 
     /**
      * Helper to get today's date in API format for network request.

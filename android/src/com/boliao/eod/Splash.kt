@@ -62,12 +62,6 @@ class Splash : AppCompatActivity() {
         // - goto WeatherRepo for THREADING 3
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
         val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        splashViewModel.weatherData.observe(
-                this,
-                Observer {
-                    weatherTxtView.text = it
-                }
-        )
 
         // start game on click "PLAY"
         playBtn.setOnClickListener {
@@ -97,10 +91,11 @@ class Splash : AppCompatActivity() {
                 NameCryptionService.startActionFoo(this@Splash, username)
 
                 // TODO THREADING 1: what if now, I want this result to be shown on UI
-                // - I know know this encryption the most takes 5secs
-                // - user needs to know result of what happened to his name anyway
+                // I know know this encryption the most takes 5secs
+                // and user needs to know result of what happened to his name anyway
                 // SOLN: use AsyncTask
-                EncryptTask(this@Splash).execute(username)
+                // - build the AsyncTask in companion object section below
+                // - call the AsyncTask(this).execute(username)
 
                 // launch the game
             }
@@ -116,7 +111,7 @@ class Splash : AppCompatActivity() {
         const val PREF_FILENAME = "com.boliao.eod.prefs"
 
         /**
-         * TODO THREADING 1: create a persistent weather widget
+         * TODO THREADING 1: cont'd... create a persistent weather widget using AsyncTask
          * AsyncTask to "encrypt" username. Typical usecase: perform heavy lifting in the background
          * meant to be posted back to UI.
          * - make a static class so as to prevent leaks
@@ -125,37 +120,5 @@ class Splash : AppCompatActivity() {
          * - note: onProgressUpdate(Integer... progress) left as an exercise
          * - note: publishProgress(Integer) is in-built to pass progress to above from doInBackground
          */
-        private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
-            // hold the Activity to get all the UI elements
-            // - use weak reference so that it does not leak mem when activity gets killed
-            var wr_splash: WeakReference<Splash> = WeakReference(act)
-
-            override fun onPreExecute() {
-                super.onPreExecute()
-                val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "encrypting"
-                }
-            }
-
-            override fun doInBackground(vararg str: String?): Boolean {
-                try {
-                    Thread.sleep(3000)
-                    // do something to the str
-                } catch (e: InterruptedException) {
-                    return false
-                }
-                return true
-            }
-
-            override fun onPostExecute(b: Boolean) {
-                super.onPostExecute(b)
-                val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "The encryption is:$b"
-                    splash.launchGame()
-                }
-            }
-        }
     }
 }
