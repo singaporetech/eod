@@ -1,7 +1,9 @@
 /**
  * # WEEK11: NETWORKING
- * 1. networking libs
- * 2. using volley
+ * Fetching and showing the weather from a RESTful API.
+ *
+ * 1. Setting network permissions
+ * 2. Using networking libs Volley
  */
 
 package com.boliao.eod
@@ -50,7 +52,11 @@ class Splash : AppCompatActivity() {
         // show splash text
         msgTxtView.setText(R.string.welcome_note)
 
-        // TODO NETWORKING 1: init volley network request queue "singleton"
+        // TODO NETWORKING 1: init the network request queue singleton object (volley)
+        // - goto NETWORKING 0 in manifest
+        // - create NetWorkRequestQueue singleton
+        // - set NetworkRequestQueue's context to this
+        // - goto NETWORKING 2 in WeatherRepo
         NetworkRequestQueue.setContext(this)
 
         // TODO THREADING 2: create a persistent weather widget

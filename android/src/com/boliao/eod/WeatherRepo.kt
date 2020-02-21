@@ -62,11 +62,15 @@ object WeatherRepo {
     }
 
     /**
-     * TODO NETWORKING 1: fetch real online weather data from RESTful API
-     * - volley is fast and clean
-     * - many APIs were created pre-MVVM, so needed context to init, in this case the request queue
-     * - note how I've used the semi singleton to resolve the context issue
-     * - others have used empty Application classes
+     * TODO NETWORKING 2: fetch real online weather data from RESTful API
+     * We'll use volley as example here (key advantages: fast and clean)
+     * Note how we've used a pseudo-singleton (that needs special init) for the Request Queue. This
+     * is cos many APIs were created pre-MVVM, so needed ref to context to init the request queue.
+     * - form a Volley Request with the URL
+     *   - define the Response.Listener to handle the Response
+     *   - define error handlers
+     * - use the handlerthread pattern to make timed requests to the web API
+     * - goto SplashViewModel for NETWORKING 3
      */
     fun fetchOnlineWeatherData() {
         val urlStr = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast?date_time=$today"

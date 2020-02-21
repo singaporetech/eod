@@ -12,7 +12,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <!-- TODO NETWORK 0: add NETWORK permissions -->
+    <!-- TODO NETWORK 0: add INTERNET permissions -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
