@@ -7,7 +7,6 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-//import androidx.core.app.NotificationCompat;
 
 class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
     companion object {
@@ -15,7 +14,6 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
     }
 
     private var count = 0
-    //    private NotificationManagerCompat notMgr;
     private val notMgr: NotificationManager
     private val NID = 8
     private val NCID = "2"
@@ -33,9 +31,9 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
     }
 
     override fun doWork(): Result {
-        Log.i(TAG, "REMINDER TO CHARGE" + count++)
+        Log.i(TAG, "${count++} times REMINDER TO CHARGE")
 
-        // TODO notification to remind charge
+        // build notification to remind charge
         // - note the builder pattern is a common design pattern used for creating objs in the api
         val n = Notification.Builder(super.getApplicationContext(), NCID)
                 .setSmallIcon(R.drawable.ic_stat_name)
@@ -43,6 +41,8 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
                 .setContentText("How to fight bugs if ur phone juice run out...")
                 .setAutoCancel(true)
                 .build()
+
+        // fire the notification
         notMgr.notify(NID, n)
 
         // indicate success or failure

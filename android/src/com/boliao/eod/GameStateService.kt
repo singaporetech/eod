@@ -14,13 +14,18 @@ import android.os.IBinder
 import android.util.Log
 
 /**
- * TODO SERVICES 5: a background service to manage game state
- * - collect sensor data and send these updates to GameState in game core component
- * - determine time to spawn bugs
- * - both a Started (collect sensor data) and Bound Service (update UI continuously)
- * - this background Service will try to persist until the app is explicitly closed
- * - Q1: when will it be killed?
- * - Q2: what happens when it is killed?
+ * TODO SERVICES 3: a background service to manage game state
+ * This is like the background engine for the app. Everything should be done in the background
+ * (even when app not visible)
+ * This is an e.g. of both a Started (collect sensor data) and Bound Service (update UI continuously)
+ * - track and update steps using sensor listeners
+ * - send updates to GameState in com.boliao.eod.core
+ * - manage countdown timer to spawn bugs
+ * - check if service already be running from a previous launch
+ * - persist this Service until the app is explicitly closed
+ *
+ * Q1: when will it be killed?
+ * Q2: what happens when it is killed?
  */
 class GameStateService: Service(), SensorEventListener {
     companion object {
@@ -28,16 +33,14 @@ class GameStateService: Service(), SensorEventListener {
         private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
         private const val NOTIFY_ID = 888
         private const val PENDINGINTENT_ID = 1
-        const val BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT"
-        const val STEP_KEY = "com.boliao.eod.STEP_KEY"
     }
 
     // a raw thread for bg work
     private lateinit var bgThread: Thread
 
-    // TODO NOTIFICATIONS
+    // TODO SERVICES 10: declare vars for NOTIFICATIONS
     // - add var for NotificationManager
-    // - add ID vars for notifications
+    // - add ID vars for notifications in companion object above
     private lateinit var notificationManager: NotificationManager
 
     // TODO SENSORS 0: create vars to interface with hardware sensors
@@ -45,7 +48,7 @@ class GameStateService: Service(), SensorEventListener {
     private var stepDetector: Sensor? = null
 
     /**
-     * TODO SERVICES 6: create GameStateBinder class to "contain" this service
+     * TODO SERVICES 4: create GameStateBinder class to "contain" this service
      * This is part of the boilerplate for Bound Service. Client can use this object to communicate
      * with the service. This approach uses the simple Binder class since clients are also in this
      * app/process. For this service to be used by other apps, use Messenger or AIDL for IPC.
@@ -59,7 +62,7 @@ class GameStateService: Service(), SensorEventListener {
     private val binder = GameStateBinder()
 
     /**
-     * TODO SERVICES 7:implement onBind to return the binder interface
+     * TODO SERVICES 5:implement onBind to return the binder interface
      * Part of the boilerplate for Bound Service
      * @param intent to hold any info from caller
      * @return IBinder to obtain a handle to the service class
@@ -69,7 +72,7 @@ class GameStateService: Service(), SensorEventListener {
     }
 
     /**
-     * TODO SERVICES 8: override onCreate Service lifecycle to initialize various things
+     * TODO SERVICES 6: override onCreate Service lifecycle to initialize various things
      * - get handle to SensorManager from a System Service
      * - get list of available sensors from the sensorManager
      * - get handle to step detector from sensorManager
@@ -110,17 +113,16 @@ class GameStateService: Service(), SensorEventListener {
     }
 
     /**
-     * TODO SERVICES 10: implement onStartCommand to define what the service will actually do
+     * TODO SERVICES 7: implement onStartCommand to define what the service will actually do
      * - register this class as a SensorListener (extend this Service) using sensorManager
      * - add a thread to manage spawning of bugs based on a countdown
      * - spawn bug when GameState.i().isCanNotify() && !GameState.i().isAppActive()
-     * - create pending intent to launch AndroidLauncher
-     * - use NotificationCompat.Builder to make notification
+     * - create a notification when spawn occurs
      * @param intent to hold any info from caller
      * @param flags to show more data about how this was started (e.g., REDELIVERY)
      * @param startId id of this started instance
      * @return an int that controls what happens when this service is auto killed
-     * , e.g., sticky or not (see https://goo.gl/shXLoy)
+     *         e.g., sticky or not (see https://goo.gl/shXLoy)
      */
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         // TODO SENSORS 3: Registering listener to listen for sensor events.
@@ -144,14 +146,19 @@ class GameStateService: Service(), SensorEventListener {
                             Log.i(TAG, "The NIGHT has come: a bug will spawn...")
 
                             // TODO SERVICES 11: create pending intent to open app from notification
-                            val intent2 = Intent(this@GameStateService, AndroidLauncher::class.java)
+                            // - create a intent from this GameStateService context that launches AndroidLauncher
+                            val androidLauncherIntent = Intent(this@GameStateService, AndroidLauncher::class.java)
+
+                            // - wrap the intent into a pending intent for triggering in future
                             val pi = PendingIntent.getActivity(
                                     this@GameStateService,
                                     PENDINGINTENT_ID,
-                                    intent2,
+                                    androidLauncherIntent,
                                     PendingIntent.FLAG_UPDATE_CURRENT)
 
-                            // build the notification
+                            // - build the notification with small icon R.drawable.ic_stat_name,
+                            //   a content title and some content text, some color,
+                            //   visibility to public, can be autocancelled, content intent to pi
                             val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
                                     .setSmallIcon(R.drawable.ic_stat_name)
                                     .setContentTitle("Exercise Or Die")
@@ -162,12 +169,14 @@ class GameStateService: Service(), SensorEventListener {
                                     .setContentIntent(pi)
                                     .build()
 
-                            // activate the notification
+                            // - use manager to trigger notify with the NOTIFY_ID and the
+                            //   notification set up above
                             notificationManager.notify(NOTIFY_ID, noti)
 
                             // TODO SERVICES 12: upgrade this service to foreground
-                            // - need to startForegroundService from caller context
-                            // - activate the ongoing notification using startForeground (needs to be called within 5s of above
+                            // - change to startForegroundService (from startService) from caller context
+                            // - activate the ongoing notification using startForeground
+                            //   (needs to be called within 5s of above)
                             // - move the notification to become a one time and change the premise
                             // startForeground(NOTIFY_ID, noti);
                         }
@@ -180,13 +189,13 @@ class GameStateService: Service(), SensorEventListener {
         // get the thread going
         bgThread.start()
 
-        // TODO SERVICE 13: return appropriate flag to indicate what happens when killed
+        // TODO SERVICE 8: return appropriate flag to indicate what happens when killed
         // Q: what are the other flags?
         return START_STICKY
     }
 
     /**
-     * TODO SERVICE 14: override Service's onDestroy to destroy any background activity if desired
+     * TODO SERVICE 9: override Service's onDestroy to destroy any background activity if desired
      * - also destroy any manual threads
      */
     override fun onDestroy() {

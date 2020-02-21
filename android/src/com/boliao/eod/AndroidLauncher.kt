@@ -18,12 +18,8 @@ class AndroidLauncher : AndroidApplication() {
 
         Log.d(TAG, "onCreate!")
 
-        // TODO SERVICES 4: manage game state changes
-        // - track and update steps
-        // - track countdown timer to spawn bugs
-        // - everything should be done in the background (even when app not visible)
-        // - start game state service
-        // - may already be running from a previous run, so pls check
+        // TODO SERVICES n: manage game state changes
+        // - start game state service using an intent
         startServiceIntent = Intent(this, GameStateService::class.java)
         Log.d(TAG, "config $startServiceIntent")
 

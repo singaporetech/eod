@@ -26,12 +26,13 @@ class OnBootReceiver : BroadcastReceiver() {
         // check that action actually matches
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
             /**
-             * TODO SERVICES 3: create a reminder for user to charge phone periodically
+             * TODO SERVICES 13: create a reminder for user to charge phone periodically
              * WorkManagers are for deferrable but guaranteed work. If you need exact timed jobs
              * use AlarmManagers (but still no guarantee on network).
              * Not to be confused, this is not detecting battery low it is simply reminding to charge.
              */
-            // a. build a set of constraints, e.g., network connected and enough batt
+            // - build a set of work constraints, e.g., network connected / not idle
+            // - set update delay of 3 secs
             val workConstraints = Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .setRequiresBatteryNotLow(false)
@@ -39,13 +40,14 @@ class OnBootReceiver : BroadcastReceiver() {
                     .setTriggerContentUpdateDelay(3, TimeUnit.SECONDS)
                     .build()
 
-            // b. build a work request from a Worker class that fires periodically with the constraints above
-            // (note that periodic tasks cannot be < 15mins)
+            // - create a ReminderWorker class from Worker,
+            // - build a work request of type ReminderWorker that fires periodically with constraints above
+            //   (note that periodic tasks cannot be < 15mins)
             val pwr = PeriodicWorkRequestBuilder<ReminderWorker>(15, TimeUnit.MINUTES)
                     .setConstraints(workConstraints)
                     .build()
 
-            // c. enqueue the work request with the WorkManager singleton
+            // - enqueue the work request with the WorkManager singleton
             WorkManager.getInstance(context).enqueue(pwr)
         }
     }

@@ -37,14 +37,14 @@ class NameCryptionService : IntentService(NameCryptionService::class.simpleName)
     private fun handleActionFoo(param1: String) {
         // encrypt username using some ultra modern 5s technique
         try {
-            Thread.sleep(5000)
+            Thread.sleep(3000)
         } catch (e: InterruptedException) {
             Log.e(TAG, "Error occurred whilst eating snake: " + e.message)
         }
 
         // store in sharedprefs after "encryption"
         pref = getSharedPreferences(Splash.PREF_FILENAME, Context.MODE_PRIVATE)
-        pref.edit().putString(param1, param1).apply()
+        pref.edit().putString(param1, param1).commit()
     }
 
     /**
@@ -75,7 +75,7 @@ class NameCryptionService : IntentService(NameCryptionService::class.simpleName)
          */
         // TODO: Customize helper method
         fun startActionFoo(context: Context, param1: String?) {
-            val intent = Intent(context, NameCryptionService::class.java).apply {
+            Intent(context, NameCryptionService::class.java).apply {
                 action = ACTION_FOO
                 putExtra(EXTRA_PARAM1, param1)
                 context.startService(this)
