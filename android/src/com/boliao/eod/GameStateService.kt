@@ -220,6 +220,9 @@ class GameStateService: Service(), SensorEventListener {
             if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
                 Log.d(TAG, "Step detector:$`val`")
                 GameState.i().incSteps(`val`)
+
+
+                // TODO RECEIVERS 2: cont'd
                 sendBroadcast(GameState.i().steps)
             }
         }
@@ -236,6 +239,11 @@ class GameStateService: Service(), SensorEventListener {
 
     /**
      * TODO RECEIVERS 2: Send broadcast to apps that wish to get step count
+     * - create a method that configures an intent with the BROADCAST_ACTION
+     * - and the steps which the func receives as input
+     * - good to Log this to the console
+     * - use sendBroadcast function from the context to broadcast the intent
+     * - call this method in onSensorChanged above
      * TODO RECEIVERS 3: Receive broadcast in another separate app
      */
     private fun sendBroadcast(steps: Int) {

@@ -11,9 +11,9 @@ import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
 /**
- * TODO RECEIVERS 1: statically triggered receiver that sets off scheduled services
- * - WorkManagers for deferrable but guaranteed work
- * - AlarmManagers for exact timed jobs but no guarantee on network
+ * TODO RECEIVERS 1: build a statically triggered receiver that sets off scheduled services
+ * - derive from BroadcastReceiver
+ * - implement onReceive to handle response when BOOT_COMPLETED intent.action received
  */
 class OnBootReceiver : BroadcastReceiver() {
     companion object {
@@ -27,9 +27,9 @@ class OnBootReceiver : BroadcastReceiver() {
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
             /**
              * TODO SERVICES 3: create a reminder for user to charge phone periodically
-             * - not to be confused, this is not detecting battery low
-             * - this is simply reminding to charge battery
-             * - remember: WorkManager cannot guarantees it will run, but not exact time
+             * WorkManagers are for deferrable but guaranteed work. If you need exact timed jobs
+             * use AlarmManagers (but still no guarantee on network).
+             * Not to be confused, this is not detecting battery low it is simply reminding to charge.
              */
             // a. build a set of constraints, e.g., network connected and enough batt
             val workConstraints = Constraints.Builder()
@@ -39,7 +39,7 @@ class OnBootReceiver : BroadcastReceiver() {
                     .setTriggerContentUpdateDelay(3, TimeUnit.SECONDS)
                     .build()
 
-            // b. build a work request from a Worker.class that fires periodically with the constraints above
+            // b. build a work request from a Worker class that fires periodically with the constraints above
             // (note that periodic tasks cannot be < 15mins)
             val pwr = PeriodicWorkRequestBuilder<ReminderWorker>(15, TimeUnit.MINUTES)
                     .setConstraints(workConstraints)

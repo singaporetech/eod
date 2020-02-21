@@ -1,9 +1,11 @@
 /**
- * # WEEK11: NETWORKING
- * Fetching and showing the weather from a RESTful API.
+ * # WEEK10: RECEIVERS
+ * A static receiver on boot for reminders and
+ * dynamically broadcasting steps to be received by another app
  *
- * 1. Setting network permissions
- * 2. Using networking libs Volley
+ * 1. adding a static broadcast receiver in the manifest
+ * 2. creating a OnBootReceiver to do a deferred task when system BOOT_COMPLETED
+ * 3. create an intent to be broadcasted to the world (in your device)
  */
 
 package com.boliao.eod
