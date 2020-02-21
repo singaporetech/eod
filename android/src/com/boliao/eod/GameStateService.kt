@@ -175,9 +175,9 @@ class GameStateService: Service(), SensorEventListener {
 
                             // TODO SERVICES 12: upgrade this service to foreground
                             // - change to startForegroundService (from startService) from caller context
+                            // - move the notification out of thread into onCreate
                             // - activate the ongoing notification using startForeground
                             //   (needs to be called within 5s of above)
-                            // - move the notification to become a one time and change the premise
                             // startForeground(NOTIFY_ID, noti);
                         }
                     }
