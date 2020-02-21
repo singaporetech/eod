@@ -1,32 +1,7 @@
 /**
- * # WEEK08: SERVICES
- * 1. background services: started and bound
- * 2. notifications
- * 3. foreground services
- * 4. scheduled services: workmanager
- * 5. Socrative Quiz
- *
- * # WEEK09: THREADING
- * 5. raw java threads
- * 6. asynctask
- * 7. handlerthread
- *
- * # WEEK10: RECEIVERS
- * 1. revise asynctask
- * 2. revise viewmodel
- * 3. handlerthread
- * 4. static broadcast receiver
- * 5. dynamic broadcast receiver
- *
  * # WEEK11: NETWORKING
  * 1. networking libs
  * 2. using volley
- *
- * # WEEK12: NDK
- * 1. adding NDK to existing proj
- * 2. interfacing with a large C lib
- *
- * # WEEK13: Industry
  */
 
 package com.boliao.eod
