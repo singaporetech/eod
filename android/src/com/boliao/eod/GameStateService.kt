@@ -223,7 +223,6 @@ class GameStateService: Service(), SensorEventListener {
 
 
                 // TODO RECEIVERS 2: cont'd
-                sendBroadcast(GameState.i().steps)
             }
         }
     }
@@ -246,11 +245,4 @@ class GameStateService: Service(), SensorEventListener {
      * - call this method in onSensorChanged above
      * TODO RECEIVERS 3: Receive broadcast in another separate app
      */
-    private fun sendBroadcast(steps: Int) {
-        val intent = Intent(BROADCAST_ACTION)
-        intent.putExtra(STEP_KEY, steps)
-        Log.i(TAG, "Sending broadcast steps=$steps")
-        sendBroadcast(intent)
-    }
-
 }
