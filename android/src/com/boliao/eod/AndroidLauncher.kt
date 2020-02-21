@@ -28,7 +28,10 @@ class AndroidLauncher : AndroidApplication() {
         } else {
             Log.i(TAG, "Starting GameStateService...")
             GameState.i().isServiceStarted = true
-            startService(startServiceIntent)
+
+            // TODO SERVICES 12: cont'd foreground service
+            // - change to startForegroundService
+            startForegroundService(startServiceIntent)
         }
 
         // init game

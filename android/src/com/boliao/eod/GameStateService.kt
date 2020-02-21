@@ -110,6 +110,40 @@ class GameStateService: Service(), SensorEventListener {
                             NotificationManager.IMPORTANCE_HIGH
                     )
             )
+
+
+        val androidLauncherIntent = Intent(this@GameStateService, AndroidLauncher::class.java)
+
+        // - wrap the intent into a pending intent for triggering in future
+        val pi = PendingIntent.getActivity(
+                this@GameStateService,
+                PENDINGINTENT_ID,
+                androidLauncherIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+
+        // - build the notification with small icon R.drawable.ic_stat_name,
+        //   a content title and some content text, some color,
+        //   visibility to public, can be autocancelled, content intent to pi
+        val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle("Exercise Or Die")
+                .setColor(Color.RED)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
+                .setAutoCancel(true)
+                .setContentIntent(pi)
+                .build()
+
+        // - use manager to trigger notify with the NOTIFY_ID and the
+        //   notification set up above
+        // notificationManager.notify(NOTIFY_ID, noti)
+
+        // TODO SERVICES 12: upgrade this service to foreground
+        // - change to startForegroundService (from startService) from caller context
+        // - move the notification out of thread into onCreate
+        // - activate the ongoing notification using startForeground
+        //   (needs to be called within 5s of above)
+        startForeground(NOTIFY_ID, noti);
     }
 
     /**
@@ -147,38 +181,6 @@ class GameStateService: Service(), SensorEventListener {
 
                             // TODO SERVICES 11: create pending intent to open app from notification
                             // - create a intent from this GameStateService context that launches AndroidLauncher
-                            val androidLauncherIntent = Intent(this@GameStateService, AndroidLauncher::class.java)
-
-                            // - wrap the intent into a pending intent for triggering in future
-                            val pi = PendingIntent.getActivity(
-                                    this@GameStateService,
-                                    PENDINGINTENT_ID,
-                                    androidLauncherIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT)
-
-                            // - build the notification with small icon R.drawable.ic_stat_name,
-                            //   a content title and some content text, some color,
-                            //   visibility to public, can be autocancelled, content intent to pi
-                            val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.ic_stat_name)
-                                    .setContentTitle("Exercise Or Die")
-                                    .setColor(Color.RED)
-                                    .setVisibility(Notification.VISIBILITY_PUBLIC)
-                                    .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
-                                    .setAutoCancel(true)
-                                    .setContentIntent(pi)
-                                    .build()
-
-                            // - use manager to trigger notify with the NOTIFY_ID and the
-                            //   notification set up above
-                            notificationManager.notify(NOTIFY_ID, noti)
-
-                            // TODO SERVICES 12: upgrade this service to foreground
-                            // - change to startForegroundService (from startService) from caller context
-                            // - move the notification out of thread into onCreate
-                            // - activate the ongoing notification using startForeground
-                            //   (needs to be called within 5s of above)
-                            // startForeground(NOTIFY_ID, noti);
                         }
                     }
                 } catch (e: InterruptedException) {
