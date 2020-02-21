@@ -57,7 +57,6 @@ class Splash : AppCompatActivity() {
         // - create NetWorkRequestQueue singleton
         // - set NetworkRequestQueue's context to this
         // - goto NETWORKING 2 in WeatherRepo
-        NetworkRequestQueue.setContext(this)
 
         // TODO THREADING 2: create a persistent weather widget
         // - WeatherRepo is already nicely linked up in MVVM with SplashViewModel

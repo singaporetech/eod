@@ -10,10 +10,9 @@ class SplashViewModel : ViewModel() {
     init {
         // TODO THREADING: boot up the WeatherRepo singleton to start fetching weather data
         // - only I control the repo, my boss (Activity) does not need to know
-        //        WeatherRepo.mockOnlineWeatherData();
+        WeatherRepo.fetchMockOnlineWeatherData()
 
         // TODO NETWORKING 3: call WeatherRepo to fetch online weather instead
-        WeatherRepo.fetchOnlineWeatherData()
 
         // link up live data to repo (observer pattern)
         weatherData = WeatherRepo.weatherData
