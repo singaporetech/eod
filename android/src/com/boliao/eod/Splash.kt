@@ -74,12 +74,8 @@ class Splash : AppCompatActivity() {
                 msgTxtView.text = "Name already exists!"
             } else {
                 // Store username to survive app destruction
-                // DEPRECATED due to encryption below
-                /*
-                    msgTxtView.setText("Starting game...");
-                    prefs.edit().putString(username, username);
-                    prefs.edit().commit();
-                    */
+                msgTxtView.setText("Starting game...");
+                pref.edit().putString(username, username).apply();
 
                 // TODO SERVICES 2: what if this needs some intensive processing
                 // - e.g., pseudo-encrypt the username using some funky algo
@@ -89,7 +85,6 @@ class Splash : AppCompatActivity() {
                 // SOLN: defer processing to an IntentService: do some heavy lifting w/o
                 // UI then shutdown the service
                 // - note that the WorkManager can also accomplish this
-                NameCryptionService.startActionFoo(this@Splash, username)
 
                 // TODO THREADING 1: what if now, I want this result to be shown on UI
                 // I know know this encryption the most takes 5secs

@@ -33,22 +33,12 @@ class OnBootReceiver : BroadcastReceiver() {
              */
             // - build a set of work constraints, e.g., network connected / not idle
             // - set update delay of 3 secs
-            val workConstraints = Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .setRequiresBatteryNotLow(false)
-                    .setRequiresDeviceIdle(false)
-                    .setTriggerContentUpdateDelay(3, TimeUnit.SECONDS)
-                    .build()
 
             // - create a ReminderWorker class from Worker,
             // - build a work request of type ReminderWorker that fires periodically with constraints above
             //   (note that periodic tasks cannot be < 15mins)
-            val pwr = PeriodicWorkRequestBuilder<ReminderWorker>(15, TimeUnit.MINUTES)
-                    .setConstraints(workConstraints)
-                    .build()
 
             // - enqueue the work request with the WorkManager singleton
-            WorkManager.getInstance(context).enqueue(pwr)
         }
     }
 }

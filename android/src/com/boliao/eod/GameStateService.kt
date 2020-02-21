@@ -39,9 +39,8 @@ class GameStateService: Service(), SensorEventListener {
     private lateinit var bgThread: Thread
 
     // TODO SERVICES 10: declare vars for NOTIFICATIONS
-    // - add var for NotificationManager
     // - add ID vars for notifications in companion object above
-    private lateinit var notificationManager: NotificationManager
+    // - add var for NotificationManager
 
     // TODO SENSORS 0: create vars to interface with hardware sensors
     private lateinit var sensorManager: SensorManager
@@ -99,17 +98,10 @@ class GameStateService: Service(), SensorEventListener {
         if (stepDetector == null) Log.e(TAG, "No step sensors on device!")
 
         // TODO SERVICES 9: obtain and init notification manager with a channel
-        // - notification channels introduced in Android Oreo
-        // - need to initialize a channel before creating actual notifications
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            notificationManager.createNotificationChannel(
-                    NotificationChannel(
-                            NOTIFICATION_CHANNEL_ID,
-                            getString(R.string.channel_name),
-                            NotificationManager.IMPORTANCE_HIGH
-                    )
-            )
+        // - get notification manager from system service using the NOTIFICATION_SERVICE code
+        // - create notification channel if build version SDK_INT above build version code Oreo
+        //   (need to initialize a channel before creating actual notifications)
+        // - set the channel to high importance
     }
 
     /**
@@ -147,38 +139,21 @@ class GameStateService: Service(), SensorEventListener {
 
                             // TODO SERVICES 11: create pending intent to open app from notification
                             // - create a intent from this GameStateService context that launches AndroidLauncher
-                            val androidLauncherIntent = Intent(this@GameStateService, AndroidLauncher::class.java)
 
                             // - wrap the intent into a pending intent for triggering in future
-                            val pi = PendingIntent.getActivity(
-                                    this@GameStateService,
-                                    PENDINGINTENT_ID,
-                                    androidLauncherIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT)
 
                             // - build the notification with small icon R.drawable.ic_stat_name,
                             //   a content title and some content text, some color,
                             //   visibility to public, can be autocancelled, content intent to pi
-                            val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.ic_stat_name)
-                                    .setContentTitle("Exercise Or Die")
-                                    .setColor(Color.RED)
-                                    .setVisibility(Notification.VISIBILITY_PUBLIC)
-                                    .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
-                                    .setAutoCancel(true)
-                                    .setContentIntent(pi)
-                                    .build()
 
                             // - use manager to trigger notify with the NOTIFY_ID and the
                             //   notification set up above
-                            notificationManager.notify(NOTIFY_ID, noti)
 
                             // TODO SERVICES 12: upgrade this service to foreground
                             // - change to startForegroundService (from startService) from caller context
                             // - move the notification out of thread into onCreate
                             // - activate the ongoing notification using startForeground
                             //   (needs to be called within 5s of above)
-                            // startForeground(NOTIFY_ID, noti);
                         }
                     }
                 } catch (e: InterruptedException) {
@@ -189,13 +164,13 @@ class GameStateService: Service(), SensorEventListener {
         // get the thread going
         bgThread.start()
 
-        // TODO SERVICE 8: return appropriate flag to indicate what happens when killed
+        // TODO SERVICES 8: return appropriate flag to indicate what happens when killed
         // Q: what are the other flags?
         return START_STICKY
     }
 
     /**
-     * TODO SERVICE 9: override Service's onDestroy to destroy any background activity if desired
+     * TODO SERVICES 9: override Service's onDestroy to destroy any background activity if desired
      * - also destroy any manual threads
      */
     override fun onDestroy() {
