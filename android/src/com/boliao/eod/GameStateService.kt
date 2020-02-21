@@ -201,7 +201,7 @@ class GameStateService: Service(), SensorEventListener {
         // bgThread.stop(); // has been deprecated
         // bgThread.interrupt();
 
-        // TODO THREADING n: go to Splash
+        // goto Splash for THREADING 1
     }
 
     /**
@@ -220,9 +220,6 @@ class GameStateService: Service(), SensorEventListener {
             if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
                 Log.d(TAG, "Step detector:$`val`")
                 GameState.i().incSteps(`val`)
-
-
-                // TODO RECEIVERS 2: cont'd
             }
         }
     }
@@ -235,14 +232,4 @@ class GameStateService: Service(), SensorEventListener {
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
         Log.i(TAG, "Sensor accuracy changed to $accuracy")
     }
-
-    /**
-     * TODO RECEIVERS 2: Send broadcast to apps that wish to get step count
-     * - create a method that configures an intent with the BROADCAST_ACTION
-     * - and the steps which the func receives as input
-     * - good to Log this to the console
-     * - use sendBroadcast function from the context to broadcast the intent
-     * - call this method in onSensorChanged above
-     * TODO RECEIVERS 3: Receive broadcast in another separate app
-     */
 }

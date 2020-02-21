@@ -8,9 +8,10 @@ class SplashViewModel : ViewModel() {
     var weatherData: LiveData<String>
 
     init {
-        // TODO THREADING: boot up the WeatherRepo singleton to start fetching weather data
-        // - only I control the repo, my boss (Activity) does not need to know
-        WeatherRepo.fetchMockOnlineWeatherData()
+        // TODO THREADING 4: replace the stub by the new threaded weather data method
+        // - only I control the repo, my boss (Activity) does not need to know about repo
+        // WeatherRepo.fetchStaticMockWeatherData()
+        WeatherRepo.fetchTimedMockWeatherData()
 
         // TODO NETWORKING 3: call WeatherRepo to fetch online weather instead
 

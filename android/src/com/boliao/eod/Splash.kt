@@ -1,11 +1,10 @@
 /**
- * # WEEK10: RECEIVERS
- * A static receiver on boot for reminders and
- * dynamically broadcasting steps to be received by another app
+ * # WEEK09: THREADING
+ * A persistent weather widget.
  *
- * 1. adding a static broadcast receiver in the manifest
- * 2. creating a OnBootReceiver to do a deferred task when system BOOT_COMPLETED
- * 3. create an intent to be broadcasted to the world (in your device)
+ * 1. See the use of raw java threads in the bug spawning code in GameStateService
+ * 2. Create an Asynctask to encrypt usernames in the background
+ * 3. Create a weather worker Handlerthread to fetch weather updates in the background
  */
 
 package com.boliao.eod
@@ -55,9 +54,12 @@ class Splash : AppCompatActivity() {
         msgTxtView.setText(R.string.welcome_note)
 
         // TODO THREADING 2: create a persistent weather widget
-        // - WeatherRepo is already nicely linked up in MVVM with SplashViewModel
-        // - implement background weather fetching in WeatherRepo
-        // - set up weatherTextView to observe the weatherData
+        // An MVVM Splash ViewModel is already set up.
+        // Splash Activity View -> Splash ViewModel -> WeatherRepo Model
+        // WeatherRepo currently has a mock stub to return static mock data, provided live by
+        // weatherData in SplashViewModel.
+        // - set up weatherTextView here to observe the weatherData
+        // - goto WeatherRepo for THREADING 3
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
         val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         splashViewModel.weatherData.observe(
@@ -114,13 +116,14 @@ class Splash : AppCompatActivity() {
         const val PREF_FILENAME = "com.boliao.eod.prefs"
 
         /**
-         * AsyncTask to "encrypt" username
-         * - heavy lifting in the background to be posted back to UI
-         * - static class so as to prevent leaks
-         * - internal ctor to only allow enclosing class to construct
-         * - need a ref to update UI thread, so use WeakReference (a.k.a. shared_ptr)
-         * - onProgressUpdate(Integer... progress) left as an exercise
-         * - note: publishProgress(Integer) is in built to pass progress to above from doInBackground
+         * TODO THREADING 1: create a persistent weather widget
+         * AsyncTask to "encrypt" username. Typical usecase: perform heavy lifting in the background
+         * meant to be posted back to UI.
+         * - make a static class so as to prevent leaks
+         * - use internal ctor to only allow enclosing class to construct
+         * - use WeakReference<Splash> (a.k.a. shared_ptr) as need a ref to update UI thread
+         * - note: onProgressUpdate(Integer... progress) left as an exercise
+         * - note: publishProgress(Integer) is in-built to pass progress to above from doInBackground
          */
         private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
             // hold the Activity to get all the UI elements
