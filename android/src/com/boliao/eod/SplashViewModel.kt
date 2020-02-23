@@ -12,8 +12,6 @@ class SplashViewModel : ViewModel() {
         // - only I control the repo, my boss (Activity) does not need to know about repo
         WeatherRepo.fetchStaticMockWeatherData()
 
-        // TODO NETWORKING 3: call WeatherRepo to fetch online weather instead
-
         // link up live data to repo (observer pattern)
         weatherData = WeatherRepo.weatherData
     }

@@ -74,24 +74,17 @@ class Splash : AppCompatActivity() {
                 msgTxtView.text = "Name already exists!"
             } else {
                 // Store username to survive app destruction
-                msgTxtView.setText("Starting game...");
-                pref.edit().putString(username, username).apply();
+                msgTxtView.setText("Starting game...")
+                pref.edit().putString(username, username).apply()
 
                 // TODO SERVICES 2: what if this needs some intensive processing
                 // - e.g., pseudo-encrypt the username using some funky algo
                 // - store the encrypted username in shared prefs
                 // - UI should not lag or ANR
 
-                // SOLN: defer processing to an IntentService: do some heavy lifting w/o
-                // UI then shutdown the service
-                // - note that the WorkManager can also accomplish this
-
                 // TODO THREADING 1: what if now, I want this result to be shown on UI
                 // I know know this encryption the most takes 5secs
                 // and user needs to know result of what happened to his name anyway
-                // SOLN: use AsyncTask
-                // - build the AsyncTask in companion object section below
-                // - call the AsyncTask(this).execute(username)
 
                 // launch the game
                 launchGame()

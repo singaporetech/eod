@@ -18,7 +18,7 @@ class AndroidLauncher : AndroidApplication() {
 
         Log.d(TAG, "onCreate!")
 
-        // TODO SERVICES n: manage game state changes
+        // TODO SERVICES 3: manage game state changes
         // - start game state service using an intent
         startServiceIntent = Intent(this, GameStateService::class.java)
         Log.d(TAG, "config $startServiceIntent")
