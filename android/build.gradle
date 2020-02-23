@@ -98,12 +98,14 @@ task run(type: Exec) {
 }
 
 dependencies {
+    // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVer"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
     implementation "androidx.core:core-ktx:$mainVer"
 
+    // compat
     implementation "androidx.appcompat:appcompat:$mainVer"
-    implementation "com.android.support.constraint:constraint-layout:1.1.3"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
     implementation "com.firebase:firebase-jobdispatcher:0.8.6"
     implementation ("com.google.android.gms:play-services-location:16.0.0") {
         exclude group: 'com.android.support'

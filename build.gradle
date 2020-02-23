@@ -56,6 +56,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
+
         /*
         implementation "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-armeabi"
