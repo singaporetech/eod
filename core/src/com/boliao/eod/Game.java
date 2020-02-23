@@ -1,11 +1,6 @@
 package com.boliao.eod;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Timer;
-
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class Game extends com.badlogic.gdx.Game {
@@ -22,8 +17,6 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void create () {
-        // this is a new comment
-
         // init engines
         RenderEngine.i().init();
         CollisionEngine.i().init();
