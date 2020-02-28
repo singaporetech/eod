@@ -23,7 +23,7 @@ object WeatherRepo {
     private const val FETCH_INTERVAL_MILLIS = 1000
 
     // threading
-    private var weatherRunner: Runnable? = null
+    private lateinit var weatherRunner: Runnable
 
     // weather live data (writable)
     val weatherData = MutableLiveData<String>()

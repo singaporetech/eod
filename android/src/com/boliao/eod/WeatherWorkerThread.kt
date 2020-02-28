@@ -11,11 +11,11 @@ class WeatherWorkerThread : HandlerThread("WeatherWorkerThread") {
         handler = Handler(looper)
     }
 
-    fun postTask(r: Runnable?) {
+    fun postTask(r: Runnable) {
         handler.post(r)
     }
 
-    fun postTaskDelayed(r: Runnable?, delayMillis: Long) {
+    fun postTaskDelayed(r: Runnable, delayMillis: Long) {
         handler.postDelayed(r, delayMillis)
     }
 }

@@ -21,13 +21,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import org.w3c.dom.Text
 import java.lang.ref.WeakReference
 
 /**
  * This is the splash view that records who is playing.
  */
 class Splash : AppCompatActivity() {
-    private lateinit var pref: SharedPreferences
     private lateinit var startAndroidLauncher: Intent
 
     fun launchGame() {
@@ -94,7 +94,7 @@ class Splash : AppCompatActivity() {
                 // SOLN: defer processing to an IntentService: do some heavy lifting w/o
                 // UI then shutdown the service
                 // - note that the WorkManager can also accomplish this
-                NameCryptionService.startActionFoo(this@Splash, username)
+                // NameCryptionService.startActionFoo(this@Splash, username)
 
                 // TODO THREADING 1: what if now, I want this result to be shown on UI
                 // - I know know this encryption the most takes 5secs
@@ -102,7 +102,6 @@ class Splash : AppCompatActivity() {
                 // SOLN: use AsyncTask
                 EncryptTask(this@Splash).execute(username)
 
-                // launch the game
             }
 
             // TODO SERVICES n: goto AndroidLauncher
@@ -114,6 +113,7 @@ class Splash : AppCompatActivity() {
 
         // shared preferences setup
         const val PREF_FILENAME = "com.boliao.eod.prefs"
+        private lateinit var pref: SharedPreferences
 
         /**
          * TODO THREADING 1: create a persistent weather widget
@@ -132,16 +132,19 @@ class Splash : AppCompatActivity() {
 
             override fun onPreExecute() {
                 super.onPreExecute()
-                val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "encrypting"
+                val splash: Splash? = wr_splash.get()
+                splash?.let {
+                    it.findViewById<TextView>(R.id.msg_txtview).text = "encrypting"
                 }
             }
 
             override fun doInBackground(vararg str: String?): Boolean {
                 try {
                     Thread.sleep(3000)
-                    // do something to the str
+
+                    // save username to prefs
+                    pref.edit().putString(str[0], str[0]).apply()
+
                 } catch (e: InterruptedException) {
                     return false
                 }
@@ -150,9 +153,9 @@ class Splash : AppCompatActivity() {
 
             override fun onPostExecute(b: Boolean) {
                 super.onPostExecute(b)
-                val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "The encryption is:$b"
+                val splash: Splash? = wr_splash.get()
+                splash?.let {
+                    it.findViewById<TextView>(R.id.msg_txtview).text = "The encryption is:$b"
                     splash.launchGame()
                 }
             }
