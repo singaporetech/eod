@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.coroutines.*
 import org.w3c.dom.Text
 import java.lang.ref.WeakReference
 
@@ -100,13 +101,53 @@ class Splash : AppCompatActivity() {
                 // - I know know this encryption the most takes 5secs
                 // - user needs to know result of what happened to his name anyway
                 // SOLN: use AsyncTask
-                EncryptTask(this@Splash).execute(username)
+                // EncryptTask(this@Splash).execute(username)
 
+                // TODO THREADING 2: DEPRECATE ASYNCTASKS, COROUTINES FTW
+                // - convert encryption fun to suspend fun with delay
+                // - in the Main thread CoroutineScope, launch a coroutine to call encrypt
+                // - await encryption asynchronously and add username to pref after encryption
+                // - can also use WithContext to use the Default threadpool to do heavy tasks
+                // - .launch is fire and forget, .async is execute for a deferred result
+                // - the launch block below is non-blocking
+                CoroutineScope(Dispatchers.Main).launch {
+                    // encrypt username
+                    val encryptedUsername = encrypt(username)
+
+                    // store in pref
+                    pref.edit().putString(username, encryptedUsername).apply()
+
+                    // launch the game
+                    msgTxtView.text = "STARTING!"
+                    launchGame()
+                }
+
+                // this will not be blocked by the above coroutine
+                msgTxtView.text = "encrypting in coroutine heaven"
             }
 
             // TODO SERVICES n: goto AndroidLauncher
         }
     }
+
+    /**
+     * Coroutine for encryption.
+     * Input username string and output encrypted username string.
+     * Place the intensive work on the Default thread.
+     *
+     * <Kotlin official defn>
+     * One can think of a coroutine as a light-weight thread. Like threads, coroutines can run in
+     * parallel, wait for each other and communicate. The biggest difference is that coroutines are
+     * very cheap, almost free: we can create thousands of them, and pay very little in terms of
+     * performance. True threads, on the other hand, are expensive to start and keep around.
+     * A thousand threads can be a serious challenge for a modern machine.
+     */
+    private suspend fun encrypt(username: String) =
+        withContext(Dispatchers.Default) {
+            // THE encryption :)
+            delay(15000)
+            return@withContext username
+        }
 
     companion object {
         private const val TAG = "Splash"
