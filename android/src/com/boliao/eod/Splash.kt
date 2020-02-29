@@ -5,6 +5,7 @@
  * 1. See the use of raw java threads in the bug spawning code in GameStateService
  * 2. Create an Asynctask to encrypt usernames in the background
  * 3. Create a weather worker Handlerthread to fetch weather updates in the background
+ * 4. Replace Asynctask with coroutine approach
  */
 
 package com.boliao.eod
@@ -14,7 +15,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.*
-import org.w3c.dom.Text
 import java.lang.ref.WeakReference
 
 /**
@@ -30,6 +29,12 @@ import java.lang.ref.WeakReference
  */
 class Splash : AppCompatActivity() {
     private lateinit var startAndroidLauncher: Intent
+
+    // define parent jobs to cancel all coroutines when done (prevent leaks)
+    val parentJob = Job()
+
+    // define scope to build coroutines
+    val splashScope = CoroutineScope(Dispatchers.Main + parentJob)
 
     fun launchGame() {
         startActivity(startAndroidLauncher)
@@ -82,10 +87,10 @@ class Splash : AppCompatActivity() {
                 // Store username to survive app destruction
                 // DEPRECATED due to encryption below
                 /*
-                    msgTxtView.setText("Starting game...");
-                    prefs.edit().putString(username, username);
-                    prefs.edit().commit();
-                    */
+                msgTxtView.setText("Starting game...");
+                prefs.edit().putString(username, username);
+                prefs.edit().commit();
+                */
 
                 // TODO SERVICES 2: what if this needs some intensive processing
                 // - e.g., pseudo-encrypt the username using some funky algo
@@ -110,7 +115,9 @@ class Splash : AppCompatActivity() {
                 // - can also use WithContext to use the Default threadpool to do heavy tasks
                 // - .launch is fire and forget, .async is execute for a deferred result
                 // - the launch block below is non-blocking
-                CoroutineScope(Dispatchers.Main).launch {
+                // - the scope should probably be defined with + jobs so that we can prevent leaks
+                // CoroutineScope(Dispatchers.Main).launch {
+                splashScope.launch {
                     // encrypt username
                     val encryptedUsername = encrypt(username)
 
@@ -130,6 +137,13 @@ class Splash : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // stop coroutines
+        splashScope.cancel()
+    }
+
     /**
      * Coroutine for encryption.
      * Input username string and output encrypted username string.
@@ -142,12 +156,11 @@ class Splash : AppCompatActivity() {
      * performance. True threads, on the other hand, are expensive to start and keep around.
      * A thousand threads can be a serious challenge for a modern machine.
      */
-    private suspend fun encrypt(username: String) =
-        withContext(Dispatchers.Default) {
-            // THE encryption :)
-            delay(15000)
-            return@withContext username
-        }
+    private suspend fun encrypt(username: String) = withContext(Dispatchers.Default) {
+        // THE encryption :)
+        delay(15000)
+        return@withContext username
+    }
 
     companion object {
         private const val TAG = "Splash"
