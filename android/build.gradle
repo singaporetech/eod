@@ -102,6 +102,8 @@ dependencies {
 //    implementation "com.android.support:support-media-compat:$supportVer"
 //    implementation "androidx.media:media:1.0.0"
 //    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVer"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVer"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVer"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
     implementation "androidx.core:core-ktx:$mainVer"
