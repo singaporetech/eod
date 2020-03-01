@@ -187,6 +187,8 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
          * - use WeakReference<Splash> (a.k.a. shared_ptr) as need a ref to update UI thread
          * - note: onProgressUpdate(Integer... progress) left as an exercise
          * - note: publishProgress(Integer) is in-built to pass progress to above from doInBackground
+         * - with MVVM, this should be in VM, but AsyncTask was built to directly update UI
+         * - we could also observe more LiveData here and AsyncTask lives in VM and updates the LiveData
          */
         private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
             // hold the Activity to get all the UI elements
