@@ -26,15 +26,18 @@ import java.lang.ref.WeakReference
 
 /**
  * This is the splash view that records who is playing.
+ *
+ * TODO THREADING 4.1: implement CoroutineScope delegated to MainScope()
+ * This allows any coroutine builder (launch, async) block to be within this Activity scope
  */
-class Splash : AppCompatActivity() {
+class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
 
     // define parent jobs to cancel all coroutines when done (prevent leaks)
-    val parentJob = Job()
+    // val parentJob = Job()
 
     // define scope to build coroutines
-    val splashScope = CoroutineScope(Dispatchers.Main + parentJob)
+    // val splashScope = CoroutineScope(Dispatchers.Main + parentJob)
 
     fun launchGame() {
         startActivity(startAndroidLauncher)
@@ -116,8 +119,13 @@ class Splash : AppCompatActivity() {
                 // - .launch is fire and forget, .async is execute for a deferred result
                 // - the launch block below is non-blocking
                 // - the scope should probably be defined with + jobs so that we can prevent leaks
+
+                // explicitly definitely a scope to call within
                 // CoroutineScope(Dispatchers.Main).launch {
-                splashScope.launch {
+                // or via a custom built scope which can be cancelled with parentJob.cancel()
+                // splashScope.launch {
+
+                launch {
                     // encrypt username
                     val encryptedUsername = encrypt(username)
 
@@ -140,14 +148,15 @@ class Splash : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        // stop coroutines
-        splashScope.cancel()
+        // stop coroutines with the inherited method
+        cancel()
     }
 
     /**
      * Coroutine for encryption.
      * Input username string and output encrypted username string.
-     * Place the intensive work on the Default thread.
+     * Use Dispatchers.Default to place this work to the background Default thread in case the
+     * caller of this coroutine is calling via Dispatchers.Main .
      *
      * <Kotlin official defn>
      * One can think of a coroutine as a light-weight thread. Like threads, coroutines can run in
