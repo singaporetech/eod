@@ -33,12 +33,6 @@ import java.lang.ref.WeakReference
 class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
 
-    // define parent jobs to cancel all coroutines when done (prevent leaks)
-    // val parentJob = Job()
-
-    // define scope to build coroutines
-    // val splashScope = CoroutineScope(Dispatchers.Main + parentJob)
-
     fun launchGame() {
         startActivity(startAndroidLauncher)
     }
@@ -55,9 +49,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         val usernameEdtTxt = findViewById<EditText>(R.id.name_edtxt)
         val msgTxtView = findViewById<TextView>(R.id.msg_txtview)
         val weatherTxtView = findViewById<TextView>(R.id.weather_txtview)
-
-        // setup shared preferences
-        pref = getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE)
 
         // show splash text
         msgTxtView.setText(R.string.welcome_note)
@@ -78,105 +69,24 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
                 }
         )
 
+        splashViewModel.loginStatus.observe(this, Observer {
+            if (it) {
+                msgTxtView.text = "LOGIN DONE. Starting..."
+                launchGame()
+            } else {
+                msgTxtView.text = "Name OREDI exist liao..."
+            }
+        })
+
         // start game on click "PLAY"
         playBtn.setOnClickListener {
-            // TODO SERVICES 1: check if username is already taken
-            // - if username exists, set msgTxtView to "player exists..."
-            // - else, set msgTxtView to "starting game, pls wait"
-            val username = usernameEdtTxt.text.toString()
-            if (pref.contains(username)) {
-                msgTxtView.text = "Name already exists!"
-            } else {
-                // Store username to survive app destruction
-                // DEPRECATED due to encryption below
-                /*
-                msgTxtView.setText("Starting game...");
-                prefs.edit().putString(username, username);
-                prefs.edit().commit();
-                */
-
-                // TODO SERVICES 2: what if this needs some intensive processing
-                // - e.g., pseudo-encrypt the username using some funky algo
-                // - store the encrypted username in shared prefs
-                // - UI should not lag or ANR
-
-                // SOLN: defer processing to an IntentService: do some heavy lifting w/o
-                // UI then shutdown the service
-                // - note that the WorkManager can also accomplish this
-                // NameCryptionService.startActionFoo(this@Splash, username)
-
-                // TODO THREADING 1: what if now, I want this result to be shown on UI
-                // - I know know this encryption the most takes 5secs
-                // - user needs to know result of what happened to his name anyway
-                // SOLN: use AsyncTask
-                // EncryptTask(this@Splash).execute(username)
-
-                // TODO THREADING 2: DEPRECATE ASYNCTASKS, COROUTINES FTW
-                // - convert encryption fun to suspend fun with delay
-                // - in the Main thread CoroutineScope, launch a coroutine to call encrypt
-                // - await encryption asynchronously and add username to pref after encryption
-                // - can also use WithContext to use the Default threadpool to do heavy tasks
-                // - .launch is fire and forget, .async is execute for a deferred result
-                // - the launch block below is non-blocking
-                // - the scope should probably be defined with + jobs so that we can prevent leaks
-
-                // explicitly definitely a scope to call within
-                // CoroutineScope(Dispatchers.Main).launch {
-                // or via a custom built scope which can be cancelled with parentJob.cancel()
-                // splashScope.launch {
-
-                launch {
-                    // encrypt username
-                    val encryptedUsername = encrypt(username)
-
-                    // store in pref
-                    pref.edit().putString(username, encryptedUsername).apply()
-
-                    // launch the game
-                    msgTxtView.text = "STARTING!"
-                    launchGame()
-                }
-
-                // this will not be blocked by the above coroutine
-                msgTxtView.text = "encrypting in coroutine heaven"
-            }
-
-            // TODO SERVICES n: goto AndroidLauncher
+            msgTxtView.text = "Encrypting in coroutine heaven..."
+            splashViewModel.login(usernameEdtTxt.text.toString())
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        // stop coroutines with the inherited method
-        cancel()
-    }
-
-    /**
-     * Coroutine for encryption.
-     * Input username string and output encrypted username string.
-     * Use Dispatchers.Default to place this work to the background Default thread in case the
-     * caller of this coroutine is calling via Dispatchers.Main .
-     *
-     * <Kotlin official defn>
-     * One can think of a coroutine as a light-weight thread. Like threads, coroutines can run in
-     * parallel, wait for each other and communicate. The biggest difference is that coroutines are
-     * very cheap, almost free: we can create thousands of them, and pay very little in terms of
-     * performance. True threads, on the other hand, are expensive to start and keep around.
-     * A thousand threads can be a serious challenge for a modern machine.
-     */
-    private suspend fun encrypt(username: String) = withContext(Dispatchers.Default) {
-        // THE encryption :)
-        delay(15000)
-        return@withContext username
     }
 
     companion object {
         private const val TAG = "Splash"
-
-        // shared preferences setup
-        const val PREF_FILENAME = "com.boliao.eod.prefs"
-        private lateinit var pref: SharedPreferences
 
         /**
          * TODO THREADING 1: create a persistent weather widget
@@ -190,6 +100,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
          * - with MVVM, this should be in VM, but AsyncTask was built to directly update UI
          * - we could also observe more LiveData here and AsyncTask lives in VM and updates the LiveData
          */
+        /*
         private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
             // hold the Activity to get all the UI elements
             // - use weak reference so that it does not leak mem when activity gets killed
@@ -225,5 +136,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
                 }
             }
         }
+        */
     }
 }

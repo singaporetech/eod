@@ -33,9 +33,6 @@
         <!-- TODO SERVICES: declare the GameStateService and IntentService -->
         <!-- Q: What are the big 4 tags? -->
         <service
-            android:name=".NameCryptionService"
-            android:exported="false" />
-        <service
             android:name=".GameStateService"
             android:enabled="true"
             android:exported="true" />
