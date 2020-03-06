@@ -23,12 +23,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import java.lang.ref.WeakReference
+import kotlinx.coroutines.*
 
 /**
  * This is the splash view that records who is playing.
  */
-class Splash : AppCompatActivity() {
-    private lateinit var pref: SharedPreferences
+class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
 
     fun launchGame() {
@@ -48,17 +48,18 @@ class Splash : AppCompatActivity() {
         val msgTxtView = findViewById<TextView>(R.id.msg_txtview)
         val weatherTxtView = findViewById<TextView>(R.id.weather_txtview)
 
-        // setup shared preferences
-        pref = getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE)
-
         // show splash text
         msgTxtView.setText(R.string.welcome_note)
 
         // TODO THREADING 2: create a persistent weather widget
-        // - WeatherRepo is already nicely linked up in MVVM with SplashViewModel
-        // - implement background weather fetching in WeatherRepo
-        // - set up weatherTextView to observe the weatherData
+        // An MVVM Splash ViewModel is already set up.
+        // Splash Activity View -> Splash ViewModel -> WeatherRepo Model
+        // WeatherRepo currently has a mock stub to return static mock data, provided live by
+        // weatherData in SplashViewModel.
+        // - set up weatherTextView here to observe the weatherData
+        // - goto WeatherRepo for THREADING 3
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
+
         val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         splashViewModel.weatherData.observe(
                 this,
@@ -67,54 +68,27 @@ class Splash : AppCompatActivity() {
                 }
         )
 
+        splashViewModel.loginStatus.observe(this, Observer {
+            if (it) {
+                msgTxtView.text = "LOGIN DONE. Starting..."
+                launchGame()
+            } else {
+                msgTxtView.text = "Name OREDI exist liao..."
+            }
+        })
+
         // start game on click "PLAY"
         playBtn.setOnClickListener {
-            // TODO SERVICES 1: check if username is already taken
-            // - if username exists, set msgTxtView to "player exists..."
-            // - else, set msgTxtView to "starting game, pls wait"
-            val username = usernameEdtTxt.text.toString()
-            if (pref.contains(username)) {
-                msgTxtView.text = "Name already exists!"
-            } else {
-                // Store username to survive app destruction
-                // DEPRECATED due to encryption below
-                /*
-                    msgTxtView.setText("Starting game...");
-                    prefs.edit().putString(username, username);
-                    prefs.edit().commit();
-                    */
-
-                // TODO SERVICES 2: what if this needs some intensive processing
-                // - e.g., pseudo-encrypt the username using some funky algo
-                // - store the encrypted username in shared prefs
-                // - UI should not lag or ANR
-
-                // SOLN: defer processing to an IntentService: do some heavy lifting w/o
-                // UI then shutdown the service
-                // - note that the WorkManager can also accomplish this
-                NameCryptionService.startActionFoo(this@Splash, username)
-
-                // TODO THREADING 1: what if now, I want this result to be shown on UI
-                // - I know know this encryption the most takes 5secs
-                // - user needs to know result of what happened to his name anyway
-                // SOLN: use AsyncTask
-                EncryptTask(this@Splash).execute(username)
-
-                // launch the game
-            }
-
-            // TODO SERVICES n: goto AndroidLauncher
+            msgTxtView.text = "Encrypting in coroutine heaven..."
+            splashViewModel.login(usernameEdtTxt.text.toString())
         }
     }
 
     companion object {
         private const val TAG = "Splash"
 
-        // shared preferences setup
-        const val PREF_FILENAME = "com.boliao.eod.prefs"
-
         /**
-         * AsyncTask to "encrypt" username
+         * [DEPRECATED] AsyncTask to "encrypt" username
          * - heavy lifting in the background to be posted back to UI
          * - static class so as to prevent leaks
          * - internal ctor to only allow enclosing class to construct
@@ -122,6 +96,7 @@ class Splash : AppCompatActivity() {
          * - onProgressUpdate(Integer... progress) left as an exercise
          * - note: publishProgress(Integer) is in built to pass progress to above from doInBackground
          */
+        /*
         private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
             // hold the Activity to get all the UI elements
             // - use weak reference so that it does not leak mem when activity gets killed
@@ -154,5 +129,6 @@ class Splash : AppCompatActivity() {
                 }
             }
         }
+         */
     }
 }

@@ -1,5 +1,6 @@
 buildscript {
     ext {
+        coroutinesVer = '1.3.3'
         kotlinVer = '1.3.61'
         archVer = '2.1.0'
         appName = "eod"
@@ -18,7 +19,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:3.6.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVer"
     }
 }

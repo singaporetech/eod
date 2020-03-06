@@ -31,7 +31,7 @@ object WeatherRepo {
     /**
      * Mock live data.
      */
-    fun mockOnlineWeatherData() {
+    fun fetchStaticMockWeatherData() {
         weatherData.postValue("Mock Weather Data")
     }
 
@@ -41,16 +41,25 @@ object WeatherRepo {
      * - always updating regularly (confirm < 15min) from online API
      * - not expecting to pause it at any point
      * - ideally want updates even if navigate away
-     * - Q: what primitive should we use?
+     *
+     * Q: what primitive should we use?
      * - Recurring WorkManager?
      * - IntentService?
      * - ThreadPoolExecutor?
      * - AsyncTask?
-     * - A: Spawn a HandlerThread
-     * - Q: Should you use a service to wrap the thread?
-     * - A: Depends on whether you want it running beyond visible lifecycle
+     * A: Spawn a HandlerThread
+     * Q: Should you use a service to wrap the thread?
+     * A: Depends on whether you want it running beyond visible lifecycle
+     * Q: Should you use a service to wrap the thread?
+     * A: Depends on whether you want it running beyond visible lifecycle
+     *
+     * - create a WeatherWorkerThread from HandlerThread class
+     * - start the thread and prepare the handler (looper only available after init HandlerThread)
+     * - create a Runnable to postValue to the weatherData (simply post a counter value)
+     * - post the Runnable as a delayed task in the thread to time updates
+     * - goto SplashViewModel for THREADING 4
      */
-    fun fetchMockOnlineWeatherData() {
+    fun fetchDynamicMockWeatherData() {
         val weatherWorkerThread = WeatherWorkerThread()
         weatherWorkerThread.start()
         weatherWorkerThread.prepareHandler()

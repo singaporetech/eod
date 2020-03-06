@@ -200,8 +200,7 @@ class GameStateService: Service(), SensorEventListener {
         // here's an example of the iffiniess of using raw threads: no good way to stop it
         // bgThread.stop(); // has been deprecated
         // bgThread.interrupt();
-
-        // TODO THREADING n: go to Splash
+        // goto Splash for THREADING 1
     }
 
     /**
