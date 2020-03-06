@@ -4,7 +4,7 @@
  * dynamically broadcasting steps to be received by another app
  *
  * 1. adding a static OnBootReceiver ON_BOOT via the manifest
- * 2. create an intent to be broadcasted to the world (in your device)
+ * 2. create an intent to be dynamically broadcasted to the world (on your device)
  */
 
 package com.boliao.eod
@@ -25,7 +25,7 @@ import kotlinx.coroutines.*
 class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
 
-    fun launchGame() {
+    private fun launchGame() {
         startActivity(startAndroidLauncher)
     }
 

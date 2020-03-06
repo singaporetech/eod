@@ -72,7 +72,7 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
      */
     private suspend fun encrypt(username: String) = withContext(Dispatchers.Default) {
         // THE encryption :)
-        delay(10000)
+        delay(5000)
         return@withContext username
     }
 

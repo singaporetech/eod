@@ -12,6 +12,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import kotlinx.coroutines.*
 
 /**
  * TODO SERVICES 5: a background service to manage game state
@@ -22,7 +23,7 @@ import android.util.Log
  * - Q1: when will it be killed?
  * - Q2: what happens when it is killed?
  */
-class GameStateService: Service(), SensorEventListener {
+class GameStateService: Service(), SensorEventListener, CoroutineScope by MainScope() {
     companion object {
         private val TAG = GameStateService::class.simpleName
         private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
@@ -128,61 +129,64 @@ class GameStateService: Service(), SensorEventListener {
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME)
 
-        // TODO THREADING 0: control the spawn timer in a thread
+        // TODO THREADING 0: control the spawn timer in a coroutine
         // O.M.G. a raw java thread
-        bgThread = Thread( Runnable{
-                try {
-                    while (true) {
-                        // thread updates every sec
-                        Thread.sleep(1000)
-
-                        // decrement countdown every sec
-                        GameState.i().decTimer()
-
-                        // notify user when bug is spawning
-                        if (GameState.i().isCanNotify && !GameState.i().isAppActive) {
-                            Log.i(TAG, "The NIGHT has come: a bug will spawn...")
-
-                            // TODO SERVICES 11: create pending intent to open app from notification
-                            val intent2 = Intent(this@GameStateService, AndroidLauncher::class.java)
-                            val pi = PendingIntent.getActivity(
-                                    this@GameStateService,
-                                    PENDINGINTENT_ID,
-                                    intent2,
-                                    PendingIntent.FLAG_UPDATE_CURRENT)
-
-                            // build the notification
-                            val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.ic_stat_name)
-                                    .setContentTitle("Exercise Or Die")
-                                    .setColor(Color.RED)
-                                    .setVisibility(Notification.VISIBILITY_PUBLIC)
-                                    .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
-                                    .setAutoCancel(true)
-                                    .setContentIntent(pi)
-                                    .build()
-
-                            // activate the notification
-                            notificationManager.notify(NOTIFY_ID, noti)
-
-                            // TODO SERVICES 12: upgrade this service to foreground
-                            // - need to startForegroundService from caller context
-                            // - activate the ongoing notification using startForeground (needs to be called within 5s of above
-                            // - move the notification to become a one time and change the premise
-                            // startForeground(NOTIFY_ID, noti);
-                        }
-                    }
-                } catch (e: InterruptedException) {
-                    Thread.currentThread().interrupt()
-                }
-        })
-
-        // get the thread going
-        bgThread.start()
+        // [DEPRECATED] bgThread = Thread( Runnable{
+        launch {
+            gameloop()
+        }
 
         // TODO SERVICE 13: return appropriate flag to indicate what happens when killed
         // Q: what are the other flags?
         return START_STICKY
+    }
+
+    suspend fun gameloop() = withContext(Dispatchers.Default) {
+        while (true) {
+            // TODO RECEIVERS: mock some step changes
+            // - due to emulator issues
+            GameState.i().incSteps(1)
+            sendBroadcast(GameState.i().steps)
+
+            // thread updates every sec
+            delay(1000)
+
+            // decrement countdown every sec
+            GameState.i().decTimer()
+
+            // notify user when bug is spawning
+            if (GameState.i().isCanNotify && !GameState.i().isAppActive) {
+                Log.i(TAG, "The NIGHT has come: a bug will spawn...")
+
+                // TODO SERVICES 11: create pending intent to open app from notification
+                val intent2 = Intent(this@GameStateService, AndroidLauncher::class.java)
+                val pi = PendingIntent.getActivity(
+                        this@GameStateService,
+                        PENDINGINTENT_ID,
+                        intent2,
+                        PendingIntent.FLAG_UPDATE_CURRENT)
+
+                // build the notification
+                val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_stat_name)
+                        .setContentTitle("Exercise Or Die")
+                        .setColor(Color.RED)
+                        .setVisibility(Notification.VISIBILITY_PUBLIC)
+                        .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
+                        .setAutoCancel(true)
+                        .setContentIntent(pi)
+                        .build()
+
+                // activate the notification
+                notificationManager.notify(NOTIFY_ID, noti)
+
+                // TODO SERVICES 12: upgrade this service to foreground
+                // - need to startForegroundService from caller context
+                // - activate the ongoing notification using startForeground (needs to be called within 5s of above
+                // - move the notification to become a one time and change the premise
+                // startForeground(NOTIFY_ID, noti);
+            }
+        }
     }
 
     /**
@@ -201,11 +205,8 @@ class GameStateService: Service(), SensorEventListener {
         // TODO SENSORS 4: unregister listeners from the sensorManager as appropriate
         sensorManager.unregisterListener(this, stepDetector)
 
-        // TODO THREADING 0: "stop" raw threads?
-        // here's an example of the iffiniess of using raw threads: no good way to stop it
-        // bgThread.stop(); // has been deprecated
-        // bgThread.interrupt();
-        // goto Splash for THREADING 1
+        // cancel all coroutines
+        cancel()
     }
 
     /**
@@ -248,6 +249,7 @@ class GameStateService: Service(), SensorEventListener {
      * - good to Log this to the console
      * - use sendBroadcast function from the context to broadcast the intent
      * - call this method in onSensorChanged above
+     *
      * TODO RECEIVERS 3: Receive broadcast in another separate app
      */
     private fun sendBroadcast(steps: Int) {
