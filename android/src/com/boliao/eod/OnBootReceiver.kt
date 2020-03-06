@@ -41,6 +41,7 @@ class OnBootReceiver : BroadcastReceiver() {
 
             // b. build a work request from a Worker class that fires periodically with the constraints above
             // (note that periodic tasks cannot be < 15mins)
+            // NOTE: also check out OneTimeWorkRequests
             val pwr = PeriodicWorkRequestBuilder<ReminderWorker>(15, TimeUnit.MINUTES)
                     .setConstraints(workConstraints)
                     .build()

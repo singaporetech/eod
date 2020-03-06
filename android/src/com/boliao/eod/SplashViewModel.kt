@@ -12,7 +12,7 @@ import kotlinx.coroutines.*
 class SplashViewModel(application: Application) : AndroidViewModel(application) {
     // shared preferences setup
     private val PREF_FILENAME = "com.boliao.eod.prefs"
-    private lateinit var pref: SharedPreferences
+    private val pref: SharedPreferences
 
     // live weather data (read-only)
     // - this is bound to the mutable one in repo

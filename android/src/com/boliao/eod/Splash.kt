@@ -3,26 +3,20 @@
  * A static receiver on boot for reminders and
  * dynamically broadcasting steps to be received by another app
  *
- * 1. adding a static broadcast receiver in the manifest
- * 2. creating a OnBootReceiver to do a deferred task when system BOOT_COMPLETED
- * 3. create an intent to be broadcasted to the world (in your device)
+ * 1. adding a static OnBootReceiver ON_BOOT via the manifest
+ * 2. create an intent to be broadcasted to the world (in your device)
  */
 
 package com.boliao.eod
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.os.AsyncTask
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import java.lang.ref.WeakReference
 import kotlinx.coroutines.*
 
 /**
@@ -61,12 +55,9 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
 
         val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        splashViewModel.weatherData.observe(
-                this,
-                Observer {
-                    weatherTxtView.text = it
-                }
-        )
+        splashViewModel.weatherData.observe(this, Observer {
+            weatherTxtView.text = it
+        })
 
         splashViewModel.loginStatus.observe(this, Observer {
             if (it) {
@@ -81,6 +72,12 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         playBtn.setOnClickListener {
             msgTxtView.text = "Encrypting in coroutine heaven..."
             splashViewModel.login(usernameEdtTxt.text.toString())
+        }
+
+        // provide a way to stop the service
+        findViewById<Button>(R.id.exit_btn).setOnClickListener {
+            stopService(AndroidLauncher.startServiceIntent)
+            finish()
         }
     }
 

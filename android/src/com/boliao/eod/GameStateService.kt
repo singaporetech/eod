@@ -191,7 +191,12 @@ class GameStateService: Service(), SensorEventListener {
      */
     override fun onDestroy() {
         super.onDestroy()
-        stopForeground(true)
+
+        // UNCOMMENT if is foreground service
+        // stopForeground(true)
+
+        // Remove all notifications
+        notificationManager.cancelAll()
 
         // TODO SENSORS 4: unregister listeners from the sensorManager as appropriate
         sensorManager.unregisterListener(this, stepDetector)
