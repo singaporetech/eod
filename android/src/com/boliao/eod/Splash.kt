@@ -14,9 +14,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.*
 
 /**
@@ -54,7 +55,8 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // - goto WeatherRepo for THREADING 3
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
 
-        val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
+        // val splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
+        val splashViewModel: SplashViewModel by viewModels()
         splashViewModel.weatherData.observe(this, Observer {
             weatherTxtView.text = it
         })
