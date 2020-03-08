@@ -21,14 +21,6 @@
         android:theme="@style/GdxTheme">
 
         <!-- TODO RECEIVERS 0: declare static OnBootReceiver w BOOT_COMPLETED intent-filter -->
-        <receiver
-            android:name=".OnBootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
 
         <!-- TODO SERVICES: declare the GameStateService and IntentService -->
         <!-- Q: What are the big 4 tags? -->

@@ -79,7 +79,9 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
 
         // provide a way to stop the service
         findViewById<Button>(R.id.exit_btn).setOnClickListener {
-            stopService(AndroidLauncher.startServiceIntent)
+            AndroidLauncher.startServiceIntent?.let {
+                stopService(it)
+            }
             finish()
         }
     }

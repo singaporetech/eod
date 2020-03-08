@@ -9,7 +9,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 class AndroidLauncher : AndroidApplication() {
     companion object {
         private val TAG = AndroidLauncher::class.simpleName
-        lateinit var startServiceIntent: Intent
+        var startServiceIntent: Intent? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
