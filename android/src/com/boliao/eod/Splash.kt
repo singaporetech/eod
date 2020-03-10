@@ -1,10 +1,9 @@
 /**
- * # WEEK10: RECEIVERS
- * A static receiver on boot for reminders and
- * dynamically broadcasting steps to be received by another app
+ * # WEEK10.5: NETWORKING
+ * Fetching and showing the weather from a RESTful API.
  *
- * 1. adding a static OnBootReceiver ON_BOOT via the manifest
- * 2. create an intent to be dynamically broadcasted to the world (on your device)
+ * 1. Setting network permissions
+ * 2. Using networking libs Volley
  */
 
 package com.boliao.eod
