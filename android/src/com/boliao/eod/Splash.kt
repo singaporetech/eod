@@ -54,6 +54,13 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // - goto WeatherRepo for THREADING 3
         // Q: Do I (Splash Activity) need to know about WeatherRepo?
 
+        // TODO NETWORKING 1: init the network request queue singleton object (volley)
+        // - goto NETWORKING 0 in manifest
+        // - create NetWorkRequestQueue singleton
+        // - set NetworkRequestQueue's context to this
+        // - goto NETWORKING 2 in WeatherRepo
+        NetworkRequestQueue.setContext(this)
+
         // val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         // val splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
         val splashViewModel: SplashViewModel by viewModels()

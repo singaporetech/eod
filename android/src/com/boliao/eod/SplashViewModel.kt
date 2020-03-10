@@ -30,9 +30,10 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
         // TODO THREADING 4: replace the stub by the new threaded weather data method
         // - only I control the repo, my boss (Activity) does not need to know about repo
         // WeatherRepo.fetchStaticMockWeatherData()
-        WeatherRepo.fetchDynamicMockWeatherData()
+        // WeatherRepo.fetchDynamicMockWeatherData()
 
         // TODO NETWORKING 3: call WeatherRepo to fetch online weather instead
+        WeatherRepo.fetchOnlineWeatherData()
 
         // link up live data to repo (observer pattern)
         weatherData = WeatherRepo.weatherData

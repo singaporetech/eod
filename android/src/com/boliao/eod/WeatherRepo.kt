@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import kotlinx.coroutines.CoroutineScope
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -68,6 +69,69 @@ object WeatherRepo {
             weatherWorkerThread.postTaskDelayed(weatherRunner, FETCH_INTERVAL_MILLIS.toLong())
         }
         weatherWorkerThread.postTask(weatherRunner)
+    }
+
+    /**
+     * TODO NETWORKING 2: fetch real online weather data from RESTful API
+     * We'll use volley as example here (key advantages: fast and clean)
+     * Note how we've used a pseudo-singleton (that needs special init) for the Request Queue. This
+     * is cos many APIs were created pre-MVVM, so needed ref to context to init the request queue.
+     * - form a Volley Request with the URL
+     *   - define the Response.Listener to handle the Response
+     *   - define error handlers
+     * - use the handlerthread pattern to make timed requests to the web API
+     * - goto SplashViewModel for NETWORKING 3
+     */
+    fun fetchOnlineWeatherData() {
+        val urlStr = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast?date_time=$today"
+        Log.i(TAG, "Fetching online weather data: url=$urlStr")
+
+        // form the network request complete with response listener
+        val request = JsonObjectRequest(
+                Request.Method.GET,
+                urlStr,
+                null,
+                Response.Listener { response ->
+                    Log.i(TAG, "volley fetched \n$response")
+                    try { // parse the returned json
+                        val areaStr = response.getJSONArray("items")
+                                .getJSONObject(0)
+                                .getJSONArray("forecasts")
+                                .getJSONObject(0)
+                                .getString("area")
+                        val forecastStr = response.getJSONArray("items")
+                                .getJSONObject(0)
+                                .getJSONArray("forecasts")
+                                .getJSONObject(0)
+                                .getString("forecast")
+
+                        // post to live data here
+                        weatherData.postValue("Weather in $areaStr \nat\n${today.substring(11, 19)} \nis \n$forecastStr  ")
+                    } catch (e: JSONException) {
+                        Log.e(TAG, "json exception: " + e.localizedMessage)
+                    }
+                },
+                Response.ErrorListener {
+                    error -> Log.e(TAG, "Volley error while fetching :" + error.localizedMessage)
+                }
+        )
+
+        // use the previous handlerthread pattern to make timed calls to weather API
+        // - note that Repo can't start any coroutines since it does not have a LifeCycle to manage it
+        // - but it can certainly provide the suspend function (which we are not using here)
+        // - if threading needs to be handled here, it is a perfect use case for low level handlerthreads
+        val weatherWorkerThread = WeatherWorkerThread()
+        weatherWorkerThread.start()
+        weatherWorkerThread.prepareHandler()
+        weatherRunner = Runnable {
+
+            // add request (with it's async response) to the volley queue
+            NetworkRequestQueue.add(request)
+
+            weatherWorkerThread.postTaskDelayed(weatherRunner, FETCH_INTERVAL_MILLIS.toLong())
+        }
+        weatherWorkerThread.postTask(weatherRunner)
+
     }
 
     /**
