@@ -1,9 +1,9 @@
 /**
- * # WEEK10.5: NETWORKING
- * Fetching and showing the weather from a RESTful API.
+ * # WEEK11: NDK
+ * Communicating data across kotlin and C/C++ code.
  *
- * 1. Setting network permissions
- * 2. Using networking libs Volley
+ * 1. Add NDK development capabilities to existing project
+ * 2. Interfacing with a native C lib - ARCore
  */
 
 package com.boliao.eod
@@ -16,7 +16,6 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.*
 
 /**
@@ -24,6 +23,26 @@ import kotlinx.coroutines.*
  */
 class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
+
+    // TODO NDK 0: install required dependencies (from Android Studio SDK Tools)
+    // - NDK: Android toolset to communicate with native code
+    // - CMake: native build tool
+    // - LLDB: native code debugger
+
+    // TODO NDK 1: create the native code and build configuration
+    // - create a src/cpp directory
+    // - create a new .cpp file
+    // - create a CMake build script called CMakeLists.txt (https://developer.android.com/studio/projects/configure-cmake.html)
+    // - add CMake path in gradle (you can right click on folder and let IDE do it)
+
+    // TODO NDK 2: create a test method in native to receive a string and show it
+    // - declare a native function you want to write in C/C++
+    // - write the method in a cpp file
+    // - load native lib and declare native methods
+    // - receive string from native function and display it in a toast
+    // - try and debug within native using <android/log.h>
+
+    // TODO NDK 3: use ARCore C lib to place things via the cam
 
     private fun launchGame() {
         startActivity(startAndroidLauncher)
@@ -90,6 +109,8 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
             }
             finish()
         }
+
+        // TODO NDK 2: show the string from native
     }
 
     companion object {

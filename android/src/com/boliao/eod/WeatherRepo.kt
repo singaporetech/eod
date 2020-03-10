@@ -81,6 +81,9 @@ object WeatherRepo {
      *   - define error handlers
      * - use the handlerthread pattern to make timed requests to the web API
      * - goto SplashViewModel for NETWORKING 3
+     *
+     * BUG with Volley: Volley error while fetching :java.net.SocketException: socket failed: EPERM
+     * - to resolve need to uninstall app manually then deploy again
      */
     fun fetchOnlineWeatherData() {
         val urlStr = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast?date_time=$today"
