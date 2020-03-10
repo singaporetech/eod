@@ -116,9 +116,9 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     companion object {
         private const val TAG = "Splash"
 
-        init {
-            System.loadLibrary("native-lib")
-        }
+//        init {
+//            System.loadLibrary("native-lib")
+//        }
 
         /**
          * [DEPRECATED] AsyncTask to "encrypt" username
