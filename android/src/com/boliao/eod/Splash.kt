@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -33,12 +34,17 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     // - create a src/cpp directory
     // - create a new .cpp file
     // - create a CMake build script called CMakeLists.txt (https://developer.android.com/studio/projects/configure-cmake.html)
+    // - check that the .cpp path (relative to script) is correct in the CMake script
+    // - make sure you add_library for your own libs and find_library for Android NDP native libs
+    // - then link the libs together using target_link_libraries
     // - add CMake path in gradle (you can right click on folder and let IDE do it)
+    // - may need to restart project afer configuration
 
     // TODO NDK 2: create a test method in native to receive a string and show it
     // - declare a native function you want to write in C/C++
     // - write the method in a cpp file
     // - load native lib and declare native methods
+    // - paste a native function in the cpp file, and use IDE helper to fill in method name
     // - receive string from native function and display it in a toast
     // - try and debug within native using <android/log.h>
 
@@ -111,14 +117,17 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         }
 
         // TODO NDK 2: show the string from native
+        Toast.makeText(this, getNativeString(), Toast.LENGTH_LONG).show()
     }
+
+    external fun getNativeString(): String
 
     companion object {
         private const val TAG = "Splash"
 
-//        init {
-//            System.loadLibrary("native-lib")
-//        }
+        init {
+            System.loadLibrary("core-lib")
+        }
 
         /**
          * [DEPRECATED] AsyncTask to "encrypt" username
