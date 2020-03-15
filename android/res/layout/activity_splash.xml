@@ -7,6 +7,20 @@
     android:background="#010101"
     tools:context="com.boliao.eod.Splash">
 
+    <!-- TODO NDK 3.1: opencv ui element for camera view -->
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/camview"
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:layout_margin="10dp"
+        android:tooltipText="this is the camera view"
+        app:camera_id="back"
+        app:show_fps="false"
+        app:layout_constraintTop_toBottomOf="@+id/weather_txtview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
     <TextView
         android:id="@+id/weather_txtview"
         android:layout_width="match_parent"

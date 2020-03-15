@@ -1,0 +1,19 @@
+{
+  "buildFiles": [
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/ch3k/repos/eod/opencv/libcxx_helper/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86\" clean"
+  ],
+  "buildTargetsCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "opencv_jni_shared-Release-x86": {
+      "artifactName": "opencv_jni_shared",
+      "buildCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86\" opencv_jni_shared",
+      "abi": "x86",
+      "output": "/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86/libopencv_jni_shared.a"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/ch3k/repos/eod/opencv/.cxx/cmake/debug/armeabi-v7a",
+  "command": "/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi21 --gcc-toolchain=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot    -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/opencv_jni_shared.dir/dummy.cpp.o -c /Users/ch3k/repos/eod/opencv/libcxx_helper/dummy.cpp",
+  "file": "/Users/ch3k/repos/eod/opencv/libcxx_helper/dummy.cpp"
+}
+]
