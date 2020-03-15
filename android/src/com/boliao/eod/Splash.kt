@@ -4,7 +4,8 @@
  *
  * 0. Review networking code to fetch online weather data
  * 1. Add NDK development capabilities to existing project
- * 2. Interfacing with a native C lib - ARCore
+ * 2. Interfacing with a native C lib - OpenCV
+ * 3. View some examples of ARCore native lib in action
  */
 
 package com.boliao.eod
@@ -49,7 +50,11 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     // - receive string from native function and display it in a toast
     // - try and debug within native using <android/log.h>
 
-    // TODO NDK 3: use ARCore C lib to place things via the cam
+    // TODO NDK 3: use OpenCV C lib to do face recognition
+    // - download OpenCV-android-sdk in a separate folder out of the project
+    // - add OpenCV-android-sdk as a module
+    // - check it is included in settings.gradle
+    // - add as an implementation under module Project:eod's build.gradle
 
     private fun launchGame() {
         startActivity(startAndroidLauncher)
