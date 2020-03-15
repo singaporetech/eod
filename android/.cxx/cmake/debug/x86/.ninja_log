@@ -1,0 +1,15 @@
+# ninja log v5
+0	25	1583841143	CMakeFiles/core-lib.dir/core-lib.cpp.o	ad2f4b01f0968f43
+25	49	1583841143	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86/libcore-lib.so	3f6840ee25fc5f61
+0	109	1583841422	CMakeFiles/core-lib.dir/core-lib.cpp.o	ad2f4b01f0968f43
+109	156	1583841422	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86/libcore-lib.so	3f6840ee25fc5f61
+0	501	1583841479	CMakeFiles/core-lib.dir/core-lib.cpp.o	ad2f4b01f0968f43
+502	558	1583841479	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86/libcore-lib.so	3f6840ee25fc5f61
+1	38	1583842060	CMakeFiles/core-lib.dir/core-lib.cpp.o	ad2f4b01f0968f43
+38	81	1583842060	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86/libcore-lib.so	3f6840ee25fc5f61
+0	685	1583842391	CMakeFiles/core-lib.dir/core-lib.cpp.o	ad2f4b01f0968f43
+685	774	1583842391	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86/libcore-lib.so	3f6840ee25fc5f61
+1	521	1583842643	CMakeFiles/core-lib.dir/core-lib.cpp.o	ad2f4b01f0968f43
+521	585	1583842643	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86/libcore-lib.so	3f6840ee25fc5f61
+1	330	1583842894	CMakeFiles/core-lib.dir/core-lib.cpp.o	ad2f4b01f0968f43
+330	398	1583842894	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86/libcore-lib.so	3f6840ee25fc5f61

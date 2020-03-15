@@ -1,0 +1,5 @@
+# ninja log v5
+0	38	1583842060	CMakeFiles/core-lib.dir/core-lib.cpp.o	95385d2208c84e0d
+38	64	1583842060	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/arm64-v8a/libcore-lib.so	154ac6b03d87a33b
+1	335	1583842894	CMakeFiles/core-lib.dir/core-lib.cpp.o	95385d2208c84e0d
+335	434	1583842894	/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/arm64-v8a/libcore-lib.so	154ac6b03d87a33b

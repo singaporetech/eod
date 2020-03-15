@@ -1,0 +1,19 @@
+{
+  "buildFiles": [
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/ch3k/repos/eod/android/src/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/android/.cxx/cmake/release/arm64-v8a\" clean"
+  ],
+  "buildTargetsCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/ch3k/repos/eod/android/.cxx/cmake/release/arm64-v8a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "core-lib-Release-arm64-v8a": {
+      "artifactName": "core-lib",
+      "buildCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/android/.cxx/cmake/release/arm64-v8a\" core-lib",
+      "abi": "arm64-v8a",
+      "output": "/Users/ch3k/repos/eod/android/build/intermediates/cmake/release/obj/arm64-v8a/libcore-lib.so"
+    }
+  }
+}

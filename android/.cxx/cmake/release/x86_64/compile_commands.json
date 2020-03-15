@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/ch3k/repos/eod/android/.cxx/cmake/release/x86_64",
+  "command": "/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=x86_64-none-linux-android26 --gcc-toolchain=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Dcore_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O2 -DNDEBUG  -fPIC   -o CMakeFiles/core-lib.dir/core-lib.cpp.o -c /Users/ch3k/repos/eod/android/src/cpp/core-lib.cpp",
+  "file": "/Users/ch3k/repos/eod/android/src/cpp/core-lib.cpp"
+}
+]

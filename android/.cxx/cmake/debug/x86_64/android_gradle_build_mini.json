@@ -1,0 +1,19 @@
+{
+  "buildFiles": [
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/ch3k/repos/eod/android/src/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/android/.cxx/cmake/debug/x86_64\" clean"
+  ],
+  "buildTargetsCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/ch3k/repos/eod/android/.cxx/cmake/debug/x86_64\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "core-lib-Debug-x86_64": {
+      "artifactName": "core-lib",
+      "buildCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/android/.cxx/cmake/debug/x86_64\" core-lib",
+      "abi": "x86_64",
+      "output": "/Users/ch3k/repos/eod/android/build/intermediates/cmake/debug/obj/x86_64/libcore-lib.so"
+    }
+  }
+}

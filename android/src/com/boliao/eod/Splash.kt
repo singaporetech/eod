@@ -49,6 +49,13 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     // - try and debug within native using <android/log.h>
 
     // TODO NDK 3: use ARCore C lib to place things via the cam
+    // - https://developers.google.com/ar/develop/c/quickstart
+    // - requires https://github.com/google-ar/arcore-android-sdk/releases/tag/v1.15.0
+    // - then install via
+    //   adb install -r Google_Play_Services_for_AR_1.15.0_x86_for_emulator.apk
+    // - clone the ARCore repo
+    // - git clone https://github.com/google-ar/arcore-android-sdk.git
+    // - run some samples
 
     private fun launchGame() {
         startActivity(startAndroidLauncher)

@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/ch3k/repos/eod/android/.cxx/cmake/debug/x86_64'
+ninja: no work to do.
