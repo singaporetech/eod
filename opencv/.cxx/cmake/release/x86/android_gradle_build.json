@@ -1,0 +1,42 @@
+{
+  "stringTable": {
+    "0": "/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86",
+    "1": "--target=i686-none-linux-android21 --gcc-toolchain=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -O2 -DNDEBUG -fPIC"
+  },
+  "buildFiles": [
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/ch3k/repos/eod/opencv/libcxx_helper/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86\" clean"
+  ],
+  "buildTargetsCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "opencv_jni_shared-Release-x86": {
+      "buildCommand": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86\" opencv_jni_shared",
+      "buildType": "release",
+      "toolchain": "1832078250",
+      "abi": "x86",
+      "artifactName": "opencv_jni_shared",
+      "files": [
+        {
+          "src": "/Users/ch3k/repos/eod/opencv/libcxx_helper/dummy.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/Users/ch3k/repos/eod/opencv/.cxx/cmake/release/x86/libopencv_jni_shared.a"
+    }
+  },
+  "toolchains": {
+    "1832078250": {
+      "cppCompilerExecutable": "/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

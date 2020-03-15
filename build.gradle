@@ -42,6 +42,10 @@ project(":android") {
     configurations { natives }
 
     dependencies {
+        // TODO NDK 3: add dependency on internal OpenCV module
+        // - see directory structure
+        implementation project(':opencv')
+
         implementation project(":core")
         implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"

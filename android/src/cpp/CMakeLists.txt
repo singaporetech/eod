@@ -4,6 +4,15 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
+# OpenCV vars
+# TODO investigate why only FULL absolute paths work here...
+set( OpenCV_DIR "~/repos/OpenCV-android-sdk/sdk/native/jni" )
+#set (PATH_OPENCV /Users/mrboliao/repos/OpenCV-android-sdk)
+#set (PATH_PROJECT /Users/mrboliao/repos/eod)
+#include_directories(${PATH_OPENCV}/sdk/native/jni/include)
+#add_library( lib_opencv SHARED IMPORTED )
+#set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${PATH_PROJECT}/android/libs/${ANDROID_ABI}/libopencv_java3.so)
+
 # Specifies a library name, specifies whether the library is STATIC or
 # SHARED, and provides relative paths to the source code. You can
 # define multiple libraries by adding multiple add_library() commands,
@@ -33,10 +42,14 @@ find_library(
         # CMake needs to locate.
         log )
 
-# Links your native library against one or more other native libraries.
-target_link_libraries(
-        # Specifies the target library.
-         core-lib
+# Search for the opencv package
+find_package( OpenCV REQUIRED )
 
-        # Links the log library to the target library.
-        ${log-lib} )
+target_link_libraries(
+        core-lib
+        opencv_java
+        ${log-lib})
+
+get_target_property(__src opencv_java IMPORTED_LOCATION_RELEASE )
+add_custom_command(TARGET core-lib POST_BUILD COMMAND
+        ${CMAKE_COMMAND} -E copy ${__src} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})

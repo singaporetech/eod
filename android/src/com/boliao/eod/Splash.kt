@@ -4,27 +4,55 @@
  *
  * 0. Review networking code to fetch online weather data
  * 1. Add NDK development capabilities to existing project
- * 2. Interfacing with a native C lib - ARCore
+ * 2. Interfacing with a native C lib - OpenCV
+ * 3. View some examples of ARCore native lib in action
  */
 
 package com.boliao.eod
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.view.SurfaceView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import org.opencv.android.BaseLoaderCallback
+import org.opencv.android.CameraBridgeViewBase
+import org.opencv.android.LoaderCallbackInterface
+import org.opencv.android.OpenCVLoader
+import org.opencv.core.CvType
+import org.opencv.core.Mat
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 
 /**
  * This is the splash view that records who is playing.
+ *
+ * TODO NDK 3.2: implement the CameraBridgeViewBase.CvCameraViewListener2 interface
+ * This will allow the Activity to have a cam view.
  */
-class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
+class Splash :
+        AppCompatActivity(),
+        CoroutineScope by MainScope(),
+        CameraBridgeViewBase.CvCameraViewListener2 {
+
     private lateinit var startAndroidLauncher: Intent
+
+    private external fun getNativeString(): String
+    private external fun convertToGrayscale(rgbaAddrInput: Long, rbgaAddrResult: Long): Int
+    private external fun detectFace(cascadePath: String?, rgbaAddrInput: Long)
 
     // TODO NDK 0: install required dependencies (from Android Studio SDK Tools)
     // - NDK: Android toolset to communicate with native code
@@ -49,7 +77,22 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     // - receive string from native function and display it in a toast
     // - try and debug within native using <android/log.h>
 
-    // TODO NDK 3: use ARCore C lib to place things via the cam
+    // TODO NDK 3: use OpenCV C lib to do face recognition
+    // - download OpenCV-android-sdk in a separate folder out of the project
+    // - add OpenCV-android-sdk as a module
+    // - check it is included in settings.gradle
+    // - add as an implementation under module Project:eod's build.gradle
+
+    // TODO NDK 3: use OpenCV C lib to do face recognition
+    lateinit var camView: CameraBridgeViewBase
+    lateinit var rgbaT: Mat
+    lateinit var rgbaF: Mat
+    lateinit var rgbaInput: Mat
+    lateinit var rgbaOutput: Mat
+
+    // TODO NDK 3: set the face model
+    private lateinit var cascadeFile: File
+    private val cascadeFileName = "haarcascade_eye_tree_eyeglasses.xml"
 
     private fun launchGame() {
         startActivity(startAndroidLauncher)
@@ -58,6 +101,20 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+        // ask user for camera permissions if not granted already
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 1)
+        }
+
+        // TODO NDK 3: setup camera ui
+        camView = findViewById(R.id.camview)
+        camView.setCameraPermissionGranted()
+        camView.visibility = SurfaceView.VISIBLE
+        camView.setCvCameraViewListener(this)
+        // camView.rotation = 180F
+        Log.i(TAG, "Cam width = ${camView.measuredWidth} and ${camView.measuredHeight}")
 
         // init launch game intent
         startAndroidLauncher = Intent(this@Splash, AndroidLauncher::class.java)
@@ -121,8 +178,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         Toast.makeText(this, getNativeString(), Toast.LENGTH_LONG).show()
     }
 
-    external fun getNativeString(): String
-
     companion object {
         private const val TAG = "Splash"
 
@@ -173,5 +228,109 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
             }
         }
          */
+    }
+
+    /**
+     * TODO NDK 3.3: implement cam callbacks
+     * - init matrices on cam view start
+     */
+    override fun onCameraViewStarted(width: Int, height: Int) {
+        rgbaInput = Mat(height, width, CvType.CV_8UC4)
+        rgbaOutput = Mat(height, width, CvType.CV_8UC4)
+        rgbaF = Mat(height, width, CvType.CV_8UC4)
+        rgbaT = Mat(width, width, CvType.CV_8UC4)
+    }
+
+    /**
+     * TODO NDK 3.4: implement cam callbacks
+     * - release matrices on cam view stop
+     */
+    override fun onCameraViewStopped() {
+        rgbaInput.release()
+        rgbaOutput.release()
+        rgbaF.release()
+        rgbaT.release()
+    }
+
+    /**
+     * TODO NDK 3.5: implement cam callbacks
+     * - detect face and demarcate on the image to draw every frame
+     */
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame): Mat {
+        rgbaInput = inputFrame.rgba()
+//        Log.i(TAG, "onCameraFrame rgbaInput is $rgbaInput")
+        // do convert to grayscale
+        // convertToGrayscale(rgbaInput.getNativeObjAddr(), rgbaOutput.getNativeObjAddr());
+
+        // do face detection
+        // - pass the object by reference so C++ can edit the same object
+        detectFace(cascadeFile.absolutePath, rgbaInput.nativeObjAddr)
+        return rgbaInput
+    }
+
+    /**
+     * TODO NDK 3: load model file
+     */
+    private fun loadCascadeFile() {
+        val inStream: InputStream
+        val outStream: FileOutputStream
+        try {
+            inStream = resources.assets.open("data/$cascadeFileName")
+
+            val cascadeDir = getDir("cascade", Context.MODE_PRIVATE)
+            cascadeFile = File(cascadeDir, "haarcascade_eye.xml")
+            outStream = FileOutputStream(cascadeFile)
+
+            val buffer = ByteArray(4096)
+            var bytesRead: Int
+            while (inStream.read(buffer).also { bytesRead = it } != -1) {
+                outStream.write(buffer, 0, bytesRead)
+            }
+
+            inStream.close()
+            outStream.close()
+        } catch (e: IOException) {
+            Log.i(TAG, "face cascade not found")
+        }
+    }
+
+    /**
+     * TODO NDK 3: opencv loader
+     */
+    private val baseLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
+        override fun onManagerConnected(status: Int) {
+            when (status) {
+                LoaderCallbackInterface.SUCCESS -> {
+                    Log.i(TAG, "OpenCV loaded")
+                    camView.enableView()
+                }
+                else -> super.onManagerConnected(status)
+            }
+        }
+    }
+
+    /**
+     * TODO NDK 3: Load OpenCV if required
+     */
+    override fun onResume() {
+        super.onResume()
+        // camView.enableView()
+        if (!OpenCVLoader.initDebug()) {
+            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization")
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, baseLoaderCallback)
+        } else {
+            Log.d(TAG, "OpenCV library found inside package. Using it!")
+            baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
+            loadCascadeFile()
+        }
+    }
+
+
+    /**
+     * TODO NDK 3: disable cam ui on pause
+     */
+    override fun onPause() {
+        super.onPause()
+        camView.disableView()
     }
 }
