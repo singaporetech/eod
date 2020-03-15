@@ -2,6 +2,7 @@
  * # WEEK11: NDK
  * Communicating data across kotlin and C/C++ code.
  *
+ * 0. Review networking code to fetch online weather data
  * 1. Add NDK development capabilities to existing project
  * 2. Interfacing with a native C lib - ARCore
  */

@@ -94,28 +94,35 @@ object WeatherRepo {
                 Request.Method.GET,
                 urlStr,
                 null,
-                Response.Listener { response ->
-                    Log.i(TAG, "volley fetched \n$response")
-                    try { // parse the returned json
-                        val areaStr = response.getJSONArray("items")
+                Response.Listener {
+                    Log.i(TAG, "volley fetched \n$it")
+                    try {
+                        // parse the returned json
+                        val areaStr = it.getJSONArray("items")
                                 .getJSONObject(0)
                                 .getJSONArray("forecasts")
                                 .getJSONObject(0)
                                 .getString("area")
-                        val forecastStr = response.getJSONArray("items")
+                        val forecastStr = it.getJSONArray("items")
                                 .getJSONObject(0)
                                 .getJSONArray("forecasts")
                                 .getJSONObject(0)
                                 .getString("forecast")
 
                         // post to live data here
-                        weatherData.postValue("Weather in $areaStr \nat\n${today.substring(11, 19)} \nis \n$forecastStr  ")
+                        weatherData.postValue("""
+                            Weather in $areaStr 
+                            at
+                            ${today.substring(11, 19)}
+                            is
+                            $forecastStr
+                            """.trimIndent())
                     } catch (e: JSONException) {
                         Log.e(TAG, "json exception: " + e.localizedMessage)
                     }
                 },
                 Response.ErrorListener {
-                    error -> Log.e(TAG, "Volley error while fetching :" + error.localizedMessage)
+                    Log.e(TAG, "Volley error while fetching :" + it.localizedMessage)
                 }
         )
 
@@ -127,14 +134,11 @@ object WeatherRepo {
         weatherWorkerThread.start()
         weatherWorkerThread.prepareHandler()
         weatherRunner = Runnable {
-
             // add request (with it's async response) to the volley queue
             NetworkRequestQueue.add(request)
-
             weatherWorkerThread.postTaskDelayed(weatherRunner, FETCH_INTERVAL_MILLIS.toLong())
         }
         weatherWorkerThread.postTask(weatherRunner)
-
     }
 
     /**
