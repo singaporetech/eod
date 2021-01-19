@@ -27,6 +27,14 @@
     },
     {
       "level": "INFO",
+      "message": "Considering /Users/ch3k/Library/Android/sdk/ndk/20.1.5948944 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /Users/ch3k/Library/Android/sdk/ndk/22.0.7026061 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
       "message": "Considering /Users/ch3k/Library/Android/sdk/ndk/20.0.5594570 in SDK ndk folder"
     },
     {

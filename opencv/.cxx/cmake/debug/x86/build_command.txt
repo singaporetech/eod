@@ -1,6 +1,7 @@
-Executable : /Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake
+                Executable : /Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake
 arguments : 
 -H/Users/ch3k/repos/eod/opencv/libcxx_helper
+-DCMAKE_FIND_ROOT_PATH=/Users/ch3k/repos/eod/opencv/.cxx/cmake/debug/prefab/x86/prefab
 -DCMAKE_BUILD_TYPE=Debug
 -DCMAKE_TOOLCHAIN_FILE=/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake
 -DANDROID_ABI=x86

@@ -20,6 +20,10 @@
       "cmakeExecutable": "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake",
       "variables": [
         {
+          "name": "CMAKE_FIND_ROOT_PATH",
+          "value": "/Users/ch3k/repos/eod/opencv/.cxx/cmake/debug/prefab/x86/prefab"
+        },
+        {
           "name": "CMAKE_BUILD_TYPE",
           "value": "Debug"
         },
@@ -89,6 +93,7 @@
     "buildTargetSet": [
       "opencv_jni_shared"
     ],
+    "implicitBuildTargetSet": [],
     "cFlagsList": [],
     "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
     "cppFlagsList": [],
@@ -167,16 +172,17 @@
         "X86",
         "X86_64"
       ],
+      "ndkDefaultStl": "LIBCXX_STATIC",
       "ndkVersion": "21.0.6113669",
       "project": {
         "compilerSettingsCacheFolder": "/Users/ch3k/repos/eod/.cxx",
         "cxxFolder": "/Users/ch3k/repos/eod/.cxx",
-        "ideBuildTargetAbi": "x86",
         "isBuildOnlyTargetAbiEnabled": true,
         "isCmakeBuildCohabitationEnabled": false,
         "isNativeCompilerSettingsCacheEnabled": false,
         "rootBuildGradleFolder": "/Users/ch3k/repos/eod",
-        "sdkFolder": "/Users/ch3k/Library/Android/sdk"
+        "sdkFolder": "/Users/ch3k/Library/Android/sdk",
+        "isPrefabEnabled": false
       },
       "splitsAbiFilterSet": [],
       "stlSharedObjectMap": {
@@ -194,7 +200,13 @@
     "objFolder": "/Users/ch3k/repos/eod/opencv/build/intermediates/cmake/debug/obj",
     "variantName": "debug",
     "validAbiList": [
-      "X86"
-    ]
-  }
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86",
+      "X86_64"
+    ],
+    "prefabDirectory": "/Users/ch3k/repos/eod/opencv/.cxx/cmake/debug/prefab",
+    "prefabPackageDirectoryList": []
+  },
+  "prefabFolder": "/Users/ch3k/repos/eod/opencv/.cxx/cmake/debug/prefab/x86"
 }

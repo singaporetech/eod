@@ -4,9 +4,9 @@
     "1": "--target=i686-none-linux-android21 --gcc-toolchain=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/ch3k/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC"
   },
   "buildFiles": [
-    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/ch3k/repos/eod/opencv/libcxx_helper/CMakeLists.txt",
     "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
-    "/Users/ch3k/repos/eod/opencv/libcxx_helper/CMakeLists.txt"
+    "/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake"
   ],
   "cleanCommands": [
     "/Users/ch3k/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/ch3k/repos/eod/opencv/.cxx/cmake/debug/x86\" clean"

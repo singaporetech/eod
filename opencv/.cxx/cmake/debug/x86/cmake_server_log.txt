@@ -37,6 +37,7 @@ CMAKE SERVER: {
   "type": "configure",
   "cacheArguments": [
     "",
+    "-DCMAKE_FIND_ROOT_PATH\u003d/Users/ch3k/repos/eod/opencv/.cxx/cmake/debug/prefab/x86/prefab",
     "-DCMAKE_BUILD_TYPE\u003dDebug",
     "-DCMAKE_TOOLCHAIN_FILE\u003d/Users/ch3k/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
     "-DANDROID_ABI\u003dx86",
