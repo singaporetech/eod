@@ -6,6 +6,7 @@
 *.war
 *.ear
 hs_err_pid*
+.cxx/
 
 ## Robovm
 robovm-build/
