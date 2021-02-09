@@ -1,9 +1,9 @@
 /**
- * # WEEK11: NDK
- * Communicating data across kotlin and C/C++ code.
+ * # WEEK10.5: NETWORKING
+ * Fetching and showing the weather from a RESTful API.
  *
- * 1. Add NDK development capabilities to existing project
- * 2. Interfacing with a native C lib - ARCore
+ * 1. Setting network permissions
+ * 2. Using networking libs Volley
  */
 
 package com.boliao.eod
