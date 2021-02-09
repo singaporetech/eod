@@ -1,9 +1,9 @@
 /**
- * # WEEK10.5: NETWORKING
- * Fetching and showing the weather from a RESTful API.
+ * # WEEK11: NDK
+ * Communicating data across kotlin and C/C++ code.
  *
- * 1. Setting network permissions
- * 2. Using networking libs Volley
+ * 1. Add NDK development capabilities to existing project
+ * 2. Interfacing with a native C lib - ARCore
  */
 
 package com.boliao.eod
@@ -13,10 +13,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.*
 
 /**
@@ -24,6 +24,38 @@ import kotlinx.coroutines.*
  */
 class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
+
+    // TODO NDK 0: install required dependencies (from Android Studio SDK Tools)
+    // - NDK: Android toolset to communicate with native code
+    // - CMake: native build tool
+    // - LLDB: native code debugger
+
+    // TODO NDK 1: create the native code and build configuration
+    // - create a src/cpp directory
+    // - create a new .cpp file
+    // - create a CMake build script called CMakeLists.txt (https://developer.android.com/studio/projects/configure-cmake.html)
+    // - check that the .cpp path (relative to script) is correct in the CMake script
+    // - make sure you add_library for your own libs and find_library for Android NDP native libs
+    // - then link the libs together using target_link_libraries
+    // - add CMake path in gradle (you can right click on folder and let IDE do it)
+    // - may need to restart project afer configuration
+
+    // TODO NDK 2: create a test method in native to receive a string and show it
+    // - declare a native function you want to write in C/C++
+    // - write the method in a cpp file
+    // - load native lib and declare native methods
+    // - paste a native function in the cpp file, and use IDE helper to fill in method name
+    // - receive string from native function and display it in a toast
+    // - try and debug within native using <android/log.h>
+
+    // TODO NDK 3: use ARCore C lib to place things via the cam
+    // - https://developers.google.com/ar/develop/c/quickstart
+    // - requires https://github.com/google-ar/arcore-android-sdk/releases/tag/v1.15.0
+    // - then install via
+    //   adb install -r Google_Play_Services_for_AR_1.15.0_x86_for_emulator.apk
+    // - clone the ARCore repo
+    // - git clone https://github.com/google-ar/arcore-android-sdk.git
+    // - run some samples
 
     private fun launchGame() {
         startActivity(startAndroidLauncher)
@@ -90,10 +122,19 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
             }
             finish()
         }
+
+        // TODO NDK 2: show the string from native
+        Toast.makeText(this, getNativeString(), Toast.LENGTH_LONG).show()
     }
+
+    external fun getNativeString(): String
 
     companion object {
         private const val TAG = "Splash"
+
+        init {
+            System.loadLibrary("core-lib")
+        }
 
         /**
          * [DEPRECATED] AsyncTask to "encrypt" username
