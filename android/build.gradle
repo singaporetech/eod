@@ -1,8 +1,9 @@
-apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android' // well to use Kotlin
+apply plugin: 'kotlin-kapt' // Kotlin Annotation Processing Tool
 
 android {
-//    buildToolsVersion '28.0.3'
-    compileSdkVersion 28
+//    buildToolsVersion '30.0.3'
+    compileSdkVersion 30
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -23,7 +24,7 @@ android {
     defaultConfig {
         applicationId "com.boliao.eod"
         minSdkVersion 26
-        targetSdkVersion 28
+        targetSdkVersion 30
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -31,6 +32,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    buildFeatures {
+        // to eliminate findViewByID
+        viewBinding true
     }
 }
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -115,14 +120,18 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
+    // TODO ARCH 1: add various artifacts for architecture component dependencies
     // architecture components
-    implementation "androidx.work:work-runtime:$workVer"
-    implementation "androidx.work:work-runtime-ktx:$workVer"
     implementation "androidx.lifecycle:lifecycle-extensions:$archVer"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archVer"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$archVer"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archVer"
     implementation "androidx.activity:activity-ktx:1.2.0-rc01"
+    implementation "androidx.room:room-runtime:$roomVer" // essential runtime
+    kapt "androidx.room:room-compiler" // to compile kotlin annotations
+    implementation "androidx.room:room-ktx:$roomVer" // extensions and coroutines
+    implementation "androidx.work:work-runtime:$workVer"
+    implementation "androidx.work:work-runtime-ktx:$workVer"
 
     // other libs
     implementation 'com.android.volley:volley:1.1.1'
@@ -142,6 +151,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVer"
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espressoVer"
     androidTestImplementation "androidx.work:work-testing:$workVer"
+    androidTestImplementation "androidx.room:room-testing:$roomVer"
 
     // Assertions
     androidTestImplementation "androidx.test.ext:truth:$testVer"

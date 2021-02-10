@@ -1,6 +1,6 @@
 /**
  * WHAT IS THIS?
- * Example android app using a mix of libraries with libgdx as the core.
+ * Example android app using a mix of libraries, e.g., libgdx for graphics.
  *
  * 0. browse through an overview of the code structure
  *
