@@ -1,4 +1,18 @@
 /**
+ * # WEEK09: THREADING
+ * A persistent weather widget.
+ *
+ * 1. See the use of raw java threads in the bug spawning code in GameStateService
+ * 2. Create an Asynctask to encrypt usernames in the background
+ * 3. Create a weather worker Handlerthread to fetch weather updates in the background
+ * 4. Replace Asynctask with coroutine approach
+ *
+ * # WEEK10: RECEIVERS
+ * A static receiver on boot for reminders and
+ * dynamically broadcasting steps to be received by another app
+ *
+ * 1. adding a static OnBootReceiver ON_BOOT via the manifest
+ * 2. create an intent to be dynamically broadcasted to the world (on your device)
  * # WEEK10.5: NETWORKING
  * Fetching and showing the weather from a RESTful API.
  *
