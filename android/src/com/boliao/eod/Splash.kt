@@ -1,4 +1,20 @@
 /**
+ * WHAT IS THIS?
+ * Example android app using a mix of libraries with libgdx as the core.
+ *
+ * 0. browse through an overview of the code structure
+ *
+ * # WEEK08: SERVICES
+ * Run through several use cases for different background processing requirements.
+ *
+ * 1. revise persistent storage by using prefs to determine if username exists.
+ * 2. create an IntentService to "encrypt" username in background
+ * 3. observe the started service: GameStateService
+ * 4. observe the binding code provided in GameStateService
+ * 5. configure notifications for the GameStateService when bugs spawn
+ * 6. convert the started service to a foreground service
+ * 7. create a scheduled service (once app boots) to remind user to charge the phone periodically
+ *
  * # WEEK09: THREADING
  * A persistent weather widget.
  *
