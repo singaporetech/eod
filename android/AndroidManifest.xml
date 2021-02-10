@@ -20,7 +20,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_foreground"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme">
 
@@ -46,6 +46,7 @@
 
         <activity android:name=".Splash">
             <intent-filter>
+                <!-- VIEW allows google to crawl your content -->
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,7 +58,7 @@
             android:name=".AndroidLauncher"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
         </activity>
 
     </application>
