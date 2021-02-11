@@ -59,6 +59,31 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     /**
+     * TODO ARCH 2:
+     * Simply provide a LiveData to track the login username.
+     */
+    fun login1(username:String) = viewModelScope.launch {
+        if (pref.contains(username))
+            _loginStatus.postValue(false)
+        else {
+            // encrypt username
+            val encryptedUsername = encrypt(username)
+
+            // store in pref
+            pref.edit().putString(username, encryptedUsername).apply()
+
+            // update UI
+            _loginStatus.postValue(true)
+        }
+    }
+
+
+    /**
+     * TODO ARCH 3:
+     * Use a Room to manage the login data. 
+     */
+
+    /**
      * Coroutine for encryption.
      * Input username string and output encrypted username string.
      * Use Dispatchers.Default to place this work to the background Default thread in case the

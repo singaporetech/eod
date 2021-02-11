@@ -1,8 +1,18 @@
 /**
+ * Splash View
+ * Author: Chek
+ *
  * WHAT IS THIS?
  * Example android app using a mix of libraries, e.g., libgdx for graphics.
- *
  * 0. browse through an overview of the code structure
+ * 
+ * # WEEK06: Putting (some of) it all together
+ * This week we will look at some common Android Architecture Components through a running
+ * example of a simple login feature that we will try to implement.
+ * 0. see the necessary artifacts in build.gradle
+ * 1. create a login view in Splash Activity and manage the login in the activity 
+ * 2. create a ViewModel component to manage the login with a LiveData component (i.e., use MVVM)
+ * 3. create a Room component to manage the login data more comprehensively
  *
  * # WEEK08: SERVICES
  * Run through several use cases for different background processing requirements.
@@ -39,14 +49,12 @@
 package com.boliao.eod
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.boliao.eod.databinding.ActivitySplashBinding
 import kotlinx.coroutines.*
 
 /**
@@ -54,26 +62,24 @@ import kotlinx.coroutines.*
  */
 class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
-
-    private fun launchGame() {
-        startActivity(startAndroidLauncher)
-    }
+    private lateinit var binding:ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // init launch game intent
         startAndroidLauncher = Intent(this@Splash, AndroidLauncher::class.java)
 
         // get refs to UI components
-        val playBtn = findViewById<Button>(R.id.play_btn)
-        val usernameEdtTxt = findViewById<EditText>(R.id.name_edtxt)
-        val msgTxtView = findViewById<TextView>(R.id.msg_txtview)
-        val weatherTxtView = findViewById<TextView>(R.id.weather_txtview)
+//        val playBtn = findViewById<Button>(R.id.play_btn)
+//        val usernameEdtTxt = findViewById<EditText>(R.id.name_edtxt)
+//        val msgTxtView = findViewById<TextView>(R.id.msg_txtview)
+//        val weatherTxtView = findViewById<TextView>(R.id.weather_txtview)
 
-        // show splash text
-        msgTxtView.setText(R.string.welcome_note)
+        // show splash text by default
+        binding.msgTxtview.setText(R.string.welcome_note)
 
         // TODO THREADING 2: create a persistent weather widget
         // An MVVM Splash ViewModel is already set up.
@@ -91,40 +97,79 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // - goto NETWORKING 2 in WeatherRepo
         NetworkRequestQueue.setContext(this)
 
+        // Old ways of getting the view model...
         // val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         // val splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-        val splashViewModel: SplashViewModel by viewModels()
-        splashViewModel.weatherData.observe(this, Observer {
-            weatherTxtView.text = it
-        })
 
-        splashViewModel.loginStatus.observe(this, Observer {
-            if (it) {
-                msgTxtView.text = "LOGIN DONE. Starting..."
-                launchGame()
-            } else {
-                msgTxtView.text = "Name OREDI exist liao..."
+        // TODO ARCH 1.2: Manage login data in view
+        // 1. get shared prefs using the filename and set mode to private for this app
+        // 2. set the play btn's onClickListener to handle login
+        //    only allow login for unique users
+        // 3. show status of login on screen
+        // 4. do a rotation and see what happens
+        pref = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE)
+        binding.playBtn.setOnClickListener {
+            val username = binding.nameEdtxt.text.toString()
+            if (pref.contains(username)) {
+                binding.msgTxtview.text = "Have user liao lah..."
             }
+            else {
+                pref.edit().putString(username, username).apply()
+                binding.msgTxtview.text = "logging in..."
+            }
+        }
+
+        // TODO ARCH 2.1: Manage login data with ViewModel and LiveData (i.e., use MVVM)
+        // 1. create a ViewModel (VM) component for this Splash View
+        // 2. move the login data mgt to the VM
+        // 3. reset the play btn's onClickListener to handle login through the VM
+        // 4. create a LiveData component to hold the login status in the VM
+        // 5. observe the login status in this View
+
+        // TODO ARCH 3: Manage membership data with a Room
+        // 1. create an entity class to represent a single user record
+        // 2. create a DAO to manage the database
+        // 3. create a repo class to store the database
+        // 4. create a Room class to store the database
+        // 5. init and manage the database through the VM
+        val splashViewModel: SplashViewModel by viewModels()
+//        splashViewModel.loginStatus.observe(this, Observer {
+//            if (it) {
+//                binding.msgTxtview.text = "LOGIN DONE. Starting..."
+//                launchGame()
+//            } else {
+//                binding.msgTxtview.text = "Name OREDI exist liao..."
+//            }
+//        })
+//
+//        // start game on click "PLAY"
+//        binding.playBtn.setOnClickListener {
+//            binding.msgTxtview.text = "Encrypting in coroutine heaven..."
+//            splashViewModel.login(binding.nameEdtxt.text.toString())
+//        }
+
+
+        // observe the weather data
+        splashViewModel.weatherData.observe(this, Observer {
+            binding.weatherTxtview.text = it
         })
 
-        // start game on click "PLAY"
-        playBtn.setOnClickListener {
-            msgTxtView.text = "Encrypting in coroutine heaven..."
-            splashViewModel.login(usernameEdtTxt.text.toString())
-        }
 
         // provide a way to stop the service
-        findViewById<Button>(R.id.exit_btn).setOnClickListener {
-            AndroidLauncher.startServiceIntent?.let {
-                stopService(it)
-            }
+        binding.exitBtn.setOnClickListener {
+            stopService(AndroidLauncher.startServiceIntent)
             finish()
         }
-
     }
 
     companion object {
         private const val TAG = "Splash"
+
+        // TODO ARCH 1.1: Manage login data in view
+        // 1. create unique FILENAME const to reference dataset
+        // 2. create a SharedPreferences var to manage data
+        const val PREF_FILENAME = "com.boliao.eod.prefs"
+        private lateinit var pref: SharedPreferences
 
         /**
          * [DEPRECATED] AsyncTask to "encrypt" username
