@@ -133,33 +133,30 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // 3. reset the play btn's onClickListener to handle login through the VM
         // 4. create a LiveData component to hold the login status in the VM
         // 5. observe the login status in this View
-        val splashViewModel: SplashViewModel by viewModels()
-        splashViewModel.loginStatus.observe(this, Observer {
-            if (it) {
-                binding.msgTxtview.text = "LOGIN DONE. Starting..."
-                launchGame()
-            } else {
-                binding.msgTxtview.text = "Name OREDI exist liao lah..."
-            }
-        })
-
         // start game on click "PLAY"
-        binding.playBtn.setOnClickListener {
-            binding.msgTxtview.text = "Encrypting in coroutine heaven..."
-            splashViewModel.login(binding.nameEdtxt.text.toString())
-        }
 
         // TODO ARCH 3: Manage membership data with a Room
         // 1. create an entity class to represent a single user record
-        // 2. create a DAO to manage the database
-        // 3. create a RoomDatabase
-        // 3. create a repo class to store the database
-        // 4. create a Room class to store the database
-        // 5. init and manage the database through the VM
-//        val splashViewModel: SplashViewModel by viewModels {
-//            SplashViewModelRepoFactory(playerRepo)
-//        }
-
+        // 2. create a DAO to handle queries
+        // 3. create a Room DB
+        // 4. create a Repo to manage the database
+        // 5. modify the VM to include the repo as input to the ctor
+        // 6. init Room DB and repo at app level
+        // 7. manage the database through the VM
+        val splashViewModel: SplashViewModelRepo by viewModels {
+            SplashViewModelRepoFactory(playerRepo)
+        }
+        binding.playBtn.setOnClickListener {
+            splashViewModel.login(binding.nameEdtxt.text.toString())
+        }
+        splashViewModel.loginStatus.observe(this, {
+            if (it) {
+                binding.msgTxtview.text = "logging in..."
+                launchGame()
+            }
+            else
+                binding.msgTxtview.text = "Name OREDI exists lah..."
+        })
 
         // observe the weather data
         splashViewModel.weatherData.observe(this, Observer {

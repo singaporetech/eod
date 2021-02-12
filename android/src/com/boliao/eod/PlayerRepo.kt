@@ -20,9 +20,17 @@ class PlayerRepo(private val playerDAO: PlayerDAO) {
      * - can explicitly specify for this to be done on a WorkerThread
      * - suspend fun to facilitate it being an async call on a background thread
      */
+    @SuppressWarnings("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insert(player: Player) {
         playerDAO.insert(player)
+    }
+
+    /**
+     * Wrapper for getting records by name.
+     */
+    suspend fun getPlayerByName(name:String): List<Player> {
+        return playerDAO.getByName(name)
     }
 
 }

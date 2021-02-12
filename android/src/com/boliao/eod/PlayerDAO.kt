@@ -30,4 +30,9 @@ interface PlayerDAO {
     // 1. use a Flow component to expose a LiveData stream from the DB
     @Query("SELECT * FROM player_table ORDER BY name ASC")
     fun getOrderedPlayerNamesFlow(): Flow<List<Player>>
+
+    // TODO ARCH 3
+    // 1. select a particular ID
+    @Query("SELECT * FROM player_table WHERE name = :name")
+    fun getByName(name:String): List<Player>
 }

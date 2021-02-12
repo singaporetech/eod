@@ -3,6 +3,7 @@ package com.boliao.eod
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import java.lang.IllegalArgumentException
@@ -49,12 +50,23 @@ class SplashViewModelRepo(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
 
     /**
      * TODO ARCH 3:
-     * Use a Room to manage the login data. 
+     * Use a Room to manage the login data.
+     *
+     * TODO proper pw and more fields
      */
     fun login(username:String) = viewModelScope.launch {
-        playerRepo.insert(
-                Player(username, "")
-        )
+        withContext(Dispatchers.IO){
+            val res = playerRepo.getPlayerByName(username)
+            Log.d(TAG, "in view model login res=${res.isEmpty()}")
+
+            if(res.isEmpty()) {
+                playerRepo.insert(Player(username, ""))
+                _loginStatus.postValue(true)
+            }
+            else {
+                _loginStatus.postValue(false)
+            }
+        }
     }
 
     /**
@@ -82,11 +94,18 @@ class SplashViewModelRepo(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
         // remember to play safe, no leaks
         viewModelScope.cancel()
     }
+
+    companion object {
+        private val TAG = SplashViewModelRepo::class.simpleName
+    }
 }
 
 /**
  * A factory to create the ViewModel properly.
- * This is due to the fact that we have ctor params.
+ * This is due to the fact that we have ctor params. We cannot create VMs by ourselves so we need
+ * to provide a Factory to the ViewModelProviders so that it knows how to create for us whenever we
+ * need an instance of it.
+ * Very boilerplatey code...
  */
 class SplashViewModelRepoFactory(private val playerRepo: PlayerRepo) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
