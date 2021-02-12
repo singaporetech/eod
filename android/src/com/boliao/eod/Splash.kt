@@ -64,6 +64,20 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
     private lateinit var binding:ActivitySplashBinding
 
+    // TODO ARCH 3:
+    // 1. lazy init the Room DB
+    // 2. lazy init the player repo with the DAO from the DB
+    // This should be done at the application level in AndroidLauncher
+    val playerDB by lazy { PlayerDB.getDatabase(this)}
+    val playerRepo by lazy { PlayerRepo(playerDB.playerDAO())}
+
+    /**
+     * Helper function to start the game.
+     */
+    fun launchGame() {
+        startActivity(startAndroidLauncher)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -71,12 +85,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
 
         // init launch game intent
         startAndroidLauncher = Intent(this@Splash, AndroidLauncher::class.java)
-
-        // get refs to UI components
-//        val playBtn = findViewById<Button>(R.id.play_btn)
-//        val usernameEdtTxt = findViewById<EditText>(R.id.name_edtxt)
-//        val msgTxtView = findViewById<TextView>(R.id.msg_txtview)
-//        val weatherTxtView = findViewById<TextView>(R.id.weather_txtview)
 
         // show splash text by default
         binding.msgTxtview.setText(R.string.welcome_note)
@@ -107,17 +115,17 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         //    only allow login for unique users
         // 3. show status of login on screen
         // 4. do a rotation and see what happens
-        pref = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE)
-        binding.playBtn.setOnClickListener {
-            val username = binding.nameEdtxt.text.toString()
-            if (pref.contains(username)) {
-                binding.msgTxtview.text = "Have user liao lah..."
-            }
-            else {
-                pref.edit().putString(username, username).apply()
-                binding.msgTxtview.text = "logging in..."
-            }
-        }
+//        pref = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE)
+//        binding.playBtn.setOnClickListener {
+//            val username = binding.nameEdtxt.text.toString()
+//            if (pref.contains(username)) {
+//                binding.msgTxtview.text = "Have user liao lah..."
+//            }
+//            else {
+//                pref.edit().putString(username, username).apply()
+//                binding.msgTxtview.text = "logging in..."
+//            }
+//        }
 
         // TODO ARCH 2.1: Manage login data with ViewModel and LiveData (i.e., use MVVM)
         // 1. create a ViewModel (VM) component for this Splash View
@@ -125,27 +133,31 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // 3. reset the play btn's onClickListener to handle login through the VM
         // 4. create a LiveData component to hold the login status in the VM
         // 5. observe the login status in this View
+        val splashViewModel: SplashViewModel by viewModels()
+        splashViewModel.loginStatus.observe(this, Observer {
+            if (it) {
+                binding.msgTxtview.text = "LOGIN DONE. Starting..."
+                launchGame()
+            } else {
+                binding.msgTxtview.text = "Name OREDI exist liao lah..."
+            }
+        })
+
+        // start game on click "PLAY"
+        binding.playBtn.setOnClickListener {
+            binding.msgTxtview.text = "Encrypting in coroutine heaven..."
+            splashViewModel.login(binding.nameEdtxt.text.toString())
+        }
 
         // TODO ARCH 3: Manage membership data with a Room
         // 1. create an entity class to represent a single user record
         // 2. create a DAO to manage the database
+        // 3. create a RoomDatabase
         // 3. create a repo class to store the database
         // 4. create a Room class to store the database
         // 5. init and manage the database through the VM
-        val splashViewModel: SplashViewModel by viewModels()
-//        splashViewModel.loginStatus.observe(this, Observer {
-//            if (it) {
-//                binding.msgTxtview.text = "LOGIN DONE. Starting..."
-//                launchGame()
-//            } else {
-//                binding.msgTxtview.text = "Name OREDI exist liao..."
-//            }
-//        })
-//
-//        // start game on click "PLAY"
-//        binding.playBtn.setOnClickListener {
-//            binding.msgTxtview.text = "Encrypting in coroutine heaven..."
-//            splashViewModel.login(binding.nameEdtxt.text.toString())
+//        val splashViewModel: SplashViewModel by viewModels {
+//            SplashViewModelRepoFactory(playerRepo)
 //        }
 
 
@@ -153,7 +165,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         splashViewModel.weatherData.observe(this, Observer {
             binding.weatherTxtview.text = it
         })
-
 
         // provide a way to stop the service
         binding.exitBtn.setOnClickListener {

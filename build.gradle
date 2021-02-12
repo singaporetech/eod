@@ -10,7 +10,7 @@ buildscript {
         workVer = '2.5.0'
         espressoVer = '3.3.0'
         supportVer = '28.0.0'
-        archVer = '2.2.0'
+        archVer = '2.3.0'
         roomVer = '2.2.6'
         junitVer = '1.1.2'
 

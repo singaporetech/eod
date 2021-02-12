@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 
 class AndroidLauncher : AndroidApplication() {
+
     companion object {
         private val TAG = AndroidLauncher::class.simpleName
         lateinit var startServiceIntent: Intent
