@@ -78,9 +78,9 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
      * - init NotificationManager and NotificationChannel
      */
     override fun onCreate() {
-        super.onCreate()
-
         Log.i(TAG, "onCreate()")
+
+        super.onCreate()
 
         // TODO SENSORS 1: get handle to sensor device and list all sensors
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
