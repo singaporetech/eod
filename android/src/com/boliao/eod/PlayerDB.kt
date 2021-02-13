@@ -37,7 +37,9 @@ public abstract class PlayerDB: RoomDatabase() {
                         context.applicationContext,
                         PlayerDB::class.java,
                         "player_db"
-                ).build()
+                )
+                        .fallbackToDestructiveMigration()
+                        .build()
 
                 // store static ref to instance
                 INSTANCE = instance
