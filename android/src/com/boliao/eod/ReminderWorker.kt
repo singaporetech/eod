@@ -9,6 +9,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 //import androidx.core.app.NotificationCompat;
 
+/**
+ * A reminder worker to do the work need to generate and send reminders for charging.
+ */
 class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
     companion object {
         private const val TAG = "ReminderWorker"

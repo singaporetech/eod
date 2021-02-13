@@ -16,6 +16,7 @@ import kotlinx.coroutines.*
 
 /**
  * TODO SERVICES 5: a background service to manage game state
+ * The main underlying service that controls the state of the game.
  * - collect sensor data and send these updates to GameState in game core component
  * - determine time to spawn bugs
  * - both a Started (collect sensor data) and Bound Service (update UI continuously)

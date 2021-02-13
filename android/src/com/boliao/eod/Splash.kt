@@ -1,6 +1,4 @@
 /**
- * Splash View
- *
  * WHAT IS THIS?
  * Example android app using a mix of libraries, e.g., libgdx for graphics.
  * 1. browse through an overview of the code structure
@@ -57,7 +55,9 @@ import com.boliao.eod.databinding.ActivitySplashBinding
 import kotlinx.coroutines.*
 
 /**
- * This is the splash view that records who is playing.
+ * Splash View to show the entry screen of the app.
+ * - shows some status info
+ * - handles user login to enter the game
  */
 class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
@@ -72,11 +72,16 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
 
     /**
      * Helper function to start the game.
+     * Android launcher will start the game state service.
      */
     fun launchGame() {
         startActivity(startAndroidLauncher)
     }
 
+    /**
+     * Setup all the UI elements and their connections with the VM.
+     * @param savedInstanceState the usual bundle of joy
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -142,8 +147,8 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // 5. modify the VM to include the repo as input to the ctor
         // 6. init Room DB and repo at app level
         // 7. manage the database through the VM
-        val splashViewModel: SplashViewModelRepo by viewModels {
-            SplashViewModelRepoFactory(playerRepo)
+        val splashViewModel: SplashViewModel by viewModels {
+            SplashViewModelFactory(playerRepo)
         }
         binding.playBtn.setOnClickListener {
             splashViewModel.login(binding.nameEdtxt.text.toString())

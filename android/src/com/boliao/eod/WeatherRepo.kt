@@ -1,3 +1,7 @@
+/**
+ * Where most of the hard work gets done... at the lower levels...
+ * - note the kotlin super singleton syntax "object"
+ */
 package com.boliao.eod
 
 import android.util.Log
@@ -10,10 +14,6 @@ import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Where most of the hard work gets done... at the lower levels...
- * - note the kotlin super singleton syntax "object"
- */
 object WeatherRepo {
     private val TAG = WeatherRepo::class.simpleName
 

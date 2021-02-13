@@ -1,9 +1,3 @@
-/**
- * Launcher extended from AndroidApplication provided by libgdx.
- * - the core (game-ish) module is in libgdx
- * - we can also add other platforms (e.g., iOS) in the platform module
- *
- */
 package com.boliao.eod
 
 import android.content.Intent
@@ -12,12 +6,13 @@ import android.util.Log
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 
+/**
+ * The game activity launcher extended from AndroidApplication provided by libgdx.
+ * - the core (game) module is in libgdx
+ * - we can also add other platforms (e.g., iOS) in the platform module
+ * - this is triggered by Splash
+ */
 class AndroidLauncher : AndroidApplication() {
-
-    companion object {
-        private val TAG = AndroidLauncher::class.simpleName
-        lateinit var startServiceIntent: Intent
-    }
 
     /**
      * Boot up the game state service and init the core Game module singleton.
@@ -80,5 +75,10 @@ class AndroidLauncher : AndroidApplication() {
 
         // set app to active
         GameState.i().isAppActive = true
+    }
+
+    companion object {
+        private val TAG = AndroidLauncher::class.simpleName
+        lateinit var startServiceIntent: Intent
     }
 }
