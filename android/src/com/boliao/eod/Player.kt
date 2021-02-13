@@ -1,6 +1,5 @@
 package com.boliao.eod
 
-import androidx.annotation.Nullable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -16,10 +15,11 @@ data class Player(
         @PrimaryKey @ColumnInfo(name = "name")
         val name: String,
 
-        // you can specify the name using @ColumnInfo, otherwise default is fine
-        // @ColumnInfo(name = "pw")
-//        val pw: String
-
         @ColumnInfo(name = "age")
         val age: Int?
+
+        // you can specify the name using @ColumnInfo, otherwise default is fine
+        // @ColumnInfo(name = "pw")
+        // val pw: String
+
         )

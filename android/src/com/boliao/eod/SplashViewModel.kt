@@ -26,6 +26,13 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
 //    : AndroidViewModel(application) { // to have context for shared prefs
 
     // live login status
+    // NOTE that LiveData is a type of lifecycle-aware component
+    // - manage functions that react to LifecycleOwners - e.g., Activity/Fragments/Services
+    // - rather than the gazillion-responsibility dictatorship Activity class handling components
+    //   using the onStart(), onResume() etc, now the responsibility falls on the individuals,
+    //   like empowering students to do student-directed learning
+    // - we can manually add lifecycle-aware components with
+    //   someLifecycleOwner.getLifeCycle().addObserver(SomeLifecycleObserver())
     private val _loginStatus = MutableLiveData<Boolean>()
     val loginStatus: LiveData<Boolean> = _loginStatus
 
