@@ -11,8 +11,15 @@ import java.lang.IllegalArgumentException
 /**
  * TODO ARCH 2.2: Manage login data with ViewModel and LiveData (i.e., use MVVM)
  * 1. create this ViewModel class that extends AndroidViewModel so as to be able to retrieve context
- * 2. modify this ViewModel class to take the player repo as input into the ctor
- *    and change the extension to ViewModel() instead of AndroidViewMode(Application)
+ *
+ * TODO ARCH 3.6: Manage membership data with a Room
+ * 1. modify this ViewModel class to take the player repo as input into the ctor
+ * 2. change the extension to ViewModel() instead of AndroidViewMode(Application)
+ * 3. create a factory that extends from ViewModelProvider.Factory
+ *    NOTE This is due to the fact that we have ctor params.
+ *    ViewModelProviders manage the lifecycle of VMs and we cannot create VMs by ourselves.
+ *    So we need to provide a Factory to ViewModelProviders so that it knows how to create for us
+ *    whenever we need an instance of it.
  */
 class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
     : ViewModel() {
@@ -36,23 +43,6 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
     // TODO ARCH 3:
     // live member records from the Room DB
     val allPlayers: LiveData<List<Player>> = playerRepo.allPlayers.asLiveData()
-
-    // live weather data (read-only)
-    // - this is bound to the mutable one in repo
-    var weatherData: LiveData<String>
-
-    init {
-        // TODO THREADING 4: replace the stub by the new threaded weather data method
-        // - only I control the repo, my boss (Activity) does not need to know about repo
-        // WeatherRepo.fetchStaticMockWeatherData()
-        // WeatherRepo.fetchDynamicMockWeatherData()
-
-        // TODO NETWORKING 3: call WeatherRepo to fetch online weather instead
-        WeatherRepo.fetchOnlineWeatherData()
-
-        // link up live data to repo (observer pattern)
-        weatherData = WeatherRepo.weatherData
-    }
 
     /**
      * TODO THREADING
@@ -96,15 +86,14 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
      * TODO ARCH 3:
      * Use a Room to manage the login data.
      *
-     * TODO proper pw and more fields
      */
-    fun login(username:String) = viewModelScope.launch {
+    fun login(username:String, age:Int?) = viewModelScope.launch {
         withContext(Dispatchers.IO){
             val res = playerRepo.getPlayerByName(username)
             Log.d(TAG, "in view model login res=${res.isEmpty()}")
 
             if(res.isEmpty()) {
-                playerRepo.insert(Player(username, ""))
+                playerRepo.insert(Player(username, age))
                 _loginStatus.postValue(true)
             }
             else {
@@ -146,9 +135,6 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
 
 /**
  * A factory to create the ViewModel properly.
- * This is due to the fact that we have ctor params. We cannot create VMs by ourselves so we need
- * to provide a Factory to the ViewModelProviders so that it knows how to create for us whenever we
- * need an instance of it.
  * Very boilerplatey code...
  */
 class SplashViewModelFactory(private val playerRepo: PlayerRepo) : ViewModelProvider.Factory {

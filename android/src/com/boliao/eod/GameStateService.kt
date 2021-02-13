@@ -80,6 +80,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     override fun onCreate() {
         super.onCreate()
 
+        Log.i(TAG, "onCreate()")
+
         // TODO SENSORS 1: get handle to sensor device and list all sensors
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
@@ -130,6 +132,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME)
 
+        Log.i(TAG, "onStartCommand starting gameloop")
+
         // TODO THREADING 0: control the spawn timer in a coroutine
         // O.M.G. a raw java thread
         // [DEPRECATED] bgThread = Thread( Runnable{
@@ -154,6 +158,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
 
             // decrement countdown every sec
             GameState.i().decTimer()
+
+            Log.i(TAG, "in gameloop() TIMER is now ${GameState.i().timer}")
 
             // notify user when bug is spawning
             if (GameState.i().isCanNotify && !GameState.i().isAppActive) {

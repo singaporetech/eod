@@ -12,36 +12,10 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <!-- TODO RECEIVERS 0: add RECEIVE_BOOT_PERMISSIONS -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
-    <!-- TODO NETWORK 0: add INTERNET permissions -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-
     <application
         android:icon="@drawable/ic_launcher_foreground"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme">
-
-        <!-- TODO RECEIVERS 0: declare static OnBootReceiver w BOOT_COMPLETED intent-filter -->
-        <!-- TODO note that this app still needs to be manually launched once to register receiver in system -->
-        <receiver
-            android:name=".OnBootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- TODO SERVICES: declare the GameStateService and IntentService -->
-        <!-- Q: What are the big 4 tags? -->
-        <!-- exported="false" limits access to within app -->
-        <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
-        <service
-            android:name=".GameStateService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity
             android:name=".Splash"

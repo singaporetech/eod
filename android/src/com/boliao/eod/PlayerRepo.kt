@@ -4,6 +4,7 @@ import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 
 /**
+ * TODO ARCH 3.5: Manage membership data with a Room
  * The repo layer that manages potentially multiple sources of data.
  * - recommended best practice for SWA
  * - most common use case is to handle an online + offline (cached) DB
