@@ -149,6 +149,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
             GameState.i().incSteps(1)
             sendBroadcast(GameState.i().steps)
 
+            Log.i(TAG, "in gameloop ${GameState.i().timer}")
+
             // thread updates every sec
             delay(1000)
 
