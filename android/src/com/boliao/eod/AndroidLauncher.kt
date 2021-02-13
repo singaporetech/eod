@@ -1,3 +1,9 @@
+/**
+ * Launcher extended from AndroidApplication provided by libgdx.
+ * - the core (game-ish) module is in libgdx
+ * - we can also add other platforms (e.g., iOS) in the platform module
+ *
+ */
 package com.boliao.eod
 
 import android.content.Intent
@@ -13,6 +19,10 @@ class AndroidLauncher : AndroidApplication() {
         lateinit var startServiceIntent: Intent
     }
 
+    /**
+     * Boot up the game state service and init the core Game module singleton.
+     * @param savedInstanceState the usual bundle of joy
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,6 +62,9 @@ class AndroidLauncher : AndroidApplication() {
         //Game.i().dispose();
     }
 
+    /**
+     * Pause the game through the game state.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -59,6 +72,9 @@ class AndroidLauncher : AndroidApplication() {
         GameState.i().isAppActive = false
     }
 
+    /**
+     * Resume the game through the game state.
+     */
     override fun onResume() {
         super.onResume()
 

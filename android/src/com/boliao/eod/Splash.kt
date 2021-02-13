@@ -1,10 +1,9 @@
 /**
  * Splash View
- * Author: Chek
  *
  * WHAT IS THIS?
  * Example android app using a mix of libraries, e.g., libgdx for graphics.
- * 0. browse through an overview of the code structure
+ * 1. browse through an overview of the code structure
  * 
  * # WEEK06: Putting (some of) it all together
  * This week we will look at some common Android Architecture Components through a running
