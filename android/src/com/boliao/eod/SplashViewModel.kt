@@ -21,9 +21,9 @@ import java.lang.IllegalArgumentException
  *    So we need to provide a Factory to ViewModelProviders so that it knows how to create for us
  *    whenever we need an instance of it.
  */
-class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
-    : ViewModel() {
-//    : AndroidViewModel(application) { // to have context for shared prefs
+class SplashViewModel(application: Application) // TODO ARCH 3.2:
+//    : ViewModel() {
+    : AndroidViewModel(application) { // to have context for shared prefs
 
     // live login status
     // NOTE that LiveData is a type of lifecycle-aware component
@@ -39,52 +39,19 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
     // TODO ARCH 2.3: Manage login data with ViewModel and LiveData (i.e., use MVVM)
     // 1. move the shared prefs setup here
     // 2. create a Mutable and non-mutable LiveData pair to store the login status
-//    //    the read-only one for Views to observe
-//    private val PREF_FILENAME = "com.boliao.eod.prefs"
-//    private val pref: SharedPreferences = getApplication<Application>().applicationContext
-//            .getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE)
-//    // live login status
-//    private val _loginStatus = MutableLiveData<Boolean>()
-//    val loginStatus: LiveData<Boolean> = _loginStatus
 
     // TODO ARCH 3.6: Manage membership data with a Room
     // live member records from the Room DB
-    val allPlayers: LiveData<List<Player>> = playerRepo.allPlayers.asLiveData()
 
     /**
      * TODO ARCH 2.4: Manage login data with ViewModel and LiveData (i.e., use MVVM)
      * Simply provide a LiveData to track the login username.
      */
-//    fun login(username:String) {
-//        if (pref.contains(username))
-//            _loginStatus.postValue(false)
-//        else {
-//            // store in pref
-//            pref.edit().putString(username, username).apply()
-//
-//            // update UI
-//            _loginStatus.postValue(true)
-//        }
-//    }
 
     /**
      * TODO ARCH 3.6: Manage membership data with a Room
      * Use a Room to manage the login data.
      */
-    fun login(username:String, age:Int?) = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            val res = playerRepo.getPlayerByName(username)
-            Log.d(TAG, "in view model login res=${res.isEmpty()}")
-
-            if(res.isEmpty()) {
-                playerRepo.insert(Player(username, age))
-                _loginStatus.postValue(true)
-            }
-            else {
-                _loginStatus.postValue(false)
-            }
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()
@@ -103,11 +70,3 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
  * A factory to create the ViewModel properly.
  * Very boilerplatey code...
  */
-class SplashViewModelFactory(private val playerRepo: PlayerRepo) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SplashViewModel::class.java)) {
-            return SplashViewModel(playerRepo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
