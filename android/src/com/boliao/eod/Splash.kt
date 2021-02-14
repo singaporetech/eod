@@ -89,8 +89,8 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // 2. create a DAO to handle queries
         // 3. create a Room DB
         // 4. create a Repo to manage the database
-        // 5. modify the VM to include the repo as input to the ctor
-        // 6. init Room DB and repo at app level
+        // 5. create an App class (and add to manifest) and init Room DB and repo at
+        // 6. modify the VM to include the repo as input to the ctor
         // 7. manage the database through the VM
 
         // provide a way to stop the service
