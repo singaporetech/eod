@@ -63,12 +63,15 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
     private lateinit var binding:ActivitySplashBinding
 
-    // TODO ARCH 3:
+    // TODO ARCH 3: Manage membership data with a Room
     // 1. lazy init the Room DB
     // 2. lazy init the player repo with the DAO from the DB
     // This should be done at the application level in
-    val playerDB by lazy { PlayerDB.getDatabase(this)}
-    val playerRepo by lazy { PlayerRepo(playerDB.playerDAO())}
+    private val splashViewModel: SplashViewModel by viewModels {
+        SplashViewModelFactory(
+                (application as EODApp).repo
+        )
+    }
 
     /**
      * Helper function to start the game.
@@ -144,12 +147,9 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // 2. create a DAO to handle queries
         // 3. create a Room DB
         // 4. create a Repo to manage the database
-        // 5. modify the VM to include the repo as input to the ctor
-        // 6. init Room DB and repo at app level
+        // 5. create an Application class to initialize repo and DAO (update the manifest app name)
+        // 6. modify the VM to include the repo as input to the ctor
         // 7. manage the database through the VM
-        val splashViewModel: SplashViewModel by viewModels {
-            SplashViewModelFactory(playerRepo)
-        }
         binding.playBtn.setOnClickListener {
             splashViewModel.login(binding.nameEdtxt.text.toString())
         }
