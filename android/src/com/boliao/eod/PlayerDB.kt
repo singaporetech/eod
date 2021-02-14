@@ -19,7 +19,7 @@ import androidx.room.RoomDatabase
  *   or even when you're testing and changing schema
  *   here we just default to fallbackToDestructiveMigration()
  */
-@Database(entities = arrayOf(Player::class), version = 6, exportSchema = false)
+@Database(entities = [Player::class], version = 6, exportSchema = false)
 abstract class PlayerDB: RoomDatabase() {
 
     // expose an abstract getter function for the DAO

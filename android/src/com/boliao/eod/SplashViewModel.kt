@@ -71,18 +71,16 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
      * TODO ARCH 3.6: Manage membership data with a Room
      * Use a Room to manage the login data.
      */
-    fun login(username:String, age:Int?) = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            val res = playerRepo.getPlayerByName(username)
-            Log.d(TAG, "in view model login res=${res.isEmpty()}")
+    fun login(username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+        val res = playerRepo.getPlayerByName(username)
+        Log.d(TAG, "in view model login res=${res.isEmpty()}")
 
-            if(res.isEmpty()) {
-                playerRepo.insert(Player(username, age))
-                _loginStatus.postValue(true)
-            }
-            else {
-                _loginStatus.postValue(false)
-            }
+        if(res.isEmpty()) {
+            playerRepo.insert(Player(username, age))
+            _loginStatus.postValue(true)
+        }
+        else {
+            _loginStatus.postValue(false)
         }
     }
 
