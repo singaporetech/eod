@@ -23,7 +23,7 @@ class AndroidLauncher : AndroidApplication() {
 
         Log.d(TAG, "onCreate!")
 
-        // TODO SERVICES 4: manage game state changes
+        // NOTE on SERVICES component: manage game state changes
         // - track and update steps
         // - track countdown timer to spawn bugs
         // - everything should be done in the background (even when app not visible)

@@ -28,8 +28,7 @@ import kotlinx.coroutines.*
 
 /**
  * Splash View to show the entry screen of the app.
- * - NOTE that some it may be more precise to refer to this as the Controller and the XML as the view
- * - MVCVM? :/
+ * - NOTE that some may prefer to refer to this as the Controller and the XML as the view (MVCVM)
  * - shows some status info
  * - handles user login to enter the game
  */
