@@ -68,9 +68,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     // 2. lazy init the player repo with the DAO from the DB
     // This should be done at the application level in
     private val splashViewModel: SplashViewModel by viewModels {
-        SplashViewModelFactory(
-                (application as EODApp).repo
-        )
+        SplashViewModelFactory((application as EODApp).repo)
     }
 
     /**
