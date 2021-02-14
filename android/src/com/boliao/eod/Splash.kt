@@ -66,7 +66,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     // TODO ARCH 3:
     // 1. lazy init the Room DB
     // 2. lazy init the player repo with the DAO from the DB
-    // This should be done at the application level in AndroidLauncher
+    // This should be done at the application level in
     val playerDB by lazy { PlayerDB.getDatabase(this)}
     val playerRepo by lazy { PlayerRepo(playerDB.playerDAO())}
 
@@ -156,6 +156,8 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         splashViewModel.loginStatus.observe(this, {
             if (it) {
                 binding.msgTxtview.text = "logging in..."
+
+                // NOTE that launchGame is launching a View so should be here
                 launchGame()
             }
             else

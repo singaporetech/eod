@@ -11,6 +11,7 @@ import java.lang.IllegalArgumentException
 /**
  * TODO ARCH 2.2: Manage login data with ViewModel and LiveData (i.e., use MVVM)
  * 1. create this ViewModel class that extends AndroidViewModel so as to be able to retrieve context
+ *    NOTE that AndroidViewModel is rather antipattern and having the sharedpref as input is better
  * 2. modify this ViewModel class to take the player repo as input into the ctor
  *    and change the extension to ViewModel() instead of AndroidViewMode(Application)
  */
@@ -74,7 +75,6 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
 //            _loginStatus.postValue(true)
 //        }
 //    }
-
 
     /**
      * TODO ARCH 2.4: Manage login data with ViewModel and LiveData (i.e., use MVVM)

@@ -28,6 +28,9 @@ interface PlayerDAO {
 
     // TODO THREADING:
     // 1. use a Flow component to expose a LiveData stream from the DB
+    // NOTE that Flow is a way to handle live continuous data
+    // - Flow is like thread-safe LiveData
+    // - emit and collect is like postValue and observe
     @Query("SELECT * FROM player_table ORDER BY name ASC")
     fun getOrderedPlayerNamesFlow(): Flow<List<Player>>
 
