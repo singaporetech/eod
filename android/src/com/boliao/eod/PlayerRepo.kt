@@ -30,8 +30,8 @@ class PlayerRepo(private val playerDAO: PlayerDAO) {
     /**
      * Wrapper for getting records by name.
      */
-    suspend fun getPlayerByName(name:String): List<Player> {
-        return playerDAO.getByName(name)
+    suspend fun contains(name:String): Boolean {
+        return playerDAO.getByName(name).isNotEmpty()
     }
 
 }

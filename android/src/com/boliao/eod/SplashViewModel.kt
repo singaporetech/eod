@@ -72,15 +72,14 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
      * Use a Room to manage the login data.
      */
     fun login(username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
-        val res = playerRepo.getPlayerByName(username)
-        Log.d(TAG, "in view model login res=${res.isEmpty()}")
+        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
 
-        if(res.isEmpty()) {
-            playerRepo.insert(Player(username, age))
-            _loginStatus.postValue(true)
+        if(playerRepo.contains(username)) {
+            _loginStatus.postValue(false)
         }
         else {
-            _loginStatus.postValue(false)
+            playerRepo.insert(Player(username, age))
+            _loginStatus.postValue(true)
         }
     }
 

@@ -12,10 +12,9 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "player_table")
 data class Player(
-        @PrimaryKey @ColumnInfo(name = "name")
+        @PrimaryKey
         val name: String,
 
-        @ColumnInfo(name = "age")
         val age: Int?
 
         // you can specify the name using @ColumnInfo, otherwise default is fine
