@@ -16,7 +16,7 @@ import androidx.room.RoomDatabase
  *   schema into VCS
  * - need to define a migration strategy when the version is bumped in a real app
  */
-@Database(entities = arrayOf(Player::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(Player::class), version = 3, exportSchema = false)
 public abstract class PlayerDB: RoomDatabase() {
 
     // expose an abstract getter function for the DAO

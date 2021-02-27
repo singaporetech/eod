@@ -13,8 +13,7 @@
  *
  * # WEEK08: SERVICES
  * Run through several use cases for different background processing requirements.
- *
- * 1. revise persistent storage by using prefs to determine if username exists.
+ * 1. revise persistent storage options to determine if username exists.
  * 2. create an IntentService to "encrypt" username in background
  * 3. observe the started service: GameStateService
  * 4. observe the binding code provided in GameStateService
@@ -36,6 +35,7 @@
  *
  * 1. adding a static OnBootReceiver ON_BOOT via the manifest
  * 2. create an intent to be dynamically broadcasted to the world (on your device)
+ *
  * # WEEK10.5: NETWORKING
  * Fetching and showing the weather from a RESTful API.
  *
@@ -157,10 +157,31 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
 
                 // NOTE that launchGame is launching a View so should be here
                 launchGame()
-            }
-            else
+            } else
                 binding.msgTxtview.text = "Name OREDI exists lah..."
         })
+
+
+        // TODO SERVICES 2.1: introduce some pseudo-encryption for the username
+        // 1. first, try a brute force naive method in the VM to perform a 3 sec pseudo-encrypt algo
+        // 2. store the encrypted username in our Room DB
+        // 3. observe the UI lag/ANR
+
+        // TODO SERVICES 2.2: now do it a bit better using an IntentService
+        // 1. create an IntentService for the encryption task
+        // 2. now observe what happens to the UI
+        // QNS: so when do we use services?
+        // note that the WorkManager can also accomplish this
+
+        // TODO SERVICES 2: what if this needs some intensive processing
+        // - e.g., pseudo-encrypt the username using some funky algo
+        // - store the encrypted username in shared prefs
+        // - UI should not lag or ANR
+
+        // SOLN: defer processing to an IntentService: do some heavy lifting w/o
+        // UI then shutdown the service
+        // - note that the WorkManager can also accomplish this
+        // NameCryptionService.startActionFoo(this@Splash, username)
 
         // observe the weather data
         splashViewModel.weatherData.observe(this, Observer {

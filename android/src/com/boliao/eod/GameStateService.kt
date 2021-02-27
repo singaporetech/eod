@@ -15,7 +15,7 @@ import android.util.Log
 import kotlinx.coroutines.*
 
 /**
- * TODO SERVICES 5: a background service to manage game state
+ * TODO SERVICES 3.0: a background service to manage game state
  * The main underlying service that controls the state of the game.
  * - collect sensor data and send these updates to GameState in game core component
  * - determine time to spawn bugs
@@ -27,20 +27,22 @@ import kotlinx.coroutines.*
 class GameStateService: Service(), SensorEventListener, CoroutineScope by MainScope() {
     companion object {
         private val TAG = GameStateService::class.simpleName
+
+        // TODO SERVICES 5.1: create vars to manage notifications
         private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
         private const val NOTIFY_ID = 888
         private const val PENDINGINTENT_ID = 1
+
+        // broadcast uris
         const val BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT"
         const val STEP_KEY = "com.boliao.eod.STEP_KEY"
     }
 
+    // - add var for NotificationManager
+    private lateinit var notificationManager: NotificationManager
+
     // a raw thread for bg work
     private lateinit var bgThread: Thread
-
-    // TODO NOTIFICATIONS
-    // - add var for NotificationManager
-    // - add ID vars for notifications
-    private lateinit var notificationManager: NotificationManager
 
     // TODO SENSORS 0: create vars to interface with hardware sensors
     private lateinit var sensorManager: SensorManager
@@ -71,7 +73,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     }
 
     /**
-     * TODO SERVICES 8: override onCreate Service lifecycle to initialize various things
+     * TODO SERVICES 3.1: observ onCreate Service lifecycle to initialize various things
      * - get handle to SensorManager from a System Service
      * - get list of available sensors from the sensorManager
      * - get handle to step detector from sensorManager
@@ -97,7 +99,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         if (stepDetector == null) Log.e(TAG, "No step sensors on device!")
 
-        // TODO SERVICES 9: obtain and init notification manager with a channel
+        // TODO SERVICES 5.2: obtain and init notification manager with a channel
         // - notification channels introduced in Android Oreo
         // - need to initialize a channel before creating actual notifications
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -112,7 +114,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     }
 
     /**
-     * TODO SERVICES 10: implement onStartCommand to define what the service will actually do
+     * TODO SERVICES 3.3: observe onStartCommand which defines what the service will actually do
      * - register this class as a SensorListener (extend this Service) using sensorManager
      * - add a thread to manage spawning of bugs based on a countdown
      * - spawn bug when GameState.i().isCanNotify() && !GameState.i().isAppActive()
@@ -137,8 +139,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
             gameloop()
         }
 
-        // TODO SERVICE 13: return appropriate flag to indicate what happens when killed
-        // Q: what are the other flags?
+        // return appropriate flag to indicate what happens when killed
+        // QNS: what are the other flags?
         return START_STICKY
     }
 
@@ -161,7 +163,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
             if (GameState.i().isCanNotify && !GameState.i().isAppActive) {
                 Log.i(TAG, "The NIGHT has come: a bug will spawn...")
 
-                // TODO SERVICES 11: create pending intent to open app from notification
+                // TODO SERVICES 5.3: create pending intent to open app from notification
                 val intent2 = Intent(this@GameStateService, AndroidLauncher::class.java)
                 val pi = PendingIntent.getActivity(
                         this@GameStateService,
@@ -183,7 +185,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
                 // activate the notification
                 notificationManager.notify(NOTIFY_ID, noti)
 
-                // TODO SERVICES 12: upgrade this service to foreground
+                // TODO SERVICES 6: upgrade this service to foreground
                 // - need to startForegroundService from caller context
                 // - activate the ongoing notification using startForeground (needs to be called within 5s of above
                 // - move the notification to become a one time and change the premise
