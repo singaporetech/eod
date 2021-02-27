@@ -11,15 +11,28 @@ import java.lang.IllegalArgumentException
 /**
  * TODO ARCH 2.2: Manage login data with ViewModel and LiveData (i.e., use MVVM)
  * 1. create this ViewModel class that extends AndroidViewModel so as to be able to retrieve context
- *    NOTE that AndroidViewModel is rather antipattern and having the sharedpref as input is better
- * 2. modify this ViewModel class to take the player repo as input into the ctor
- *    and change the extension to ViewModel() instead of AndroidViewMode(Application)
+ *
+ * TODO ARCH 3.6: Manage membership data with a Room
+ * 1. modify this ViewModel class to take the player repo as input into the ctor
+ * 2. change the extension to ViewModel() instead of AndroidViewMode(Application)
+ * 3. create a factory that extends from ViewModelProvider.Factory
+ *    NOTE This is due to the fact that we have ctor params.
+ *    ViewModelProviders manage the lifecycle of VMs and we cannot create VMs by ourselves.
+ *    So we need to provide a Factory to ViewModelProviders so that it knows how to create for us
+ *    whenever we need an instance of it.
  */
 class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
     : ViewModel() {
 //    : AndroidViewModel(application) { // to have context for shared prefs
 
     // live login status
+    // NOTE that LiveData is a type of lifecycle-aware component
+    // - manage functions that react to LifecycleOwners - e.g., Activity/Fragments/Services
+    // - rather than the gazillion-responsibility dictatorship Activity class handling components
+    //   using the onStart(), onResume() etc, now the responsibility falls on the individuals,
+    //   like empowering students to do student-directed learning
+    // - we can manually add lifecycle-aware components with
+    //   someLifecycleOwner.getLifeCycle().addObserver(SomeLifecycleObserver())
     private val _loginStatus = MutableLiveData<Boolean>()
     val loginStatus: LiveData<Boolean> = _loginStatus
 
@@ -34,7 +47,7 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
 //    private val _loginStatus = MutableLiveData<Boolean>()
 //    val loginStatus: LiveData<Boolean> = _loginStatus
 
-    // TODO ARCH 3:
+    // TODO ARCH 3.6: Manage membership data with a Room
     // live member records from the Room DB
     val allPlayers: LiveData<List<Player>> = playerRepo.allPlayers.asLiveData()
 
@@ -93,23 +106,18 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
 //    }
 
     /**
-     * TODO ARCH 3:
+     * TODO ARCH 3.6: Manage membership data with a Room
      * Use a Room to manage the login data.
-     *
-     * TODO proper pw and more fields
      */
-    fun login(username:String) = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            val res = playerRepo.getPlayerByName(username)
-            Log.d(TAG, "in view model login res=${res.isEmpty()}")
+    fun login(username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
 
-            if(res.isEmpty()) {
-                playerRepo.insert(Player(username, ""))
-                _loginStatus.postValue(true)
-            }
-            else {
-                _loginStatus.postValue(false)
-            }
+        if(playerRepo.contains(username)) {
+            _loginStatus.postValue(false)
+        }
+        else {
+            playerRepo.insert(Player(username, age))
+            _loginStatus.postValue(true)
         }
     }
 
@@ -145,10 +153,8 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
 }
 
 /**
+ * TODO ARCH 3.6: Manage membership data with a Room
  * A factory to create the ViewModel properly.
- * This is due to the fact that we have ctor params. We cannot create VMs by ourselves so we need
- * to provide a Factory to the ViewModelProviders so that it knows how to create for us whenever we
- * need an instance of it.
  * Very boilerplatey code...
  */
 class SplashViewModelFactory(private val playerRepo: PlayerRepo) : ViewModelProvider.Factory {

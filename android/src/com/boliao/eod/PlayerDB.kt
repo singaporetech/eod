@@ -6,7 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * The Player Room DB
+ * TODO ARCH 3.4: Manage membership data with a Room
+ * Create a Player Room DB
  * - a clever layer on top of SQLite DB
  * - we used to extend SQLiteOpenHelper and implement the handlers ourselves
  * - Room handles all the boilerplate now
@@ -14,22 +15,27 @@ import androidx.room.RoomDatabase
  * - normally need to maintain just one instance (i.e., singleton)
  * - exportSchema will be useful in a real app when you want to commit your
  *   schema into VCS
- * - need to define a migration strategy when the version is bumped in a real app
+ * - need to define a migration strategy when the version is bumped in a real app,
+ *   or even when you're testing and changing schema
+ *   here we just default to fallbackToDestructiveMigration()
  */
-@Database(entities = arrayOf(Player::class), version = 3, exportSchema = false)
+@Database(entities = arrayOf(Player::class), version = 1, exportSchema = false)
 public abstract class PlayerDB: RoomDatabase() {
 
     // expose an abstract getter function for the DAO
     abstract fun playerDAO(): PlayerDAO
 
+    // NOTE that this is a pretty standard boilerplate for thread-safe singletons
     companion object {
-        // make this a singleton
+        // use the volatile annotation to make changes immediately available across all threads
+        // - i.e., make sure when reading this, it is from mem and not cache
         @Volatile
         private var INSTANCE: PlayerDB? = null
 
         /**
          * Singleton method to get single DB instance.
-         * Return INSTANCE if not null, else create/store it and return
+         * Return INSTANCE if not null, else (?:) create/store it and return (lazy init)
+         * - use the synchronized block to get a lock to perform modifications
          */
         fun getDatabase(context: Context): PlayerDB {
             return INSTANCE ?: synchronized(this) {

@@ -4,6 +4,7 @@ import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 
 /**
+ * TODO ARCH 3.5: Manage membership data with a Room
  * The repo layer that manages potentially multiple sources of data.
  * - recommended best practice for SWA
  * - most common use case is to handle an online + offline (cached) DB
@@ -19,6 +20,8 @@ class PlayerRepo(private val playerDAO: PlayerDAO) {
      * Wrapper for inserting into the database.
      * - can explicitly specify for this to be done on a WorkerThread
      * - suspend fun to facilitate it being an async call on a background thread
+     *
+     * @param player the player record to insert
      */
     @SuppressWarnings("RedundantSuspendModifier")
     @WorkerThread
@@ -27,10 +30,12 @@ class PlayerRepo(private val playerDAO: PlayerDAO) {
     }
 
     /**
-     * Wrapper for getting records by name.
+     * Check if db contains this name.
+     * @param name the name to find
+     * @return Boolean of whether the name exists or not in the db
      */
-    suspend fun getPlayerByName(name:String): List<Player> {
-        return playerDAO.getByName(name)
+    suspend fun contains(name:String): Boolean {
+        return playerDAO.getByName(name).isNotEmpty()
     }
 
 }

@@ -56,6 +56,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <!--
+    TODO ARCH 3.0: Manage membership data with a Room
+    1. add another field here
+    2. adjust the constraints correctly
+    -->
+    <EditText
+        android:id="@+id/age_edtxt"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:backgroundTint="@android:color/holo_orange_light"
+        android:fontFamily="casual"
+        android:hint="@string/your_age"
+        android:singleLine="true"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_edtxt"
+        />
+
     <Button
         android:id="@+id/play_btn"
         style="@android:style/Widget.Material.Button.Colored"
@@ -70,8 +92,7 @@
         android:fontFamily="@font/earthorbiter"
         app:layout_constraintEnd_toEndOf="@+id/name_edtxt"
         app:layout_constraintStart_toStartOf="@+id/name_edtxt"
-        app:layout_constraintTop_toBottomOf="@+id/name_edtxt" />
-
+        app:layout_constraintTop_toBottomOf="@+id/age_edtxt" />
 
     <Button
         android:id="@+id/exit_btn"

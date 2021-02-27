@@ -1,15 +1,19 @@
 /**
- * WHAT IS THIS?
- * Example android app using a mix of libraries, e.g., libgdx for graphics.
- * 1. browse through an overview of the code structure
- * 
+ * # WHAT IS THIS?
+ * Example android app EOD using a mix of libraries, e.g., libgdx for graphics.
+ * 1. browse through the code structure
+ * 2. highlight expected commenting conventions
+ *
  * # WEEK06: Putting (some of) it all together
  * This week we will look at some common Android Architecture Components through a running
  * example of a simple login feature that we will try to implement.
  * 0. see the necessary artifacts in build.gradle
- * 1. create a login view in Splash Activity and manage the login in the activity 
+ * 1. create a login view in Splash Activity and manage the login in the activity
  * 2. create a ViewModel component to manage the login with a LiveData component (i.e., use MVVM)
  * 3. create a Room component to manage the login data more comprehensively
+ *
+ * # Extras:
+ * 1. Managing Sprints through github
  *
  * # WEEK08: SERVICES
  * Run through several use cases for different background processing requirements.
@@ -56,6 +60,8 @@ import kotlinx.coroutines.*
 
 /**
  * Splash View to show the entry screen of the app.
+ * - NOTE that some it may be more precise to refer to this as the Controller and the XML as the view
+ * - MVCVM? :/
  * - shows some status info
  * - handles user login to enter the game
  */
@@ -89,6 +95,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         setContentView(binding.root)
 
         // init launch game intent
+        // NOTE I have more comments than necessary for demo purposes
         startAndroidLauncher = Intent(this@Splash, AndroidLauncher::class.java)
 
         // show splash text by default
@@ -149,7 +156,11 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // 6. modify the VM to include the repo as input to the ctor
         // 7. manage the database through the VM
         binding.playBtn.setOnClickListener {
-            splashViewModel.login(binding.nameEdtxt.text.toString())
+            splashViewModel.login(
+                    binding.nameEdtxt.text.toString(),
+                    if (binding.ageEdtxt.text.toString() == "") 0
+                    else binding.ageEdtxt.text.toString().toInt()
+            )
         }
         splashViewModel.loginStatus.observe(this, {
             if (it) {

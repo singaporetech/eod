@@ -7,7 +7,8 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 /**
- * The Data Access Object Interface for Player records.
+ * TODO ARCH 3.3: Manage membership data with a Room
+ * Create a Data Access Object Interface for Player records.
  * This DAO interface is used to generate a clean code-based API for your DB.
  * In other words associate SQL queries to methods calls.
  * - similarly uses kotlin annotations to create loads of boilerplate code
