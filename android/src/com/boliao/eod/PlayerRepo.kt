@@ -30,12 +30,32 @@ class PlayerRepo(private val playerDAO: PlayerDAO) {
     }
 
     /**
+     * Get a list of players by the name.
+     * @param name of the player record to retrieve
+     * TODO actually only one record since it is id...
+     */
+    suspend fun getPlayer(name:String) : List<Player> {
+        return playerDAO.getByName(name)
+    }
+
+    /**
      * Check if db contains this name.
      * @param name the name to find
      * @return Boolean of whether the name exists or not in the db
      */
-    suspend fun contains(name:String): Boolean {
+    fun contains(name:String): Boolean {
         return playerDAO.getByName(name).isNotEmpty()
+    }
+
+    /**
+     * TODO SERVICES 2.5: Add password updating functionality to the db.
+     *
+     * Update a record with the password.
+     * @param name the name id to be updated
+     * @param pw the pw to update the record
+     */
+    suspend fun updatePw(name: String, pw: String) {
+        playerDAO.updatePw(name, pw)
     }
 
 }

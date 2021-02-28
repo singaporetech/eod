@@ -26,7 +26,7 @@ class OnBootReceiver : BroadcastReceiver() {
         // check that action actually matches
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
             /**
-             * TODO SERVICES 7: create a reminder for user to charge phone periodically
+             * TODO SERVICES 8.1: create a reminder for user to charge phone periodically
              * WorkManagers are for deferrable but guaranteed work. If you need exact timed jobs
              * use AlarmManagers (but still no guarantee on network).
              * Not to be confused, this is not detecting battery low it is simply reminding to charge.

@@ -7,16 +7,15 @@
 
     <!-- only show app in store to users with the following -->
     <!-- <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" /> -->
+    <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <!-- TODO RECEIVERS 0: add RECEIVE_BOOT_PERMISSIONS -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- TODO NETWORK 0: add INTERNET permissions -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".EODApp"
@@ -35,27 +34,30 @@
             </intent-filter>
         </receiver>
 
-        <!-- TODO SERVICES: declare the GameStateService and IntentService -->
+        <!-- TODO SERVICES: declare the GameStateService-->
         <!-- Q: What are the big 4 tags? -->
         <!-- exported="false" limits access to within app -->
-        <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
         <service
             android:name=".GameStateService"
             android:enabled="true"
             android:exported="true" />
 
+        <!-- IntentServices are auto added here when using the studio UI to create -->
+        <service
+            android:name=".PasswordGeneratorService"
+            android:exported="false" />
+
         <activity
             android:name=".Splash"
             android:screenOrientation="fullSensor">
-
             <intent-filter>
+
                 <!-- VIEW allows google to crawl your content -->
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity

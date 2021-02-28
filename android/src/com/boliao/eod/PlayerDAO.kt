@@ -1,9 +1,6 @@
 package com.boliao.eod
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -39,4 +36,9 @@ interface PlayerDAO {
     // 1. select a particular ID
     @Query("SELECT * FROM player_table WHERE name = :name")
     fun getByName(name:String): List<Player>
+
+    // TODO SERVICES 2.4
+    // 1. create a query to UPDATE existing records by SETting pw WHERE name matches
+    @Query("UPDATE player_table SET pw = :pw WHERE name = :name")
+    fun updatePw(name: String, pw: String)
 }

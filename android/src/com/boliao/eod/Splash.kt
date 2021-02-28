@@ -18,12 +18,13 @@
  * # WEEK08: SERVICES
  * Run through several use cases for different background processing requirements.
  * 1. revise persistent storage options to determine if username exists.
- * 2. create an IntentService to "encrypt" username in background
- * 3. observe the started service: GameStateService
- * 4. observe the binding code provided in GameStateService
- * 5. configure notifications for the GameStateService when bugs spawn
- * 6. convert the started service to a foreground service
- * 7. create a scheduled service (once app boots) to remind user to charge the phone periodically
+ * 2. create a method in the view to generate a hard pw using some pseudo-cpu-intensive algo
+ * 3. now use the VM to perform the pw generation task
+ * 4. now use an IntentService for the pw generation task
+ * 5. observe the started and bound service: GameStateService
+ * 6. configure notifications for the GameStateService when bugs spawn
+ * 7. convert the started service to a foreground service
+ * 8. create a scheduled service (once app boots) to remind user to charge the phone periodically
  *
  * # WEEK09: THREADING
  * A persistent weather widget.
@@ -156,12 +157,37 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // 6. modify the VM to include the repo as input to the ctor
         // 7. manage the database through the VM
         binding.playBtn.setOnClickListener {
-            splashViewModel.login(
-                    binding.nameEdtxt.text.toString(),
+            val name = binding.nameEdtxt.text.toString()
+            val age =
                     if (binding.ageEdtxt.text.toString() == "") 0
                     else binding.ageEdtxt.text.toString().toInt()
-            )
+
+            // TODO SERVICES 2.1: brute force method of having the cpu-intensive pw generator here
+            // 1. simulate naive approach to perform an 8-sec long pseudo-encrypt method here
+            // 2. extend the Player, PlayerDAO, PlayerRepo to have access to a pw field
+            // 3. modify the login method in VM to take in a pw as well to add to the db
+            // 4. observe the UI when we run it this way...
+//            val pw = getEncryptedPw(name)
+
+            // TODO SERVICES 3.1: slightly better method by having the pw generator in the VM
+            // 1. shift the pw generator method into the VM
+            // 2. omit the pw arg into the login() in VM
+//            val pw = null
+//            splashViewModel.login(
+////                    this,
+//                    name, age
+////                    , pw
+//            )
+
+            // TODO SERVICES 4.1: an even better pw generator using an IntentService
+            // 1. create an IntentService for the encryption task
+            // 2. include context in the login(args..) to start the service
+            // QNS: so when do we use services?
+            // Note that the WorkManager is the preferred way to do this now
+            splashViewModel.login(this, name, age)
         }
+
+        // observe login status changes from the VM
         splashViewModel.loginStatus.observe(this, {
             if (it) {
                 binding.msgTxtview.text = "logging in..."
@@ -171,28 +197,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
             } else
                 binding.msgTxtview.text = "Name OREDI exists lah..."
         })
-
-
-        // TODO SERVICES 2.1: introduce some pseudo-encryption for the username
-        // 1. first, try a brute force naive method in the VM to perform a 3 sec pseudo-encrypt algo
-        // 2. store the encrypted username in our Room DB
-        // 3. observe the UI lag/ANR
-
-        // TODO SERVICES 2.2: now do it a bit better using an IntentService
-        // 1. create an IntentService for the encryption task
-        // 2. now observe what happens to the UI
-        // QNS: so when do we use services?
-        // note that the WorkManager can also accomplish this
-
-        // TODO SERVICES 2: what if this needs some intensive processing
-        // - e.g., pseudo-encrypt the username using some funky algo
-        // - store the encrypted username in shared prefs
-        // - UI should not lag or ANR
-
-        // SOLN: defer processing to an IntentService: do some heavy lifting w/o
-        // UI then shutdown the service
-        // - note that the WorkManager can also accomplish this
-        // NameCryptionService.startActionFoo(this@Splash, username)
 
         // observe the weather data
         splashViewModel.weatherData.observe(this, Observer {
@@ -204,6 +208,19 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
             stopService(AndroidLauncher.startServiceIntent)
             finish()
         }
+    }
+
+    /**
+     * TODO SERVICES 2.2: write pseudo-encryption function.
+     *
+     * A function that simply sleeps for 5s to mock a cpu-intensive task
+     * It also does some amazing manip to the name string
+     * @param name of the record to generate pw for
+     * @return (pseudo-)encrypted pw String
+     */
+    private fun getEncryptedPw(name: String): String {
+        Thread.sleep(8000)
+        return name + "888888"
     }
 
     companion object {
