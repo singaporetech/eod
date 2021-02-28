@@ -224,7 +224,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     companion object {
-        private const val TAG = "Splash"
+        private val TAG = Splash::class.simpleName
 
         // TODO ARCH 1.1: Manage login data in view
         // 1. create unique FILENAME const to reference dataset

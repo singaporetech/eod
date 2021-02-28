@@ -36,7 +36,7 @@
         </receiver>
 
         <!-- TODO SERVICES: declare the GameStateService-->
-        <!-- Q: What are the big 4 tags? -->
+        <!-- QNS: What are the big 4 tags? -->
         <!-- exported="false" limits access to within app -->
         <service
             android:name=".GameStateService"

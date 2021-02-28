@@ -65,6 +65,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     /**
      * TODO SERVICES 5.3:implement onBind to return the binder interface
      * Part of the boilerplate for Bound Service
+     *
      * @param intent to hold any info from caller
      * @return IBinder to obtain a handle to the service class
      */
@@ -120,6 +121,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
      * - spawn bug when GameState.i().isCanNotify() && !GameState.i().isAppActive()
      * - create pending intent to launch AndroidLauncher
      * - use NotificationCompat.Builder to make notification
+     *
      * @param intent to hold any info from caller
      * @param flags to show more data about how this was started (e.g., REDELIVERY)
      * @param startId id of this started instance
@@ -131,6 +133,26 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         // - note that the DELAY is the max, and system normally lower
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME)
+
+        // TODO SERVICES 7.1.2: upgrade this service to the foreground
+//        val intentToLaunchGame = Intent(this@GameStateService, AndroidLauncher::class.java)
+//        val pi = PendingIntent.getActivity(
+//                this@GameStateService,
+//                PENDINGINTENT_ID,
+//                intentToLaunchGame,
+//                PendingIntent.FLAG_UPDATE_CURRENT)
+//
+//        // build the notification
+//        val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
+//                .setSmallIcon(R.drawable.ic_stat_name)
+//                .setContentTitle("Exercise Or Die")
+//                .setColor(Color.RED)
+//                .setVisibility(Notification.VISIBILITY_PUBLIC)
+//                .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
+//                .setAutoCancel(true)
+//                .setContentIntent(pi)
+//                .build()
+//        startForeground(NOTIFY_ID, noti);
 
         // TODO THREADING 0: control the spawn timer in a coroutine
         // O.M.G. a raw java thread
@@ -164,6 +186,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
             GameState.i().decTimer()
 
             // notify user when bug is spawning
+            // NOTE that we only send the notification when app is in active (foreground)
             if (GameState.i().isCanNotify && !GameState.i().isAppActive) {
                 Log.i(TAG, "The NIGHT has come: a bug will spawn...")
 
@@ -189,11 +212,11 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
                 // activate the notification
                 notificationManager.notify(NOTIFY_ID, noti)
 
-                // TODO SERVICES 7.1: upgrade this service to the foreground
-                // - need to startForegroundService from caller context
-                // - activate the ongoing notification using startForeground (needs to be called within 5s of above
+                // TODO SERVICES 7.1.1: upgrade this service to the foreground
+                // - need to startForegroundService from caller context in the AndroidLauncher
+                // - activate the ongoing notification using startForeground instead of
+                //   notificationManager.notify above (needs to be called within 5s of above
                 // - move the notification to become a one time and change the premise
-                // startForeground(NOTIFY_ID, noti);
             }
         }
     }
@@ -227,17 +250,16 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
      * - log value for debugging
      * - do as minimal as possible (this is called VERY frequently)
      *
+     * @param event received when values changed
      */
     override fun onSensorChanged(event: SensorEvent) {
-        if (event.values.size > 0) {
+        if (event.values.isNotEmpty()) {
             val `val` = event.values[0].toInt()
             // update game state based on sensor vals
             if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
                 Log.d(TAG, "Step detector:$`val`")
                 GameState.i().incSteps(`val`)
 
-
-                // TODO RECEIVERS 2: cont'd
                 sendBroadcast(GameState.i().steps)
             }
         }
@@ -247,6 +269,9 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
      * TODO SENSORS 6: implement onAccuracyChanged callback
      * - system will call this back when sensor accuracy changed
      * - just show a log msg here but may want to only track steps on HIGH  ACCURACY
+     *
+     * @param sensor in question affected by the change
+     * @param accuracy value of the sensor during the change
      */
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
         Log.i(TAG, "Sensor accuracy changed to $accuracy")
@@ -261,6 +286,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
      * - call this method in onSensorChanged above
      *
      * TODO RECEIVERS 3: Receive broadcast in another separate app
+     *
+     * @param steps that this service is tracking from the pedometer
      */
     private fun sendBroadcast(steps: Int) {
         val intent = Intent(BROADCAST_ACTION)
