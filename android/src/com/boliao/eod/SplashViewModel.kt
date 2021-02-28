@@ -75,7 +75,7 @@ class SplashViewModel(private val playerRepo: PlayerRepo): ViewModel() {
             _loginStatus.postValue(true)
 
             // perform the pw generation
-            PasswordGeneratorService.startActionEncrypt(context, username)
+            PasswordGeneratorService.startActionGenPw(context, username)
         }
     }
 

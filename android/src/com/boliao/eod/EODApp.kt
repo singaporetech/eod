@@ -7,6 +7,16 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
+/**
+ * Represents a non-UI global place to contain the global App Context.
+ * Many things should not be owned individually in the components and should be here.
+ *
+ * Note on context:
+ *  - load resources (strings, assets, etc)
+ *  - starting Activities and Services
+ *  - send broadcasts, register receivers
+ *  - Activity context can inflate layouts
+ */
 class EODApp: Application() {
     // 1. lazy init the Room DB
     // 2. lazy init the player repo with the DAO from the DB

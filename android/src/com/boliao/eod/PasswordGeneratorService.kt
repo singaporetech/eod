@@ -66,7 +66,7 @@ class PasswordGeneratorService :
          */
         // TODO: Customize helper method
         @JvmStatic
-        fun startActionEncrypt(context: Context, name: String) {
+        fun startActionGenPw(context: Context, name: String) {
             val intent = Intent(context, PasswordGeneratorService::class.java).apply {
                 action = ACTION_ENCRYPT
                 putExtra(EXTRA_NAME, name)
