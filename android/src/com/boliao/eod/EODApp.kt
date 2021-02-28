@@ -28,22 +28,4 @@ class EODApp: Application() {
     // 5. edit the constraints on the device and observe the worker behavior
     //    - set device battery level using adb
     //    - set the airplane mode
-
-    /**
-     * Init the stuff that needs context to be initialized.
-     */
-    override fun onCreate() {
-        super.onCreate()
-
-        val workConstraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .setRequiresBatteryNotLow(true)
-                .build()
-
-        val periodicWorkRequest = PeriodicWorkRequestBuilder<ReminderWorker>(15, TimeUnit.MINUTES)
-                .setConstraints(workConstraints)
-                .build()
-
-        WorkManager.getInstance(this).enqueue(periodicWorkRequest)
-    }
 }

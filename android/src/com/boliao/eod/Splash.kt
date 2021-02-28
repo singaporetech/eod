@@ -24,13 +24,12 @@
  * 5. observe the started and bound service: GameStateService
  * 6. configure notifications for the GameStateService when bugs spawn
  * 7. convert the started service to a foreground service
- * 8. create a scheduled service (once app boots) to remind user to charge the phone periodically
+ * 8. create a scheduled service (via EODApp) to remind user to charge the phone periodically
  */
 
 package com.boliao.eod
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
