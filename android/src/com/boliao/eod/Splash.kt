@@ -181,10 +181,10 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
 
             // TODO SERVICES 4.1: an even better pw generator using an IntentService
             // 1. create an IntentService for the encryption task
-            // 2. include context in the login(args..) to start the service
+            // 2. include APP (not ACT) context in the login(args..) to start the service
             // QNS: so when do we use services?
             // Note that the WorkManager is the preferred way to do this now
-            splashViewModel.login(this, name, age)
+            splashViewModel.login(applicationContext, name, age)
         }
 
         // observe login status changes from the VM
