@@ -26,23 +26,22 @@ class SplashViewModel(private val playerRepo: PlayerRepo): ViewModel() {
     /**
      * Use a Room to manage the login data.
      */
-//    fun login(username:String, age:Int?/*, pw:String?*/) = viewModelScope.launch(Dispatchers.IO) {
-//        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
-//
-//        // TODO SERVICES 3.3: encrypt username before storing
-//        // NOTE that we don't really need to wait for the pw to be generated before we allow login
-//        // NOTE that although no more ANR, it still disrupts the UX as incuring unnecessary wait
-//        val pw = getEncryptedPw(username)
-//
-//        if(playerRepo.contains(username)) {
-//            _loginStatus.postValue(false)
-//        }
-//        else {
-//            // do the db IO in a dedicated "thread"
-//            playerRepo.insert(Player(username, age, pw))
-//            _loginStatus.postValue(true)
-//        }
-//    }
+    fun login(username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
+
+        // TODO SERVICES 3.3: encrypt username before storing
+        // NOTE that we don't really need to wait for the pw to be generated before we allow login
+        // NOTE that although no more ANR, it still disrupts the UX as incuring unnecessary wait
+
+        if(playerRepo.contains(username)) {
+            _loginStatus.postValue(false)
+        }
+        else {
+            // do the db IO in a dedicated "thread"
+            playerRepo.insert(Player(username, age))
+            _loginStatus.postValue(true)
+        }
+    }
 
     /**
      * TODO SERVICES 3.2: Shift the pseudo-encryption function here.
@@ -52,10 +51,6 @@ class SplashViewModel(private val playerRepo: PlayerRepo): ViewModel() {
      * @param name of the record to generate pw for
      * @return (pseudo-)encrypted pw String
      */
-//    private fun getEncryptedPw(name: String): String {
-//        Thread.sleep(5000)
-//        return name + "888888"
-//    }
 
     /**
      * TODO SERVICES 2.3: login with pw generation using an intent service
@@ -64,20 +59,6 @@ class SplashViewModel(private val playerRepo: PlayerRepo): ViewModel() {
      * 3. let it store the encrypted pw into the db when it is done
      * @return (pseudo-)encrypted String
      */
-    fun login(context: Context, username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
-        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
-
-        if(playerRepo.contains(username)) {
-            _loginStatus.postValue(false)
-        }
-        else {
-            playerRepo.insert(Player(username, age, null))
-            _loginStatus.postValue(true)
-
-            // perform the pw generation
-            PasswordGeneratorService.startActionEncrypt(context, username)
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()

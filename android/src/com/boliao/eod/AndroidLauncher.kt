@@ -40,7 +40,6 @@ class AndroidLauncher : AndroidApplication() {
 
             // TODO SERVICES 7.1.1: change the way to start service in the foreground
             startService(startServiceIntent)
-            // startForegroundService(startServiceIntent)
         }
 
         // init game

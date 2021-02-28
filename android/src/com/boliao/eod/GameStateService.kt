@@ -28,7 +28,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     companion object {
         private val TAG = GameStateService::class.simpleName
 
-        // TODO SERVICES 6.1: create vars to manage notifications
+        // TODO SERVICES 6.1: observe vars to manage notifications
         private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
         private const val NOTIFY_ID = 888
         private const val PENDINGINTENT_ID = 1
@@ -100,7 +100,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         if (stepDetector == null) Log.e(TAG, "No step sensors on device!")
 
-        // TODO SERVICES 6.2: obtain and init notification manager with a channel
+        // TODO SERVICES 6.2: observe obtain and init notification manager with a channel
         // - notification channels introduced in Android Oreo
         // - need to initialize a channel before creating actual notifications
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -134,26 +134,6 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME)
 
-//        // TODO SERVICES 7.1.2: upgrade this service to the foreground
-//        val intentToLaunchGame = Intent(this@GameStateService, AndroidLauncher::class.java)
-//        val pi = PendingIntent.getActivity(
-//                this@GameStateService,
-//                PENDINGINTENT_ID,
-//                intentToLaunchGame,
-//                PendingIntent.FLAG_UPDATE_CURRENT)
-//
-//        // build the notification
-//        val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
-//                .setSmallIcon(R.drawable.ic_stat_name)
-//                .setContentTitle("Exercise Or Die")
-//                .setColor(Color.RED)
-//                .setVisibility(Notification.VISIBILITY_PUBLIC)
-//                .setContentText("OMG NIGHT TIME lai liao, BUGs will spawn")
-//                .setAutoCancel(true)
-//                .setContentIntent(pi)
-//                .build()
-//        startForeground(NOTIFY_ID, noti);
-
         launch {
             gameloop()
         }
@@ -184,7 +164,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
             if (GameState.i().isCanNotify && !GameState.i().isAppActive) {
                 Log.i(TAG, "The NIGHT has come: a bug will spawn...")
 
-                // TODO SERVICES 5.4: create pending intent to open app from notification
+                // TODO SERVICES 5.4: observe pending intent to open app from notification
                 val intentToLaunchGame = Intent(this@GameStateService, AndroidLauncher::class.java)
                 val pi = PendingIntent.getActivity(
                         this@GameStateService,

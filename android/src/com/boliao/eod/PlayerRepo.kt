@@ -49,8 +49,4 @@ class PlayerRepo(private val playerDAO: PlayerDAO) {
      * @param name the name id to be updated
      * @param pw the pw to update the record
      */
-    suspend fun updatePw(name: String, pw: String) {
-        playerDAO.updatePw(name, pw)
-    }
-
 }

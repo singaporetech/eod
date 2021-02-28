@@ -19,8 +19,4 @@ data class Player(
         val age: Int?,
 
         // TODO SERVICES 2.3: Add a pw field
-        // you can specify the name using @ColumnInfo, otherwise default is fine
-         @ColumnInfo(name = "pw")
-         val pw: String?
-
         )

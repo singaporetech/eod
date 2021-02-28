@@ -28,6 +28,4 @@ interface PlayerDAO {
 
     // TODO SERVICES 2.4: query to update pw in a player record
     // 1. create a query to UPDATE existing records by SETting pw WHERE name matches
-    @Query("UPDATE player_table SET pw = :pw WHERE name = :name")
-    fun updatePw(name: String, pw: String)
 }

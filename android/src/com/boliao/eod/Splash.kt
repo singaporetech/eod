@@ -49,10 +49,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
     private lateinit var binding:ActivitySplashBinding
 
-    // TODO ARCH 3: Manage membership data with a Room
-    // 1. lazy init the Room DB
-    // 2. lazy init the player repo with the DAO from the DB
-    // This should be done at the application level in
+    // Get the splash VM with the repo from the app level
     private val splashViewModel: SplashViewModel by viewModels {
         SplashViewModelFactory((application as EODApp).repo)
     }
@@ -87,29 +84,22 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
                     if (binding.ageEdtxt.text.toString() == "") 0
                     else binding.ageEdtxt.text.toString().toInt()
 
+            splashViewModel.login(name, age)
+
             // TODO SERVICES 2.1: brute force method of having the cpu-intensive pw generator here
             // 1. simulate naive approach to perform an 8-sec long pseudo-encrypt method here
             // 2. extend the Player, PlayerDAO, PlayerRepo to have access to a pw field
             // 3. modify the login method in VM to take in a pw as well to add to the db
             // 4. observe the UI when we run it this way...
-//            val pw = getEncryptedPw(name)
 
             // TODO SERVICES 3.1: slightly better method by having the pw generator in the VM
             // 1. shift the pw generator method into the VM
             // 2. omit the pw arg into the login() in VM
-//            val pw = null
-//            splashViewModel.login(
-////                    this,
-//                    name, age
-////                    , pw
-//            )
 
             // TODO SERVICES 4.1: an even better pw generator using an IntentService
             // 1. create an IntentService for the encryption task
             // 2. include context in the login(args..) to start the service
             // QNS: so when do we use services?
-            // Note that the WorkManager is the preferred way to do this now
-            splashViewModel.login(this, name, age)
         }
 
         // observe login status changes from the VM
@@ -138,10 +128,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
      * @param name of the record to generate pw for
      * @return (pseudo-)encrypted pw String
      */
-    private fun getEncryptedPw(name: String): String {
-        Thread.sleep(8000)
-        return name + "888888"
-    }
 
     companion object {
         private val TAG = Splash::class.simpleName
