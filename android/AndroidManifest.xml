@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- TODO RECEIVERS 0: add RECEIVE_BOOT_PERMISSIONS -->
+    <!-- TODO SERVICES 8 / RECEIVERS 0: add RECEIVE_BOOT_PERMISSIONS -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- TODO NETWORK 0: add INTERNET permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,8 +21,12 @@
         android:label="@string/app_name"
         android:theme="@style/GdxTheme">
 
-        <!-- TODO SERVICES 8 / RECEIVERS 0: declare static OnBootReceiver w BOOT_COMPLETED intent-filter -->
-        <!-- NOTE that this app still needs to be manually launched at least
+        <!-- TODO SERVICES 8 / RECEIVERS 0:
+        1. create a reminder Worker class (harness the power of the ALT-ENTER)
+        2. create a notification in the worker class to remind the user to charge the phone
+                  1. declare static OnBootReceiver w BOOT_COMPLETED action intent-filter
+                  2. create a receiver class
+             NOTE that this app still needs to be manually launched at least
                   once to register receiver in system -->
         <receiver
             android:name=".OnBootReceiver"
@@ -40,11 +44,6 @@
             android:name=".GameStateService"
             android:enabled="true"
             android:exported="true" />
-
-        <!-- IntentServices are auto added here when using the studio UI to create -->
-        <service
-            android:name=".PasswordGeneratorService"
-            android:exported="false" />
 
         <activity
             android:name=".Splash"

@@ -8,7 +8,6 @@ import java.lang.IllegalArgumentException
 
 /**
  * Splash VM to manage the data logic between splash view and the model
- *
  */
 class SplashViewModel(private val playerRepo: PlayerRepo): ViewModel() {
 
@@ -31,7 +30,7 @@ class SplashViewModel(private val playerRepo: PlayerRepo): ViewModel() {
 
         // TODO SERVICES 3.3: encrypt username before storing
         // NOTE that we don't really need to wait for the pw to be generated before we allow login
-        // NOTE that although no more ANR, it still disrupts the UX as incuring unnecessary wait
+        // NOTE that although no more ANR, it still disrupts the UX as incurring unnecessary wait
 
         if(playerRepo.contains(username)) {
             _loginStatus.postValue(false)

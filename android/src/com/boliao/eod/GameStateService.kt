@@ -174,7 +174,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
 
                 // build the notification
                 val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_stat_name)
+                        .setSmallIcon(R.drawable.ic_stat_batt)
                         .setContentTitle("Exercise Or Die")
                         .setColor(Color.RED)
                         .setVisibility(Notification.VISIBILITY_PUBLIC)
