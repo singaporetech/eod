@@ -30,9 +30,8 @@ class OnBootReceiver : BroadcastReceiver() {
             // a. build a set of constraints, e.g., network connected and enough batt
             val workConstraints = Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .setRequiresBatteryNotLow(false)
+                    .setRequiresBatteryNotLow(true)
                     .setRequiresDeviceIdle(false)
-                    .setTriggerContentUpdateDelay(3, TimeUnit.SECONDS)
                     .build()
 
             // b. build a work request from a Worker class that fires periodically with the constraints above
