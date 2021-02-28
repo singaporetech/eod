@@ -13,12 +13,7 @@ import androidx.work.WorkerParameters
  * A reminder worker to do the work need to generate and send reminders for charging.
  */
 class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
-    companion object {
-        private const val TAG = "ReminderWorker"
-    }
-
     private var count = 0
-    //    private NotificationManagerCompat notMgr;
     private val notMgr: NotificationManager
     private val NID = 8
     private val NCID = "2"
@@ -35,6 +30,10 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
         notMgr.createNotificationChannel(chan)
     }
 
+    /**
+     * Where the real work lies for this worker object.
+     * - simply build a notification to be sent by the noti mgr
+     */
     override fun doWork(): Result {
         Log.i(TAG, "REMINDER TO CHARGE" + count++)
 
@@ -54,4 +53,7 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
         return Result.success()
     }
 
+    companion object {
+        private val TAG = ReminderWorker::class.simpleName
+    }
 }

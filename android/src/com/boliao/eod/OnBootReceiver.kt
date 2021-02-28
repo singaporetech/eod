@@ -16,10 +16,6 @@ import java.util.concurrent.TimeUnit
  * - implement onReceive to handle response when BOOT_COMPLETED intent.action received
  */
 class OnBootReceiver : BroadcastReceiver() {
-    companion object {
-        private const val TAG = "OnBootReceiver"
-    }
-
     override fun onReceive(context: Context, intent: Intent) {
         Log.i(TAG, "onReceived triggered")
 
@@ -49,5 +45,9 @@ class OnBootReceiver : BroadcastReceiver() {
             // c. enqueue the work request with the WorkManager singleton
             WorkManager.getInstance(context).enqueue(pwr)
         }
+    }
+
+    companion object {
+        private val TAG = OnBootReceiver::class.simpleName
     }
 }
