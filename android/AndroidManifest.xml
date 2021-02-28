@@ -22,8 +22,6 @@
         android:theme="@style/GdxTheme">
 
         <!-- TODO SERVICES 8 / RECEIVERS 0:
-        1. create a reminder Worker class (harness the power of the ALT-ENTER)
-        2. create a notification in the worker class to remind the user to charge the phone
                   1. declare static OnBootReceiver w BOOT_COMPLETED action intent-filter
                   2. create a receiver class
              NOTE that this app still needs to be manually launched at least

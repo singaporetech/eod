@@ -48,7 +48,6 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters)
         // notification vars
         private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
         private const val NOTIFY_ID = 818
-        private const val PENDINGINTENT_ID = 2
 
         // - add var for NotificationManager
         private lateinit var notificationManager: NotificationManager
