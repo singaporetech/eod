@@ -109,7 +109,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
             // 2. include APP (not activity) context in the login(args..) to start the service
             // QNS: so when do we use services?
             // Note that the WorkManager is the preferred way to do this now
-            splashViewModel.login(application, name, age)
+            splashViewModel.login(applicationContext, name, age)
         }
 
         // observe login status changes from the VM
