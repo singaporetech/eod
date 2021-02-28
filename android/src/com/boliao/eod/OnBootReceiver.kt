@@ -11,7 +11,7 @@ import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
 /**
- * TODO RECEIVERS 1: build a statically triggered receiver that sets off scheduled services
+ * RECEIVERS: build a statically triggered receiver that sets off scheduled services
  * - derive from BroadcastReceiver
  * - implement onReceive to handle response when BOOT_COMPLETED intent.action received
  */

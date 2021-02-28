@@ -7,7 +7,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /**
- * TODO ARCH 3.2: Manage membership data with a Room
  * A player entity to represent a single player record.
  * - uses kotlin specific annotations extensively (kapt) to correspond to the
  *   names in SQLite table
@@ -21,7 +20,7 @@ data class Player(
 
         // TODO SERVICES 2.3: Add a pw field
         // you can specify the name using @ColumnInfo, otherwise default is fine
-         @ColumnInfo(name = "pw", defaultValue = "") @Nullable
+         @ColumnInfo(name = "pw")
          val pw: String?
 
         )

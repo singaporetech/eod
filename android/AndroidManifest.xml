@@ -7,9 +7,7 @@
 
     <!-- only show app in store to users with the following -->
     <!-- <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" /> -->
-    <!-- note that only things run by jobscheduler needs the BIND_JOB_SERVICE special permission -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- TODO RECEIVERS 0: add RECEIVE_BOOT_PERMISSIONS -->
@@ -36,7 +34,7 @@
         </receiver>
 
         <!-- TODO SERVICES: declare the GameStateService-->
-        <!-- Q: What are the big 4 tags? -->
+        <!-- QNS: What are the big 4 tags? -->
         <!-- exported="false" limits access to within app -->
         <service
             android:name=".GameStateService"

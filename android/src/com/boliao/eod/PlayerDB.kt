@@ -6,8 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * TODO ARCH 3.4: Manage membership data with a Room
- * Create a Player Room DB
+ * Player Room DB
  * - a clever layer on top of SQLite DB
  * - we used to extend SQLiteOpenHelper and implement the handlers ourselves
  * - Room handles all the boilerplate now
@@ -19,7 +18,7 @@ import androidx.room.RoomDatabase
  *   or even when you're testing and changing schema
  *   here we just default to fallbackToDestructiveMigration()
  */
-@Database(entities = arrayOf(Player::class), version = 9, exportSchema = false)
+@Database(entities = arrayOf(Player::class), version = 10, exportSchema = false)
 public abstract class PlayerDB: RoomDatabase() {
 
     // expose an abstract getter function for the DAO

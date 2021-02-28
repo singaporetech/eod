@@ -25,27 +25,6 @@
  * 6. configure notifications for the GameStateService when bugs spawn
  * 7. convert the started service to a foreground service
  * 8. create a scheduled service (once app boots) to remind user to charge the phone periodically
- *
- * # WEEK09: THREADING
- * A persistent weather widget.
- *
- * 1. See the use of raw java threads in the bug spawning code in GameStateService
- * 2. Create an Asynctask to encrypt usernames in the background
- * 3. Create a weather worker Handlerthread to fetch weather updates in the background
- * 4. Replace Asynctask with coroutine approach
- *
- * # WEEK10: RECEIVERS
- * A static receiver on boot for reminders and
- * dynamically broadcasting steps to be received by another app
- *
- * 1. adding a static OnBootReceiver ON_BOOT via the manifest
- * 2. create an intent to be dynamically broadcasted to the world (on your device)
- *
- * # WEEK10.5: NETWORKING
- * Fetching and showing the weather from a RESTful API.
- *
- * 1. Setting network permissions
- * 2. Using networking libs Volley
  */
 
 package com.boliao.eod
@@ -102,60 +81,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // show splash text by default
         binding.msgTxtview.setText(R.string.welcome_note)
 
-        // TODO THREADING 2: create a persistent weather widget
-        // An MVVM Splash ViewModel is already set up.
-        // Splash Activity View -> Splash ViewModel -> WeatherRepo Model
-        // WeatherRepo currently has a mock stub to return static mock data, provided live by
-        // weatherData in SplashViewModel.
-        // - set up weatherTextView here to observe the weatherData
-        // - goto WeatherRepo for THREADING 3
-        // Q: Do I (Splash Activity) need to know about WeatherRepo?
-
-        // TODO NETWORKING 1: init the network request queue singleton object (volley)
-        // - goto NETWORKING 0 in manifest
-        // - create NetWorkRequestQueue singleton
-        // - set NetworkRequestQueue's context to this
-        // - goto NETWORKING 2 in WeatherRepo
-        NetworkRequestQueue.setContext(this)
-
-        // Old ways of getting the view model...
-        // val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        // val splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-
-        // TODO ARCH 1.2: Manage login data in view
-        // 1. get shared prefs using the filename and set mode to private for this app
-        // 2. set the play btn's onClickListener to handle login
-        //    only allow login for unique users
-        // 3. show status of login on screen
-        // 4. do a rotation and see what happens
-//        pref = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE)
-//        binding.playBtn.setOnClickListener {
-//            val username = binding.nameEdtxt.text.toString()
-//            if (pref.contains(username)) {
-//                binding.msgTxtview.text = "Have user liao lah..."
-//            }
-//            else {
-//                pref.edit().putString(username, username).apply()
-//                binding.msgTxtview.text = "logging in..."
-//            }
-//        }
-
-        // TODO ARCH 2.1: Manage login data with ViewModel and LiveData (i.e., use MVVM)
-        // 1. create a ViewModel (VM) component for this Splash View
-        // 2. move the login data mgt to the VM
-        // 3. reset the play btn's onClickListener to handle login through the VM
-        // 4. create a LiveData component to hold the login status in the VM
-        // 5. observe the login status in this View
-        // start game on click "PLAY"
-
-        // TODO ARCH 3: Manage membership data with a Room
-        // 1. create an entity class to represent a single user record
-        // 2. create a DAO to handle queries
-        // 3. create a Room DB
-        // 4. create a Repo to manage the database
-        // 5. create an Application class to initialize repo and DAO (update the manifest app name)
-        // 6. modify the VM to include the repo as input to the ctor
-        // 7. manage the database through the VM
         binding.playBtn.setOnClickListener {
             val name = binding.nameEdtxt.text.toString()
             val age =
@@ -198,11 +123,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
                 binding.msgTxtview.text = "Name OREDI exists lah..."
         })
 
-        // observe the weather data
-        splashViewModel.weatherData.observe(this, Observer {
-            binding.weatherTxtview.text = it
-        })
-
         // provide a way to stop the service
         binding.exitBtn.setOnClickListener {
             stopService(AndroidLauncher.startServiceIntent)
@@ -224,56 +144,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     companion object {
-        private const val TAG = "Splash"
-
-        // TODO ARCH 1.1: Manage login data in view
-        // 1. create unique FILENAME const to reference dataset
-        // 2. create a SharedPreferences var to manage data
-        const val PREF_FILENAME = "com.boliao.eod.prefs"
-        private lateinit var pref: SharedPreferences
-
-        /**
-         * [DEPRECATED] AsyncTask to "encrypt" username
-         * - heavy lifting in the background to be posted back to UI
-         * - static class so as to prevent leaks
-         * - internal ctor to only allow enclosing class to construct
-         * - need a ref to update UI thread, so use WeakReference (a.k.a. shared_ptr)
-         * - onProgressUpdate(Integer... progress) left as an exercise
-         * - note: publishProgress(Integer) is in built to pass progress to above from doInBackground
-         */
-        /*
-        private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
-            // hold the Activity to get all the UI elements
-            // - use weak reference so that it does not leak mem when activity gets killed
-            var wr_splash: WeakReference<Splash> = WeakReference(act)
-
-            override fun onPreExecute() {
-                super.onPreExecute()
-                val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "encrypting"
-                }
-            }
-
-            override fun doInBackground(vararg str: String?): Boolean {
-                try {
-                    Thread.sleep(3000)
-                    // do something to the str
-                } catch (e: InterruptedException) {
-                    return false
-                }
-                return true
-            }
-
-            override fun onPostExecute(b: Boolean) {
-                super.onPostExecute(b)
-                val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "The encryption is:$b"
-                    splash.launchGame()
-                }
-            }
-        }
-         */
+        private val TAG = Splash::class.simpleName
     }
 }
