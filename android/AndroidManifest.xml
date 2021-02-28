@@ -24,14 +24,14 @@
         <!-- TODO SERVICES 8 / RECEIVERS 0: declare static OnBootReceiver w BOOT_COMPLETED intent-filter -->
         <!-- NOTE that this app still needs to be manually launched at least
                   once to register receiver in system -->
-        <receiver
-            android:name=".OnBootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver-->
+<!--            android:name=".OnBootReceiver"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
         <!-- TODO SERVICES: declare the GameStateService-->
         <!-- QNS: What are the big 4 tags? -->

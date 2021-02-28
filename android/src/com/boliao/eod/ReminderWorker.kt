@@ -40,7 +40,7 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) : Worker(
         // TODO notification to remind charge
         // - note the builder pattern is a common design pattern used for creating objs in the api
         val n = Notification.Builder(super.getApplicationContext(), NCID)
-                .setSmallIcon(R.drawable.ic_stat_name)
+                .setSmallIcon(R.drawable.ic_stat_batt)
                 .setContentTitle("eod REMINDER to charge")
                 .setContentText("How to fight bugs if ur phone juice run out...")
                 .setAutoCancel(true)
