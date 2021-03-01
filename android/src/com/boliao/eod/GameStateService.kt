@@ -38,11 +38,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         const val STEP_KEY = "com.boliao.eod.STEP_KEY"
     }
 
-    // - add var for NotificationManager
+    // var for NotificationManager
     private lateinit var notificationManager: NotificationManager
-
-    // a raw thread for bg work
-    private lateinit var bgThread: Thread
 
     // SENSORS: create vars to interface with hardware sensors
     private lateinit var sensorManager: SensorManager
@@ -83,7 +80,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     override fun onCreate() {
         super.onCreate()
 
-        // TODO SENSORS 1: get handle to sensor device and list all sensors
+        // SENSORS: get handle to sensor device and list all sensors
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         // get list of all available sensors, along with some capability data
@@ -95,7 +92,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         }
         Log.i(TAG, sensorsStr)
 
-        // TODO SENSORS 2: get handles only for required sensors
+        // SENSORS: get handles only for required sensors
         // - if you want to show app only if user has the sensor, then do <uses-feature> in manifest
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         if (stepDetector == null) Log.e(TAG, "No step sensors on device!")
@@ -174,7 +171,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
 
                 // build the notification
                 val noti = Notification.Builder(this@GameStateService, NOTIFICATION_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_stat_batt)
+                        .setSmallIcon(R.drawable.ic_stat_bug)
                         .setContentTitle("Exercise Or Die")
                         .setColor(Color.RED)
                         .setVisibility(Notification.VISIBILITY_PUBLIC)
