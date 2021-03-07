@@ -15,7 +15,7 @@ import android.util.Log
 import kotlinx.coroutines.*
 
 /**
- * TODO SERVICES 5.1: a background service to manage game state
+ * SERVICES 5.1: a background service to manage game state
  * The main underlying service that controls the state of the game.
  * - collect sensor data and send these updates to GameState (Model) in game core component
  * - constantly determine time to spawn bugs
@@ -28,7 +28,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     companion object {
         private val TAG = GameStateService::class.simpleName
 
-        // TODO SERVICES 6.1: create vars to manage notifications
+        // SERVICES 6.1: create vars to manage notifications
         private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
         private const val NOTIFY_ID = 888
         private const val PENDINGINTENT_ID = 1
@@ -44,12 +44,12 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     // a raw thread for bg work
     private lateinit var bgThread: Thread
 
-    // TODO SENSORS 0: create vars to interface with hardware sensors
+    // SENSORS 0: create vars to interface with hardware sensors
     private lateinit var sensorManager: SensorManager
     private var stepDetector: Sensor? = null
 
     /**
-     * TODO SERVICES 5.2: create GameStateBinder class to "contain" this service
+     * SERVICES 5.2: create GameStateBinder class to "contain" this service
      * This is part of the boilerplate for Bound Service. Client can use this object to communicate
      * with the service. This approach uses the simple Binder class since clients are also in this
      * app/process. For this service to be used by other apps, use Messenger or AIDL for IPC.
@@ -63,7 +63,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     private val binder = GameStateBinder()
 
     /**
-     * TODO SERVICES 5.3:implement onBind to return the binder interface
+     * SERVICES 5.3:implement onBind to return the binder interface
      * Part of the boilerplate for Bound Service
      *
      * @param intent to hold any info from caller
@@ -74,7 +74,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     }
 
     /**
-     * TODO SERVICES 5.2: observe onCreate Service lifecycle to initialize various things
+     * SERVICES 5.2: observe onCreate Service lifecycle to initialize various things
      * - get handle to SensorManager from a System Service
      * - get list of available sensors from the sensorManager
      * - get handle to step detector from sensorManager
@@ -83,7 +83,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     override fun onCreate() {
         super.onCreate()
 
-        // TODO SENSORS 1: get handle to sensor device and list all sensors
+        // SENSORS 1: get handle to sensor device and list all sensors
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         // get list of all available sensors, along with some capability data
@@ -95,12 +95,12 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         }
         Log.i(TAG, sensorsStr)
 
-        // TODO SENSORS 2: get handles only for required sensors
+        // SENSORS 2: get handles only for required sensors
         // - if you want to show app only if user has the sensor, then do <uses-feature> in manifest
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         if (stepDetector == null) Log.e(TAG, "No step sensors on device!")
 
-        // TODO SERVICES 6.2: obtain and init notification manager with a channel
+        // SERVICES 6.2: obtain and init notification manager with a channel
         // - notification channels introduced in Android Oreo
         // - need to initialize a channel before creating actual notifications
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -115,7 +115,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     }
 
     /**
-     * TODO SERVICES 5.3: observe onStartCommand which defines what the service will actually do
+     * SERVICES 5.3: observe onStartCommand which defines what the service will actually do
      * - register this class as a SensorEventListener (extend this Service) using sensorManager
      * - add a thread to manage spawning of bugs based on a countdown
      * - spawn bug when GameState.i().isCanNotify() && !GameState.i().isAppActive()
@@ -129,12 +129,12 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
      *         , e.g., sticky or not (see https://goo.gl/shXLoy)
      */
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        // TODO SENSORS 3: Registering listener to listen for sensor events.
+        // SENSORS 3: Registering listener to listen for sensor events.
         // - note that the DELAY is the max, and system normally lower
         // - don't just use SENSOR_DELAY_FASTEST (0us) as it uses max power
         sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_GAME)
 
-        // TODO SERVICES 7.1.2: upgrade this service to the foreground
+        // SERVICES 7.1.2: upgrade this service to the foreground
 //        val intentToLaunchGame = Intent(this@GameStateService, AndroidLauncher::class.java)
 //        val pi = PendingIntent.getActivity(
 //                this@GameStateService,
@@ -154,9 +154,13 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
 //                .build()
 //        startForeground(NOTIFY_ID, noti);
 
-        // TODO THREADING 0: control the spawn timer in a coroutine
+        // TODO THREADING 1: see the use of traw threads to control the spawn timer
         // O.M.G. a raw java thread
-        // [DEPRECATED] bgThread = Thread( Runnable{
+//        bgThread = Thread( Runnable {
+//            gameloop()
+//        })
+//        bgThread.start()
+
         launch {
             gameloop()
         }
@@ -169,6 +173,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     /**
      * The gameloop which will update the game infinitely.
      */
+//    fun gameloop() {
     suspend fun gameloop() = withContext(Dispatchers.Default) {
         while (true) {
             // TODO RECEIVERS 1: to communicate data to other apps
@@ -180,7 +185,8 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
             Log.i(TAG, "in gameloop ${GameState.i().timer}")
 
             // fix fps updates to 1 sec
-            delay(1000)
+            Thread.sleep(1000)
+//            delay(1000)
 
             // decrement countdown each loop
             GameState.i().decTimer()
@@ -215,35 +221,42 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
                 // TODO SERVICES 7.1.1: upgrade this service to the foreground
                 // - need to startForegroundService from caller context in the AndroidLauncher
                 // - activate the ongoing notification using startForeground instead of
-                //   notificationManager.notify above (needs to be called within 5s of above
+                //   notificationManager.notifwall-of-texty above (needs to be called within 5s of above
                 // - move the notification to become a one time and change the premise
             }
         }
     }
 
     /**
-     * TODO SERVICE 5.5: override Service's onDestroy to destroy any background activity if desired
+     * SERVICE 5.5: override Service's onDestroy to destroy any background activity if desired
      * - also destroy any manual threads
      */
     override fun onDestroy() {
         super.onDestroy()
 
-        // TODO SERVICES 7.1: stop the foreground service
+        // SERVICES 7.1: stop the foreground service
         // UNCOMMENT if is foreground service
         // stopForeground(true)
 
         // Remove all notifications
         notificationManager.cancelAll()
 
-        // TODO SENSORS 4: unregister listeners from the sensorManager as appropriate
+        // SENSORS 4: unregister listeners from the sensorManager as appropriate
         sensorManager.unregisterListener(this, stepDetector)
+
+        // TODO THREADING 1: look at the iffiness of using java threads
+        // - no easy way to stop raw threads
+        // - Oracle deprecated the most intuitive .stop() as it is dangerous
+        // - the wall-of-text on how to do this supposedly simple task is:
+        //   https://docs.oracle.com/javase/1.5.0/docs/guide/misc/threadPrimitiveDeprecation.html
+//        bgThread.stop()
 
         // cancel all coroutines
         cancel()
     }
 
     /**
-     * TODO SENSORS 5: implement onSensorChanged callback
+     * SENSORS 5: implement onSensorChanged callback
      * - system will call this back when sensor has new vals
      * - simply call GameState.i().incSteps(event.values[0])
      * if event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR
@@ -266,7 +279,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     }
 
     /**
-     * TODO SENSORS 6: implement onAccuracyChanged callback
+     * SENSORS 6: implement onAccuracyChanged callback
      * - system will call this back when sensor accuracy changed
      * - just show a log msg here but may want to only track steps on HIGH  ACCURACY
      *
@@ -278,14 +291,14 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     }
 
     /**
-     * TODO RECEIVERS 2: Send broadcast to apps that wish to get step count
+     * RECEIVERS 2: Send broadcast to apps that wish to get step count
      * - create a method that configures an intent with the BROADCAST_ACTION
      * - and the steps which the func receives as input
      * - good to Log this to the console
      * - use sendBroadcast function from the context to broadcast the intent
      * - call this method in onSensorChanged above
      *
-     * TODO RECEIVERS 3: Receive broadcast in another separate app
+     * RECEIVERS 3: Receive broadcast in another separate app
      *
      * @param steps that this service is tracking from the pedometer
      */

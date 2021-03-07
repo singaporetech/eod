@@ -8,6 +8,7 @@ import android.os.HandlerThread
  * - has a Looper that constantly conveys Runnables to be acted on
  * - has a Handler to post Runnables onto the Looper
  *   Handler can postDelayed Runnables
+ * QNS: why do I know this?  Cos I read the API online and which is why quizzes are open-google
  */
 class WeatherWorkerThread : HandlerThread("WeatherWorkerThread") {
     private lateinit var handler: Handler

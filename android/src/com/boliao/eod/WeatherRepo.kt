@@ -1,7 +1,3 @@
-/**
- * Where most of the hard work gets done... at the lower levels...
- * - note the kotlin super singleton syntax "object"
- */
 package com.boliao.eod
 
 import android.util.Log
@@ -17,6 +13,7 @@ import java.util.*
 
 /**
  * The Weather Repository that manages weather data.
+ * @param networkRequestQueue is the Volley component that manages network requests.
  */
 class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
 
@@ -27,7 +24,7 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
         private const val FETCH_INTERVAL_MILLIS: Long = 1000
     }
 
-    // Mocking var
+    // mocking var
     private var count = 0
 
     // threading
@@ -43,7 +40,7 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
             urlStr,
             null,
             { response ->
-//                Log.i(TAG, "volley fetched \n$response")
+                // Log.i(TAG, "volley fetched \n$response")
                 try { // parse the returned json
                     val areaStr = response.getJSONArray("items")
                             .getJSONObject(0)
@@ -117,6 +114,7 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
      *   - define error handlers
      * - use the handlerthread pattern to make timed requests to the web API
      * - goto SplashViewModel for NETWORKING 3
+     * NOTE that posting to the Livedata is done in the volley callback
      */
 //    fun fetchOnlineWeatherData() {
 //        // use the previous handlerthread pattern to make timed calls to weather API
@@ -136,6 +134,8 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
 
     /**
      * TODO THREADING 5: use a coroutine to fetch the weather
+     * 1. create a suspend fun that dispatches to the IO threadpool
+     * 2. make an infinite loop adds a volley request to the queue regularly
      */
     suspend fun fetchOnlineWeatherData() = withContext(Dispatchers.IO) {
         var count = 0
@@ -150,7 +150,7 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
 
     /**
      * Helper to get today's date in API format for network request.
-     * @return
+     * @return String in the format that the data.gov.sg API likes
      */
     val today: String
         get() {
