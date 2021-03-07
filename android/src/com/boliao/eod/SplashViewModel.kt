@@ -1,5 +1,6 @@
 package com.boliao.eod
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
@@ -53,75 +54,28 @@ class SplashViewModel(
      * 3. let it store the encrypted pw into the db when it is done
      * @return (pseudo-)encrypted String
      */
-//    fun login(context: Context, username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
-//        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
-//
-//        if(playerRepo.contains(username)) {
-//            _loginStatus.postValue(false)
-//        }
-//        else {
-//            playerRepo.insert(Player(username, age, null))
-//            _loginStatus.postValue(true)
-//
-//            // perform the pw generation
-//            PasswordGeneratorService.startActionEncrypt(context, username)
-//        }
-//    }
+    fun login(context: Context, username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
 
-
-    /**
-     * TODO THREADING 3*: coroutine approach for login task.
-     * Login using a username
-     * Runs a coroutine in the VM in-built scope
-     * - note that the viewModelScope is an extension func of ViewModel from lifecycle-viewmodel-ktx
-     */
-    fun loginWithCoroutines(username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
-        if (playerRepo.contains(username))
+        if(playerRepo.contains(username)) {
             _loginStatus.postValue(false)
+        }
         else {
             playerRepo.insert(Player(username, age, null))
             _loginStatus.postValue(true)
 
             // perform the pw generation
-            generatePwAndUpdate(username)
+            PasswordGeneratorService.startActionEncrypt(context, username)
         }
     }
 
     /**
-     * Coroutine for encryption.
-     * Input username string and output encrypted username string.
-     * Use Dispatchers.Default to place this work to the background Default thread in case the
-     * caller of this coroutine is calling via Dispatchers.Main .
+     * TODO THREADING 6: revamp the login task using only coroutines
+     * 1. create a suspend function that performs the (mock) pw generation from the IntentService
+     * 2. make this fun main-safe by dispatching the task to the appropriate threadpool
      *
-     * <Kotlin official defn>
-     * One can think of a coroutine as a light-weight thread. Like threads, coroutines can run in
-     * parallel, wait for each other and communicate. The biggest difference is that coroutines are
-     * very cheap, almost free: we can create thousands of them, and pay very little in terms of
-     * performance. True threads, on the other hand, are expensive to start and keep around.
-     * A thousand threads can be a serious challenge for a modern machine.
-     *
-     * NOTE that we use withContext to make this function independently main-safe so that it does
-     *      not matter what coroutine dispatcher context the caller is in
-     * NOTE that this will likely still continue to finish even if the app is placed in the
-     *      background. This makes intent services obsolete.
+     * QNS will this run after app into the background?
      */
-    private suspend fun generatePwAndUpdate(username: String) = withContext(Dispatchers.IO) {
-        Thread.sleep(5000)
-        val pw = username + "888888"
-        playerRepo.updatePw(username, pw)
-
-        // DEBUG fetch and log
-        delay(6000) // coroutine method
-        val players = playerRepo.getPlayer(username)
-        Log.d(TAG, "in generatePwAndUpdate just added pw = ${players[0].pw}")
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        // by right there is no need to perform this as viewModelScope manages everything auto
-        // viewModelScope.cancel()
-    }
 
     companion object {
         private val TAG = SplashViewModel::class.simpleName

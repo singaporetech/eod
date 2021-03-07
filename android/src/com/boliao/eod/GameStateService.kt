@@ -24,7 +24,7 @@ import kotlinx.coroutines.*
  * - QNS: when will it be killed?
  * - QNS: what happens when it is killed?
  */
-class GameStateService: Service(), SensorEventListener, CoroutineScope by MainScope() {
+class GameStateService: Service(), SensorEventListener {
     companion object {
         private val TAG = GameStateService::class.simpleName
 
@@ -156,14 +156,10 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
 
         // TODO THREADING 1: see the use of traw threads to control the spawn timer
         // O.M.G. a raw java thread
-//        bgThread = Thread( Runnable {
-//            gameloop()
-//        })
-//        bgThread.start()
-
-        launch {
+        bgThread = Thread( Runnable {
             gameloop()
-        }
+        })
+        bgThread.start()
 
         // return appropriate flag to indicate what happens when killed
         // QNS: what are the other flags?
@@ -173,8 +169,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
     /**
      * The gameloop which will update the game infinitely.
      */
-//    fun gameloop() {
-    suspend fun gameloop() = withContext(Dispatchers.Default) {
+    private fun gameloop() {
         while (true) {
             // TODO RECEIVERS 1: to communicate data to other apps
             // - broadcasting steps to the (Android device) world
@@ -186,7 +181,6 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
 
             // fix fps updates to 1 sec
             Thread.sleep(1000)
-//            delay(1000)
 
             // decrement countdown each loop
             GameState.i().decTimer()
@@ -249,10 +243,7 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         // - Oracle deprecated the most intuitive .stop() as it is dangerous
         // - the wall-of-text on how to do this supposedly simple task is:
         //   https://docs.oracle.com/javase/1.5.0/docs/guide/misc/threadPrimitiveDeprecation.html
-//        bgThread.stop()
-
-        // cancel all coroutines
-        cancel()
+        bgThread.stop()
     }
 
     /**

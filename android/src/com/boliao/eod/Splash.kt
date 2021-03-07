@@ -12,22 +12,23 @@
  * 6. configure notifications for the GameStateService when bugs spawn
  * 7. convert the started service to a foreground service
  * 8. create a scheduled service (once app boots) to remind user to charge the phone periodically
+ * NOTE to finish above first
  *
  * # WEEK09: THREADING (& NETWORKING)
  * Add a persistent weather widget.
- * 1. Observe the use of raw java threads in the bug spawning code in GameStateService
- * 2. Use an Asynctask to fetch (mock) weather updates in the background.
- * 3. Revamp the weather task using coroutines.
- * 3*.Also revamp the login task with coroutines if there is time.
- * 4. Now use a worker Handlerthread to do the above weather widget task in the background.
- * 5. Now use a coroutine to do the same weather widget
- * 6. Replace the mock weather task with real fetching from a RESTful API using the volley lib.
+ * 1. observe the use of raw java threads in the bug spawning code in GameStateService
+ * 2. observe an Asynctask to fetch (mock) weather updates in the background.
+ * 3. revamp the weather task using coroutines.
+ * 4. observe the implementation of a real weather widget task, using:
+ *    - a worker Handlerthread for jobs to land on in a background thread
+ *    - a networking lib (Volley) to fetch data from a RESTful API
+ * 5. now revamp the weather widget using coroutines
+ * 6. also revamp the login task with coroutines if there is time.
  */
 
 package com.boliao.eod
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -37,7 +38,6 @@ import androidx.lifecycle.Observer
 import com.boliao.eod.databinding.ActivitySplashBinding
 import kotlinx.coroutines.*
 import java.lang.ref.WeakReference
-import kotlin.random.Random
 
 /**
  * Splash View to show the entry screen of the app.
@@ -46,7 +46,7 @@ import kotlin.random.Random
  * - shows some status info
  * - handles user login to enter the game
  */
-class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
+class Splash : AppCompatActivity(){
     private lateinit var startAndroidLauncher: Intent
     private lateinit var binding:ActivitySplashBinding
 
@@ -83,22 +83,13 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
 
         // TODO THREADING 2.2: Use an Asynctask to fetch (mock) weather updates in the background.
         // 1. execute the AsyncTask here with some str data
-//        WeatherTask(this).execute("NYP")
+        WeatherTask(this).execute("NYP")
 
         // TODO THREADING 4: Use a Handlerthread in a Repo layer to fetch (mock) weather updates
         // 1. Look at the arch layers EODApp->Splash->SplashViewModel->WeatherRepo
         // 1. Create the Weather Handlerthread
         // 2. Use the Handlerthread in the WeatherRepo to fetch weather
         // 3. Expose a Livedata from the WeatherRepo through the SplashViewModel, to be observed here
-        splashViewModel.weatherData.observe(this, Observer {
-            binding.weatherTxtview.text = it
-        })
-
-        // TODO NETWORKING 1: init the network request queue singleton object (volley)
-        // - goto NETWORKING 0 in manifest
-        // - create NetWorkRequestQueue singleton
-        // - in EODApp, set NetworkRequestQueue's context to EODApp
-        // - goto NETWORKING 2 in WeatherRepo
 
         // PLAY button actions
         binding.playBtn.setOnClickListener {
@@ -108,10 +99,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
                     else binding.ageEdtxt.text.toString().toInt()
 
             // A pw generator using an IntentService
-//            splashViewModel.login(applicationContext, name, age)
-
-            // TODO THREADING 3*: call a coroutine in the VM to do the login
-            splashViewModel.loginWithCoroutines(name, age)
+            splashViewModel.login(applicationContext, name, age)
         }
 
         // observe login status changes from the VM
@@ -138,49 +126,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
      * 1. add a coroutine scope to the activity using the MainScope delegate
      * 2. write a suspend function to perform the mock network fetch
      * 3. launch a coroutine block in onResume to run the non-blocking network task
-     *
-     * NOTE
-     *   - .launch is fire and forget, .async is execute for a deferred result
-     *   - the launch block below is non-blocking
-     *   - the scope should probably be defined with + jobs so that we can prevent leaks
-     *   - explicitly definitely a scope to call within
-     *     CoroutineScope(Dispatchers.Main).launch {
-     *   - or via a custom built scope which can be cancelled with parentJob.cancel()
-     *     splashScope.launch {
      */
-//    override fun onResume() {
-//        super.onResume()
-//
-//        launch { // this is fire-and-forget
-////            delay(3000)
-//            Log.i(TAG, "1")
-//            binding.weatherTxtview.text = "coroutine start..."
-//            // within the coroutine, a state machine manages the suspend/resume
-//            binding.weatherTxtview.text = fetchMockWeather() // this is suspended to allow subsequent code to run
-//            Log.i(TAG, "2")
-//        }
-//
-//        launch {
-//            Log.i(TAG, "3")
-//            binding.weatherTxtview.text = "after coroutine start..." // this will not be blocked by the above
-////        Thread.sleep(3000)
-//            delay(3000) // delay is a suspend function so will let things come in to run
-//            binding.weatherTxtview.text = "after coroutine end..."
-//            Log.i(TAG, "4")
-//        }
-//    }
-
-    /**
-     * Suspend function to perform mock network task.
-     * NOTE that for simplicity sake this logic is here but this is of course to be done at lower
-     *      layers in the architecture.
-     * NOTE also the qualified return syntax so that it returns the value at the withContext scope
-     */
-    private suspend fun fetchMockWeather(): String = withContext(Dispatchers.Main) {
-//        Thread.sleep(5000)
-        delay(5000)
-        return@withContext "Todays mockery is ${Random.nextInt()}"
-    }
 
     companion object {
         private val TAG = Splash::class.simpleName
