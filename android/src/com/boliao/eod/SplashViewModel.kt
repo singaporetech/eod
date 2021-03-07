@@ -19,7 +19,9 @@ import java.lang.IllegalArgumentException
  *    So we need to provide a Factory to ViewModelProviders so that it knows how to create for us
  *    whenever we need an instance of it.
  */
-class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
+class SplashViewModel(
+        private val playerRepo: PlayerRepo,
+        private val weatherRepo: WeatherRepo) // TODO ARCH 3.2:
     : ViewModel() {
 //    : AndroidViewModel(application) { // to have context for shared prefs
 
@@ -59,33 +61,15 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
         // WeatherRepo.fetchStaticMockWeatherData()
         // WeatherRepo.fetchDynamicMockWeatherData()
 
-        // TODO NETWORKING 3: call WeatherRepo to fetch online weather instead
-        WeatherRepo.fetchOnlineWeatherData()
+        // TODO NETWORKING 2: call WeatherRepo to fetch online weather instead
+        viewModelScope.launch {
+            weatherRepo.fetchOnlineWeatherData()
+        }
 
         // link up live data to repo (observer pattern)
-        weatherData = WeatherRepo.weatherData
+        weatherData = weatherRepo.weatherData
     }
 
-    /**
-     * TODO THREADING
-     * Login using a username
-     * Runs a coroutine in the VM in-built scope
-     * - note that the viewModelScope is an extension func of ViewModel from lifecycle-viewmodel-ktx
-     */
-//    fun loginWithCoroutines(username:String) = viewModelScope.launch {
-//        if (pref.contains(username))
-//            _loginStatus.postValue(false)
-//        else {
-//            // encrypt username
-//            val encryptedUsername = encrypt(username)
-//
-//            // store in pref
-//            pref.edit().putString(username, encryptedUsername).apply()
-//
-//            // update UI
-//            _loginStatus.postValue(true)
-//        }
-//    }
 
     /**
      * TODO ARCH 2.4: Manage login data with ViewModel and LiveData (i.e., use MVVM)
@@ -145,18 +129,37 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
      * 3. let it store the encrypted pw into the db when it is done
      * @return (pseudo-)encrypted String
      */
-    fun login(context: Context, username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
-        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
+//    fun login(context: Context, username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+//        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
+//
+//        if(playerRepo.contains(username)) {
+//            _loginStatus.postValue(false)
+//        }
+//        else {
+//            playerRepo.insert(Player(username, age, null))
+//            _loginStatus.postValue(true)
+//
+//            // perform the pw generation
+//            PasswordGeneratorService.startActionEncrypt(context, username)
+//        }
+//    }
 
-        if(playerRepo.contains(username)) {
+
+    /**
+     * TODO THREADING 3*: coroutine approach for login task.
+     * Login using a username
+     * Runs a coroutine in the VM in-built scope
+     * - note that the viewModelScope is an extension func of ViewModel from lifecycle-viewmodel-ktx
+     */
+    fun loginWithCoroutines(username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+        if (playerRepo.contains(username))
             _loginStatus.postValue(false)
-        }
         else {
             playerRepo.insert(Player(username, age, null))
             _loginStatus.postValue(true)
 
             // perform the pw generation
-            PasswordGeneratorService.startActionEncrypt(context, username)
+            generatePwAndUpdate(username)
         }
     }
 
@@ -172,12 +175,22 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
      * very cheap, almost free: we can create thousands of them, and pay very little in terms of
      * performance. True threads, on the other hand, are expensive to start and keep around.
      * A thousand threads can be a serious challenge for a modern machine.
+     *
+     * NOTE that we use withContext to make this function independently main-safe so that it does
+     *      not matter what coroutine dispatcher context the caller is in
+     * NOTE that this will likely still continue to finish even if the app is placed in the
+     *      background. This makes intent services obsolete.
      */
-//    private suspend fun encrypt(username: String) = withContext(Dispatchers.Default) {
-//        // THE encryption :)
-//        delay(5000)
-//        return@withContext username
-//    }
+    private suspend fun generatePwAndUpdate(username: String) = withContext(Dispatchers.IO) {
+        Thread.sleep(5000)
+        val pw = username + "888888"
+        playerRepo.updatePw(username, pw)
+
+        // DEBUG fetch and log
+        delay(6000) // coroutine method
+        val players = playerRepo.getPlayer(username)
+        Log.d(TAG, "in generatePwAndUpdate just added pw = ${players[0].pw}")
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -196,10 +209,13 @@ class SplashViewModel(private val playerRepo: PlayerRepo) // TODO ARCH 3.2:
  * A factory to create the ViewModel properly.
  * Very boilerplatey code...
  */
-class SplashViewModelFactory(private val playerRepo: PlayerRepo) : ViewModelProvider.Factory {
+class SplashViewModelFactory(
+        private val playerRepo: PlayerRepo,
+        private val weatherRepo: WeatherRepo)
+    : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SplashViewModel::class.java)) {
-            return SplashViewModel(playerRepo) as T
+            return SplashViewModel(playerRepo, weatherRepo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

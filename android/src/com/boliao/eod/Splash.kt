@@ -26,38 +26,31 @@
  * 7. convert the started service to a foreground service
  * 8. create a scheduled service (once app boots) to remind user to charge the phone periodically
  *
- * # WEEK09: THREADING
- * A persistent weather widget.
- *
- * 1. See the use of raw java threads in the bug spawning code in GameStateService
- * 2. Create an Asynctask to encrypt usernames in the background
- * 3. Create a weather worker Handlerthread to fetch weather updates in the background
- * 4. Replace Asynctask with coroutine approach
- *
- * # WEEK10: RECEIVERS
- * A static receiver on boot for reminders and
- * dynamically broadcasting steps to be received by another app
- *
- * 1. adding a static OnBootReceiver ON_BOOT via the manifest
- * 2. create an intent to be dynamically broadcasted to the world (on your device)
- *
- * # WEEK10.5: NETWORKING
- * Fetching and showing the weather from a RESTful API.
- *
- * 1. Setting network permissions
- * 2. Using networking libs Volley
+ * # WEEK09: THREADING (& NETWORKING)
+ * Add a persistent weather widget.
+ * 1. Observe the use of raw java threads in the bug spawning code in GameStateService
+ * 2. Use an Asynctask to fetch (mock) weather updates in the background.
+ * 3. Revamp the weather task using coroutines.
+ * 3*.Also revamp the login task if there is time.
+ * 4. Now use a worker Handlerthread to do the above weather widget task in the background.
+ * 5. Now use a coroutine to do the same weather widget
+ * 6. Replace the mock weather task with real fetching from a RESTful API using the volley lib.
  */
 
 package com.boliao.eod
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.boliao.eod.databinding.ActivitySplashBinding
 import kotlinx.coroutines.*
+import java.lang.ref.WeakReference
+import kotlin.random.Random
 
 /**
  * Splash View to show the entry screen of the app.
@@ -75,7 +68,9 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     // 2. lazy init the player repo with the DAO from the DB
     // This should be done at the application level in
     private val splashViewModel: SplashViewModel by viewModels {
-        SplashViewModelFactory((application as EODApp).repo)
+        SplashViewModelFactory(
+                (application as EODApp).playerRepo,
+                (application as EODApp).weatherRepo)
     }
 
     /**
@@ -102,21 +97,24 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // show splash text by default
         binding.msgTxtview.setText(R.string.welcome_note)
 
-        // TODO THREADING 2: create a persistent weather widget
-        // An MVVM Splash ViewModel is already set up.
-        // Splash Activity View -> Splash ViewModel -> WeatherRepo Model
-        // WeatherRepo currently has a mock stub to return static mock data, provided live by
-        // weatherData in SplashViewModel.
-        // - set up weatherTextView here to observe the weatherData
-        // - goto WeatherRepo for THREADING 3
-        // Q: Do I (Splash Activity) need to know about WeatherRepo?
+        // TODO THREADING 2.2: Use an Asynctask to fetch (mock) weather updates in the background.
+        // 1. execute the AsyncTask here with some str data
+//        WeatherTask(this).execute("NYP")
+
+        // TODO THREADING 4: Use a Handlerthread in a Repo layer to fetch (mock) weather updates
+        // 1. Create the Weather Handlerthread
+        // 2. Use the Handlerthread in the WeatherRepo to fetch weather
+        // 3. Expose a Livedata from the WeatherRepo through the SplashViewModel
+        // 4. Observe the weather Livedata here on weatherTxtView
+        splashViewModel.weatherData.observe(this, Observer {
+            binding.weatherTxtview.text = it
+        })
 
         // TODO NETWORKING 1: init the network request queue singleton object (volley)
         // - goto NETWORKING 0 in manifest
         // - create NetWorkRequestQueue singleton
-        // - set NetworkRequestQueue's context to this
+        // - in EODApp, set NetworkRequestQueue's context to EODApp
         // - goto NETWORKING 2 in WeatherRepo
-        NetworkRequestQueue.setContext(this)
 
         // Old ways of getting the view model...
         // val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
@@ -184,7 +182,10 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
             // 2. include APP (not ACT) context in the login(args..) to start the service
             // QNS: so when do we use services?
             // Note that the WorkManager is the preferred way to do this now
-            splashViewModel.login(applicationContext, name, age)
+//            splashViewModel.login(applicationContext, name, age)
+
+            // TODO THREADING 3*: call a coroutine in the VM to do the login
+            splashViewModel.loginWithCoroutines(name, age)
         }
 
         // observe login status changes from the VM
@@ -198,16 +199,60 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
                 binding.msgTxtview.text = "Name OREDI exists lah..."
         })
 
-        // observe the weather data
-        splashViewModel.weatherData.observe(this, Observer {
-            binding.weatherTxtview.text = it
-        })
-
         // provide a way to stop the service
         binding.exitBtn.setOnClickListener {
             stopService(AndroidLauncher.startServiceIntent)
             finish()
         }
+    }
+
+    /**
+     * TODO THREADING 3: use a coroutine to perform the above weather update task
+     * 1. add a coroutine scope to the activity using the MainScope delegate
+     * 2. write a suspend function to perform the mock network fetch
+     * 3. launch a coroutine block in onResume to run the non-blocking network task
+     *
+     * NOTE
+     *   - .launch is fire and forget, .async is execute for a deferred result
+     *   - the launch block below is non-blocking
+     *   - the scope should probably be defined with + jobs so that we can prevent leaks
+     *   - explicitly definitely a scope to call within
+     *     CoroutineScope(Dispatchers.Main).launch {
+     *   - or via a custom built scope which can be cancelled with parentJob.cancel()
+     *     splashScope.launch {
+     */
+//    override fun onResume() {
+//        super.onResume()
+//
+//        launch { // this is fire-and-forget
+////            delay(3000)
+//            Log.i(TAG, "1")
+//            binding.weatherTxtview.text = "coroutine start..."
+//            // within the coroutine, a state machine manages the suspend/resume
+//            binding.weatherTxtview.text = fetchMockWeather() // this is suspended to allow subsequent code to run
+//            Log.i(TAG, "2")
+//        }
+//
+//        launch {
+//            Log.i(TAG, "3")
+//            binding.weatherTxtview.text = "after coroutine start..." // this will not be blocked by the above
+////        Thread.sleep(3000)
+//            delay(3000) // delay is a suspend function so will let things come in to run
+//            binding.weatherTxtview.text = "after coroutine end..."
+//            Log.i(TAG, "4")
+//        }
+//    }
+
+    /**
+     * Suspend function to perform mock network task.
+     * NOTE that for simplicity sake this logic is here but this is of course to be done at lower
+     *      layers in the architecture.
+     * NOTE also the qualified return syntax so that it returns the value at the withContext scope
+     */
+    private suspend fun fetchMockWeather(): String = withContext(Dispatchers.Main) {
+//        Thread.sleep(5000)
+        delay(5000)
+        return@withContext "Todays mockery is ${Random.nextInt()}"
     }
 
     /**
@@ -218,10 +263,10 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
      * @param name of the record to generate pw for
      * @return (pseudo-)encrypted pw String
      */
-    private fun getEncryptedPw(name: String): String {
-        Thread.sleep(8000)
-        return name + "888888"
-    }
+//    private fun getEncryptedPw(name: String): String {
+//        Thread.sleep(8000)
+//        return name + "888888"
+//    }
 
     companion object {
         private val TAG = Splash::class.simpleName
@@ -233,47 +278,56 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         private lateinit var pref: SharedPreferences
 
         /**
+         * TODO THREADING 2.1: observe the asynctask approach for fetching (mock) weather updates
          * [DEPRECATED] AsyncTask to "encrypt" username
-         * - heavy lifting in the background to be posted back to UI
          * - static class so as to prevent leaks
          * - internal ctor to only allow enclosing class to construct
-         * - need a ref to update UI thread, so use WeakReference (a.k.a. shared_ptr)
          * - onProgressUpdate(Integer... progress) left as an exercise
-         * - note: publishProgress(Integer) is in built to pass progress to above from doInBackground
+         *   publishProgress(Integer) is in built to pass progress to above from doInBackground
          */
-        /*
-        private class EncryptTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
+        private class WeatherTask internal constructor(act: Splash) : AsyncTask<String?, Void?, Boolean>() {
             // hold the Activity to get all the UI elements
-            // - use weak reference so that it does not leak mem when activity gets killed
+            // - use weak reference (a.k.a. share_ptr) so that it does not leak mem when
+            //   activity gets killed
             var wr_splash: WeakReference<Splash> = WeakReference(act)
 
             override fun onPreExecute() {
                 super.onPreExecute()
                 val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "encrypting"
+                splash?.let {
+                    it.binding.weatherTxtview.text ="fetching weather"
                 }
             }
 
-            override fun doInBackground(vararg str: String?): Boolean {
+            /**
+             * Heavy lifting in the background to be posted back to UI
+             * @param strs is a list of the data type we indicate (another thing to trip the unwary)
+             * @return Boolean to indicate whether weather fetching was successful
+             */
+            override fun doInBackground(vararg strs: String?): Boolean {
                 try {
                     Thread.sleep(3000)
                     // do something to the str
+                    strs?.let {
+                        Log.i(TAG, "in background of AsyncTask processing weather for ${it[0]}")
+                    }
                 } catch (e: InterruptedException) {
                     return false
                 }
                 return true
             }
 
+            /**
+             * Stuff to be done of the main thread after done background processing.
+             * @param b the value returned from the processing
+             */
             override fun onPostExecute(b: Boolean) {
                 super.onPostExecute(b)
                 val splash = wr_splash.get()
-                if (splash != null) {
-                    (splash.findViewById<View>(R.id.msg_txtview) as TextView).text = "The encryption is:$b"
-                    splash.launchGame()
+                splash?.let {
+                    it.binding.weatherTxtview.text ="Today's weather is sunny"
                 }
             }
         }
-         */
     }
 }

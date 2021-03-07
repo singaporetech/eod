@@ -9,15 +9,18 @@ import com.android.volley.toolbox.Volley
  * A singleton to handle requests
  * - allows someone to init object with context
  */
-object NetworkRequestQueue {
-    private const val TAG = "NetworkRequestQueue"
-    private lateinit var context: Context
+class NetworkRequestQueue constructor(context: Context) {
+    companion object {
+        private val TAG = NetworkRequestQueue::class.simpleName
 
-    /**
-     * Init func to set the context once before others use the singleton
-     */
-    fun setContext(context: Context) {
-        this.context = context
+        // Getting the singleton instance
+        @Volatile
+        private var INSTANCE: NetworkRequestQueue? = null
+        fun getInstance(context: Context) = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: NetworkRequestQueue(context).also {
+                INSTANCE = it
+            }
+        }
     }
 
     /**
@@ -36,4 +39,4 @@ object NetworkRequestQueue {
     }
 }
 
-// goto Splash to continue NETWORKING 1
+// goto Splash to continue NETWORKING

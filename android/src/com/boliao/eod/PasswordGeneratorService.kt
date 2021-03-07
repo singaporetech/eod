@@ -34,11 +34,11 @@ class PasswordGeneratorService :
                 name?.let {
                     launch(Dispatchers.IO) {
                         val eodApp = applicationContext as EODApp
-                        eodApp.repo.updatePw(name, getEncryptedPw(it))
+                        eodApp.playerRepo.updatePw(name, getEncryptedPw(it))
 
                         // DEBUG to view whether db updated correctly after some time
                         delay(6000) // coroutine method
-                        val players = eodApp.repo.getPlayer(name)
+                        val players = eodApp.playerRepo.getPlayer(name)
                         Log.d(TAG, "in handleIntent just added pw = ${players[0].pw}")
                     }
                 }
