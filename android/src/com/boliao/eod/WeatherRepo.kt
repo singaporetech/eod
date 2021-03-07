@@ -110,10 +110,8 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
     }
 
     /**
-     * TODO NETWORKING 2: fetch real online weather data from RESTful API
+     * TODO NETWORKING 1.1: fetch real online weather data from RESTful API
      * We'll use volley as example here (key advantages: fast and clean)
-     * Note how we've used a pseudo-singleton (that needs special init) for the Request Queue. This
-     * is cos many APIs were created pre-MVVM, so needed ref to context to init the request queue.
      * - form a Volley Request with the URL
      *   - define the Response.Listener to handle the Response
      *   - define error handlers

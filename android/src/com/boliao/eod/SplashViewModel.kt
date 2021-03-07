@@ -195,8 +195,8 @@ class SplashViewModel(
     override fun onCleared() {
         super.onCleared()
 
-        // remember to play safe, no leaks
-        viewModelScope.cancel()
+        // by right there is no need to perform this as viewModelScope manages everything auto
+        // viewModelScope.cancel()
     }
 
     companion object {

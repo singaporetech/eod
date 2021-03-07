@@ -31,7 +31,7 @@
  * 1. Observe the use of raw java threads in the bug spawning code in GameStateService
  * 2. Use an Asynctask to fetch (mock) weather updates in the background.
  * 3. Revamp the weather task using coroutines.
- * 3*.Also revamp the login task if there is time.
+ * 3*.Also revamp the login task with coroutines if there is time.
  * 4. Now use a worker Handlerthread to do the above weather widget task in the background.
  * 5. Now use a coroutine to do the same weather widget
  * 6. Replace the mock weather task with real fetching from a RESTful API using the volley lib.
