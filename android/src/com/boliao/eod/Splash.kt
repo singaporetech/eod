@@ -13,7 +13,7 @@
  * 5. observe the started and bound service: GameStateService
  * 6. configure notifications for the GameStateService when bugs spawn
  * 7. convert the started service to a foreground service
- * 8. create a scheduled service (once app boots) to remind user to charge the phone periodically
+ * 8. create a scheduled service (once app boots) to remind the user about something periodically
  *
  * # WEEK09: THREADING (& NETWORKING)
  * Add a persistent weather widget.
@@ -47,7 +47,7 @@ import java.lang.ref.WeakReference
  * - shows some status info
  * - handles user login to enter the game
  */
-class Splash : AppCompatActivity(), CoroutineScope by MainScope(){
+class Splash : AppCompatActivity(){
     private lateinit var startAndroidLauncher: Intent
     private lateinit var binding:ActivitySplashBinding
 
@@ -130,7 +130,6 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope(){
 
     companion object {
         private val TAG = Splash::class.simpleName
-        private var count = 0
 
         /**
          * TODO THREADING 2.1: observe the asynctask approach for fetching (mock) weather updates

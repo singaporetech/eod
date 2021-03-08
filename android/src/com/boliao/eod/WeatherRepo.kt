@@ -75,20 +75,21 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
     )
 
     /**
-     * OPTIONAL TODO THREADING 3: override method to fetch timed weather data
+     * TODO THREADING 3: "continuous" background task to fetch timed weather data
      * - background continuous task to fetch weather data
      * - always updating regularly (confirm < 15min) from online API
      * - not expecting to pause it at any point
      * - ideally continue to updates as much as possible even if navigate away
      *
-     * Q: what primitive should we use?
-     * - Recurring WorkManager?
-     * - IntentService?
-     * - ThreadPoolExecutor?
-     * - AsyncTask?
-     * A: Spawn a HandlerThread
-     * Q: Should you use a service to contain the thread?
-     * A: Depends on whether you want it running beyond visible lifecycle
+     * QNS: what primitive should we use?
+     *      - Recurring WorkManager?
+     *      - IntentService?
+     *      - ThreadPoolExecutor?
+     *      - AsyncTask?
+     *   A: Spawn a HandlerThread
+     *
+     * QNS: Should you use a service to contain the thread?
+     *   A: Depends on whether you want it running beyond visible lifecycle
      *
      * - create a WeatherWorkerThread from HandlerThread class
      * - start the thread and prepare the handler (looper only available after init HandlerThread)
@@ -96,10 +97,7 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
      * - post the Runnable as a delayed task in the thread to time updates
      * - goto SplashViewModel for THREADING 4
      *
-     *
      * - use the HandlerThread primitive to make timed requests to the web API
-     * - goto SplashViewModel for NETWORKING 3
-     * NOTE that posting to the Livedata is done in the volley callback
      */
     fun fetchOnlineWeatherData() {
         val weatherWorkerThread = WeatherWorkerThread()
@@ -119,11 +117,10 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
     /**
      * TODO THREADING 5: use a coroutine to fetch the weather
      * 1. create a suspend fun that dispatches to the IO threadpool
-     * 2. make an infinite loop adds a volley request to the queue regularly
+     * 2. make an infinite loop that adds a volley request to the queue regularly
      *
-     * NOTE that Repo can't start any coroutines since it does not have a LifeCycle to manage it
-     *      - but it can certainly provide the suspend function (which we are not using here)
-     *      - if threading needs to be handled here, it is a perfect use case for low level handlerthreads
+     * NOTE that Repo can't start any coroutines since it does not have a LifeCycle to scope it
+     *      but it can certainly provide the suspend function
      */
 
     /**

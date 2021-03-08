@@ -28,11 +28,11 @@ class EODApp: Application() {
     private val networkRequestQueue by lazy { NetworkRequestQueue.getInstance(this) }
     val weatherRepo by lazy { WeatherRepo(networkRequestQueue)}
 
-    // TODO SERVICES 8: create a reminder Worker for charging
+    // TODO SERVICES 8: create a Worker to remind the user to do something
     // 1. create a reminder Worker class (harness the power of ALT-ENTER)
-    //    - create/send a notification in doWork() to remind the user to charge the phone
+    //    - create/send a notification in doWork() to remind the user
     //    - test adding an icon image asset from the "New" menu, as the small icon
-    // 2. in onCreate, build a set of work constraints, e.g.,
+    // 2. in onCreate, build a set of work Constraints, e.g.,
     //    - connected to network
     //    - enough battery
     // 3. in onCreate, build a work request of the Worker class type,

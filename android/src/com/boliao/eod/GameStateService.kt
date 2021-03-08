@@ -29,9 +29,9 @@ class GameStateService: Service(), SensorEventListener {
         private val TAG = GameStateService::class.simpleName
 
         // SERVICES 6.1: create vars to manage notifications
-        private const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
-        private const val NOTIFY_ID = 888
-        private const val PENDINGINTENT_ID = 1
+        const val NOTIFICATION_CHANNEL_ID = "EOD CHANNEL"
+        const val NOTIFY_ID = 888
+        const val PENDINGINTENT_ID = 1
 
         // broadcast uris
         const val BROADCAST_ACTION = "com.boliao.eod.STEP_COUNT"

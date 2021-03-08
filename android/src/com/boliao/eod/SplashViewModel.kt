@@ -34,9 +34,7 @@ class SplashViewModel(
 
     init {
         // TODO THREADING 4: start the WeatherRepo engine running to fetch online weather
-        viewModelScope.launch {
-            weatherRepo.fetchOnlineWeatherData()
-        }
+        weatherRepo.fetchOnlineWeatherData()
 
         // link up live data to repo (observer pattern)
         weatherData = weatherRepo.weatherData

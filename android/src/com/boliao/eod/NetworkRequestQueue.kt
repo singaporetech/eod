@@ -38,5 +38,3 @@ class NetworkRequestQueue constructor(context: Context) {
         requestQueue.add(request)
     }
 }
-
-// goto Splash to continue NETWORKING
