@@ -47,7 +47,7 @@ import java.lang.ref.WeakReference
  * - shows some status info
  * - handles user login to enter the game
  */
-class Splash : AppCompatActivity(){
+class Splash : AppCompatActivity(), CoroutineScope by MainScope(){
     private lateinit var startAndroidLauncher: Intent
     private lateinit var binding:ActivitySplashBinding
 
@@ -84,11 +84,14 @@ class Splash : AppCompatActivity(){
 
         // TODO THREADING 2.2: Use an Asynctask to fetch (mock) weather updates in the background.
         // 1. execute the AsyncTask here with some str data
-        WeatherTask(this).execute("NYP")
+//        WeatherTask(this).execute("NYP")
 
         // TODO THREADING 4: Use a HandlerThread in a Repo layer to fetch (mock) weather updates
         // 1. Look at the arch layers EODApp->Splash->SplashViewModel->WeatherRepo
         // 2. Call observe on the weather Livedata
+        splashViewModel.weatherData.observe(this, {
+            binding.weatherTxtview.text = it
+        })
 
         // PLAY button actions
         binding.playBtn.setOnClickListener {
@@ -98,7 +101,7 @@ class Splash : AppCompatActivity(){
                     else binding.ageEdtxt.text.toString().toInt()
 
             // A pw generator using an IntentService
-            splashViewModel.login(applicationContext, name, age)
+            splashViewModel.login(name, age)
         }
 
         // observe login status changes from the VM
@@ -119,14 +122,83 @@ class Splash : AppCompatActivity(){
         }
     }
 
-    /**
-     * TODO THREADING 3: use a coroutine to perform the above weather update task
-     * (we ignore our nice arch layers first to illustrate how coroutines function)
-     * 1. add a coroutine scope to the activity using the MainScope delegate
-     * 2. write a suspend function to perform the mock network fetch
-     * 3. launch a coroutine block in onResume to run the non-blocking network task
-     * QNS: What if we can construct the weather str from 2 independent jobs?
-     */
+//    override fun onResume() {
+//        super.onResume()
+//
+//        var result1 = "empty1"
+//        var result2 = "empty2"
+//
+//        val startTime = System.currentTimeMillis()
+//
+//        Log.i(TAG, "1 time taken: ${System.currentTimeMillis()-startTime}")
+//        // starting a coroutine (a.k.a modern thread) which is non-blocking
+//        // fire and forget
+//        launch {
+//            val result1 = async {fetchWeather1()}
+//            val result2 = async {fetchWeather2()}
+//            binding.weatherTxtview.text = "Weather is ${result1.await()} ${result2.await()}"
+//            Log.i(TAG, "2 time taken: ${System.currentTimeMillis()-startTime}")
+//        }
+//
+//        Log.i(TAG, "3 time taken: ${System.currentTimeMillis()-startTime}")
+//
+//    }
+//
+//    // assume fetchWeather1 and 2 are independent and can be performed together
+//    private suspend fun fetchWeather1(): String = withContext(Dispatchers.IO) {
+//        Log.i(TAG, "fetchWeather1 start... in thread ${Thread.currentThread().name}")
+//        // mock long running task
+//        Thread.sleep(2000)
+//        Log.i(TAG, "fetchWeather1 end... ")
+//        return@withContext "SUNNY"
+//    }
+//
+//    private suspend fun fetchWeather2(): String = withContext(Dispatchers.Default) {
+//        Log.i(TAG, "fetchWeather2 start... in thread ${Thread.currentThread().name}")
+//        // mock long running task
+//        Thread.sleep(5000)
+//        Log.i(TAG, "fetchWeather2 end... ")
+//        return@withContext "AND HUMID"
+//    }
+
+//    override fun onResume() {
+//        super.onResume()
+//
+//        var result1 = "empty1"
+//        var result2 = "empty2"
+//
+//        val startTime = System.currentTimeMillis()
+//
+//        Log.i(TAG, "1 time taken: ${System.currentTimeMillis()-startTime}")
+//        // starting a coroutine (a.k.a modern thread) which is non-blocking
+//        // fire and forget
+//        launch {
+//            result1 = fetchWeather1()
+//            result2 = fetchWeather2()
+//            binding.weatherTxtview.text = "Weather is ${result1} ${result2}"
+//            Log.i(TAG, "2 time taken: ${System.currentTimeMillis()-startTime}")
+//        }
+//
+//        Log.i(TAG, "3 time taken: ${System.currentTimeMillis()-startTime}")
+//
+//    }
+
+    // assume fetchWeather1 and 2 are independent and can be performed together
+    private suspend fun fetchWeather1(): String = withContext(Dispatchers.IO) {
+        Log.i(TAG, "fetchWeather1 start... in thread ${Thread.currentThread().name}")
+        // mock long running task
+        delay(2000)
+        Log.i(TAG, "fetchWeather1 end... ")
+        return@withContext "SUNNY"
+    }
+
+    private suspend fun fetchWeather2(): String = withContext(Dispatchers.Default) {
+        Log.i(TAG, "fetchWeather2 start... in thread ${Thread.currentThread().name}")
+        // mock long running task
+        delay(5000)
+        Log.i(TAG, "fetchWeather2 end... ")
+        return@withContext "AND HUMID"
+    }
 
     companion object {
         private val TAG = Splash::class.simpleName
@@ -161,7 +233,7 @@ class Splash : AppCompatActivity(){
             override fun doInBackground(vararg strs: String?): Boolean {
                 try {
                     // mocking long running task
-                    Thread.sleep(3000)
+                    Thread.sleep(6000)
 
                     // do something to the str
                     strs?.let {

@@ -34,7 +34,9 @@ class SplashViewModel(
 
     init {
         // TODO THREADING 4: start the WeatherRepo engine running to fetch online weather
-        weatherRepo.fetchOnlineWeatherData()
+        viewModelScope.launch {
+            weatherRepo.fetchOnlineWeatherDataCoroutine()
+        }
 
         // link up live data to repo (observer pattern)
         weatherData = weatherRepo.weatherData
@@ -47,7 +49,29 @@ class SplashViewModel(
      * 3. let it store the encrypted pw into the db when it is done
      * @return (pseudo-)encrypted String
      */
-    fun login(context: Context, username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+//    fun login(context: Context, username:String, age:Int?) = viewModelScope.launch(Dispatchers.IO) {
+//        Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
+//
+//        if(playerRepo.contains(username)) {
+//            _loginStatus.postValue(false)
+//        }
+//        else {
+//            playerRepo.insert(Player(username, age, null))
+//            _loginStatus.postValue(true)
+//
+//            // perform the pw generation
+//            PasswordGeneratorService.startActionEncrypt(context, username)
+//        }
+//    }
+
+    /**
+     * TODO THREADING 6: revamp the login task using only coroutines
+     * 1. create a suspend function that performs the (mock) pw generation from the IntentService
+     * 2. make this fun main-safe by dispatching the task to the appropriate threadpool
+     *
+     * QNS will this run after app into the background?
+     */
+    fun login(username:String, age:Int?) = viewModelScope.launch(Dispatchers.Main) {
         Log.d(TAG, "in view model login ${playerRepo.contains(username)}")
 
         if(playerRepo.contains(username)) {
@@ -58,17 +82,21 @@ class SplashViewModel(
             _loginStatus.postValue(true)
 
             // perform the pw generation
-            PasswordGeneratorService.startActionEncrypt(context, username)
+            generatePwAndUpdate(username)
         }
     }
 
-    /**
-     * TODO THREADING 6: revamp the login task using only coroutines
-     * 1. create a suspend function that performs the (mock) pw generation from the IntentService
-     * 2. make this fun main-safe by dispatching the task to the appropriate threadpool
-     *
-     * QNS will this run after app into the background?
-     */
+    // ensuring this func to be main-safe
+    suspend fun generatePwAndUpdate(username: String) = withContext(Dispatchers.Default) {
+        delay(5000)
+        val pw = username + "888888"
+        playerRepo.updatePw(username, pw)
+
+        // DEBUG to view whether db updated correctly after some time
+        val players = playerRepo.getPlayer(username)
+        Log.i(TAG, "in generatePwAndUpdate just added pw = ${players[0].pw}")
+    }
+
 
     companion object {
         private val TAG = SplashViewModel::class.simpleName

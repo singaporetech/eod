@@ -21,7 +21,7 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
         private val TAG = WeatherRepo::class.simpleName
 
         // interval between fetching data
-        private const val FETCH_INTERVAL_MILLIS: Long = 1000
+        private const val FETCH_INTERVAL_MILLIS: Long = 3000
     }
 
     // mocking var
@@ -122,6 +122,12 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
      * NOTE that Repo can't start any coroutines since it does not have a LifeCycle to scope it
      *      but it can certainly provide the suspend function
      */
+    suspend fun fetchOnlineWeatherDataCoroutine() = withContext(Dispatchers.IO){
+        while(true) {
+            networkRequestQueue.add(request)
+            delay(FETCH_INTERVAL_MILLIS)
+        }
+    }
 
     /**
      * Helper to get today's date in API format for network request.
