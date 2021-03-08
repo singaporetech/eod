@@ -11,7 +11,7 @@ import java.lang.IllegalArgumentException
  */
 class SplashViewModel(
         private val playerRepo: PlayerRepo,
-        private val weatherRepo: WeatherRepo)
+        private val weatherRepo: WeatherRepo) // TODO THREADING 4: add WeatherRepo dependency
     : ViewModel() {
 
     // live login status
@@ -33,12 +33,7 @@ class SplashViewModel(
     var weatherData: LiveData<String>
 
     init {
-        // TODO THREADING 4: replace the stub by the new threaded weather data method
-        // - only I control the repo, my boss (Activity) does not need to know about repo
-        // WeatherRepo.fetchStaticMockWeatherData()
-        // WeatherRepo.fetchDynamicMockWeatherData()
-
-        // TODO NETWORKING 2: call WeatherRepo to fetch online weather instead
+        // TODO THREADING 4: start the WeatherRepo engine running to fetch online weather
         viewModelScope.launch {
             weatherRepo.fetchOnlineWeatherData()
         }

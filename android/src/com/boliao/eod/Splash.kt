@@ -1,6 +1,8 @@
 /**
- * NOTE that ARCH lecture has extended video which completes the Room exercise.
- *      Remember to perform git branching and PR processes.
+ * NOTE:
+ *      - ARCH lecture has extended video which completes the Room exercise.
+ *      - Remember to perform git branching and PR processes.
+ *      - let's complete task 8 in WEEK08 first
  *
  * # WEEK08: SERVICES
  * Run through several use cases for different background processing requirements.
@@ -12,18 +14,17 @@
  * 6. configure notifications for the GameStateService when bugs spawn
  * 7. convert the started service to a foreground service
  * 8. create a scheduled service (once app boots) to remind user to charge the phone periodically
- * NOTE to finish above first
  *
  * # WEEK09: THREADING (& NETWORKING)
  * Add a persistent weather widget.
  * 1. observe the use of raw java threads in the bug spawning code in GameStateService
- * 2. observe an Asynctask to fetch (mock) weather updates in the background.
- * 3. revamp the weather task using coroutines.
+ * 2. observe an Asynctask to fetch (mock) weather updates in the background
+ * 3. revamp the weather task using coroutines
  * 4. observe the implementation of a real weather widget task, using:
  *    - a worker Handlerthread for jobs to land on in a background thread
  *    - a networking lib (Volley) to fetch data from a RESTful API
  * 5. now revamp the weather widget using coroutines
- * 6. also revamp the login task with coroutines if there is time.
+ * 6. also revamp the login task with coroutines if there is time
  */
 
 package com.boliao.eod
@@ -87,9 +88,7 @@ class Splash : AppCompatActivity(){
 
         // TODO THREADING 4: Use a Handlerthread in a Repo layer to fetch (mock) weather updates
         // 1. Look at the arch layers EODApp->Splash->SplashViewModel->WeatherRepo
-        // 1. Create the Weather Handlerthread
-        // 2. Use the Handlerthread in the WeatherRepo to fetch weather
-        // 3. Expose a Livedata from the WeatherRepo through the SplashViewModel, to be observed here
+        // 2. Call observe on the weather Livedata
 
         // PLAY button actions
         binding.playBtn.setOnClickListener {
@@ -127,6 +126,7 @@ class Splash : AppCompatActivity(){
      * 2. write a suspend function to perform the mock network fetch
      * 3. launch a coroutine block in onResume to run the non-blocking network task
      */
+
 
     companion object {
         private val TAG = Splash::class.simpleName

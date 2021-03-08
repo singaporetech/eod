@@ -154,7 +154,7 @@ class GameStateService: Service(), SensorEventListener {
 //                .build()
 //        startForeground(NOTIFY_ID, noti);
 
-        // TODO THREADING 1: see the use of traw threads to control the spawn timer
+        // TODO THREADING 1: see the use of raw threads to control the spawn timer
         // O.M.G. a raw java thread
         bgThread = Thread( Runnable {
             gameloop()
