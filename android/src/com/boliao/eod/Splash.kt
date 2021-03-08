@@ -47,7 +47,7 @@ import java.lang.ref.WeakReference
  * - shows some status info
  * - handles user login to enter the game
  */
-class Splash : AppCompatActivity(){
+class Splash : AppCompatActivity(), CoroutineScope by MainScope(){
     private lateinit var startAndroidLauncher: Intent
     private lateinit var binding:ActivitySplashBinding
 
@@ -86,7 +86,7 @@ class Splash : AppCompatActivity(){
         // 1. execute the AsyncTask here with some str data
         WeatherTask(this).execute("NYP")
 
-        // TODO THREADING 4: Use a Handlerthread in a Repo layer to fetch (mock) weather updates
+        // TODO THREADING 4: Use a HandlerThread in a Repo layer to fetch (mock) weather updates
         // 1. Look at the arch layers EODApp->Splash->SplashViewModel->WeatherRepo
         // 2. Call observe on the weather Livedata
 
@@ -125,11 +125,12 @@ class Splash : AppCompatActivity(){
      * 1. add a coroutine scope to the activity using the MainScope delegate
      * 2. write a suspend function to perform the mock network fetch
      * 3. launch a coroutine block in onResume to run the non-blocking network task
+     * QNS: What if we can construct the weather str from 2 independent jobs?
      */
-
 
     companion object {
         private val TAG = Splash::class.simpleName
+        private var count = 0
 
         /**
          * TODO THREADING 2.1: observe the asynctask approach for fetching (mock) weather updates
