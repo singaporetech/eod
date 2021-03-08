@@ -86,18 +86,17 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
      *      - IntentService?
      *      - ThreadPoolExecutor?
      *      - AsyncTask?
-     *   A: Spawn a HandlerThread
+     *   A: Spawn a HandlerThread (first...)
      *
      * QNS: Should you use a service to contain the thread?
      *   A: Depends on whether you want it running beyond visible lifecycle
      *
+     * Observe the following:
      * - create a WeatherWorkerThread from HandlerThread class
      * - start the thread and prepare the handler (looper only available after init HandlerThread)
      * - create a Runnable to postValue to the weatherData (simply post a counter value)
      * - post the Runnable as a delayed task in the thread to time updates
      * - goto SplashViewModel for THREADING 4
-     *
-     * - use the HandlerThread primitive to make timed requests to the web API
      */
     fun fetchOnlineWeatherData() {
         val weatherWorkerThread = WeatherWorkerThread()
@@ -118,6 +117,7 @@ class WeatherRepo (private val networkRequestQueue: NetworkRequestQueue) {
      * TODO THREADING 5: use a coroutine to fetch the weather
      * 1. create a suspend fun that dispatches to the IO threadpool
      * 2. make an infinite loop that adds a volley request to the queue regularly
+     * 3. call the suspend fun in a coroutine from the VM
      *
      * NOTE that Repo can't start any coroutines since it does not have a LifeCycle to scope it
      *      but it can certainly provide the suspend function
