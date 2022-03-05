@@ -189,7 +189,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         }
 
         // observe login status changes from the VM
-        splashViewModel.loginStatus.observe(this, {
+        splashViewModel.loginStatus.observe(this) {
             if (it) {
                 binding.msgTxtview.text = "logging in..."
 
@@ -197,7 +197,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
                 launchGame()
             } else
                 binding.msgTxtview.text = "Name OREDI exists lah..."
-        })
+        }
 
         // provide a way to stop the service
         binding.exitBtn.setOnClickListener {

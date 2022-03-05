@@ -19,14 +19,13 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters)
 
     init {
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            notificationManager.createNotificationChannel(
-                    NotificationChannel(
-                            NOTIFICATION_CHANNEL_ID,
-                            context.getString(R.string.channel_name),
-                            NotificationManager.IMPORTANCE_HIGH
-                    )
-            )
+        notificationManager.createNotificationChannel(
+                NotificationChannel(
+                        NOTIFICATION_CHANNEL_ID,
+                        context.getString(R.string.channel_name),
+                        NotificationManager.IMPORTANCE_HIGH
+                )
+        )
     }
 
     override fun doWork(): Result {

@@ -104,14 +104,13 @@ class GameStateService: Service(), SensorEventListener, CoroutineScope by MainSc
         // - notification channels introduced in Android Oreo
         // - need to initialize a channel before creating actual notifications
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            notificationManager.createNotificationChannel(
-                    NotificationChannel(
-                            NOTIFICATION_CHANNEL_ID,
-                            getString(R.string.channel_name),
-                            NotificationManager.IMPORTANCE_HIGH
-                    )
-            )
+        notificationManager.createNotificationChannel(
+                NotificationChannel(
+                        NOTIFICATION_CHANNEL_ID,
+                        getString(R.string.channel_name),
+                        NotificationManager.IMPORTANCE_HIGH
+                )
+        )
     }
 
     /**
