@@ -140,8 +140,13 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
      * 3. launch a coroutine block in onResume to run the non-blocking network task
      *
      * NOTE
+     *   - launch and async are coroutine builders and are not suspend functions themselves
+     *   - withContext is a suspend function
      *   - .launch is fire and forget, .async is execute for a deferred result
-     *   - the launch block below is non-blocking
+     *   - suspend and thread-blocking are different
+     *   - the launch block below is non-blocking (non suspend) and will just register everything
+     *     inside it and let the subsequent code run. But what is inside are suspend funcs and
+     *     will all be suspended
      *   - the scope should probably be defined with + jobs so that we can prevent leaks
      *   - explicitly definitely a scope to call within
      *     CoroutineScope(Dispatchers.Main).launch {
@@ -180,6 +185,141 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
 //        Thread.sleep(5000)
         delay(5000)
         return@withContext "Todays mockery is ${Random.nextInt()}"
+    }
+
+    /**
+     * TODO THREADING 3: use a coroutine to perform the above weather update task
+     * (we ignore our nice arch layers first to illustrate how coroutines function)
+     * 1. add a coroutine scope to the activity using the MainScope delegate
+     * 2. write a suspend function to perform the mock network fetch
+     * 3. launch a coroutine block in onResume to run the non-blocking network task
+     * QNS: What if we can construct the weather str from 2 independent jobs?
+     *
+     * NOTE
+     *   - launch and async are coroutine builders and are not suspend functions themselves
+     *   - withContext is a suspend function
+     *   - .launch is fire and forget, .async is execute for a deferred result
+     *   - suspend and thread-blocking are different
+     *   - the launch block below is non-blocking and will just register everything
+     *     inside it and let the subsequent code run. But what is inside are suspend funcs and
+     *     will all be suspended until possible to start (other ops in the thread that are not
+     *     suspend funcs)
+     *   - the scope should probably be defined with + jobs so that we can prevent leaks
+     *   - explicitly definitely a scope to call within
+     *     CoroutineScope(Dispatchers.Main).launch {
+     *   - or via a custom built scope which can be cancelled with parentJob.cancel()
+     *     splashScope.launch {
+     */
+    override fun onResume() {
+        super.onResume()
+
+        var result1 = "empty1"
+        var result2 = "empty2"
+        val startTime = System.currentTimeMillis()
+
+        // TODO 1. The task we need to do
+//        Log.i(TAG, "1")
+//        launch {
+//            result1 = fetchMockWeather1()
+//            binding.weatherTxtview.text = "Weather is ${result1}"
+//        }
+//        // NOTE when running in Dispatchers.Main,
+//        //      these log statements are not run on Main thread so will be printed before display
+//        //      BUT you should notice that the screen freezes until the work is done
+//        Log.i(TAG, "2")
+//        Log.i(TAG, "Time taken is ${(System.currentTimeMillis()-startTime)}")
+
+        // TODO 2. NAIVE way to concat 2 parts from 2 independent funcs
+//        Log.i(TAG, "1")
+//        launch {
+//            result1 = fetchMockWeather1()
+//            result2 = fetchMockWeather2()
+//            binding.weatherTxtview.text = "Weather is ${result1}${result2}"
+//            Log.i(TAG, "2 with time taken ${(System.currentTimeMillis()-startTime)}")
+//        }
+//        Log.i(TAG, "3 with time taken ${(System.currentTimeMillis()-startTime)}")
+
+        // TODO 3. Another NAIVE try... to show launch is like threads
+        //      (trying changing both the Dispatchers to IO and one to main etc...)
+//        Log.i(TAG, "1")
+//        launch {
+//            result1 = fetchMockWeather1()
+//            Log.i(TAG, "2 with time taken ${(System.currentTimeMillis()-startTime)}")
+//        }
+//        launch {
+//            result2 = fetchMockWeather2()
+//            Log.i(TAG, "3 with time taken ${(System.currentTimeMillis()-startTime)}")
+//        }
+//        binding.weatherTxtview.text = "Weather is ${result1}${result2}"
+//        Log.i(TAG, "4 with time taken ${(System.currentTimeMillis()-startTime)}")
+
+        // TODO 4. RIGHT way to do independent work
+        //         NOTE that now the results need to be Deferred so re-declare
+        Log.i(TAG, "1")
+        launch {
+            val result1 = async {fetchMockWeather1()}
+            val result2 = async {fetchMockWeather2()}
+            binding.weatherTxtview.text = "Weather is ${result1.await()}${result2.await()}"
+            Log.i(TAG, "2 with time taken ${(System.currentTimeMillis()-startTime)}")
+        }
+        Log.i(TAG, "3 with time taken ${(System.currentTimeMillis()-startTime)}")
+
+        // USING ASYNC in another way
+        // async is not a suspend function but a builder to start a coroutine
+//        Log.i(TAG, "1")
+//        val result1 = async { fetchMockWeather1() }
+//
+//        Log.i(TAG, "2")
+//        val result2 = async { fetchMockWeather1() }
+//
+//        // .await is a suspend function and so needs to be in coroutine
+//        Log.i(TAG, "3")
+//        launch {
+//            binding.weatherTxtview.text = "${result1.await()}\n${result2.await()}"
+//            Log.i(TAG, "Time taken is ${(System.currentTimeMillis()-startTime)}")
+//        }
+//
+//        Log.i(TAG, "4")
+//        Log.i(TAG, "Time taken is ${(System.currentTimeMillis()-startTime)}")
+//        //do other things
+
+        // using launch in another way
+//        Log.i(TAG, "1")
+//        launch { result1 = fetchMockWeather1() }
+//
+//        Log.i(TAG, "2")
+//        launch { result2 = fetchMockWeather2() }
+//
+//        // .await is a suspend function and so needs to be in coroutine
+//        Log.i(TAG, "3")
+//        binding.weatherTxtview.text = "weather is ${result1} ${result2}"
+//        Log.i(TAG, "Time taken is ${(System.currentTimeMillis()-startTime)}")
+//
+//        Log.i(TAG, "4")
+//        Log.i(TAG, "Time taken is ${(System.currentTimeMillis()-startTime)}")
+//        //do other things
+
+    }
+
+    /**
+     * Suspend function to perform mock network task.
+     * NOTE using Thread.sleep() to show freezing UI, else using delay it is a suspend function that
+     *      allows UI ops to sneak in appropriately to not freeze the screen
+     * NOTE that for simplicity sake this logic is here but this is of course to be done at lower
+     *      layers in the architecture.
+     * NOTE also the qualified return syntax so that it returns the value at the withContext scope
+     */
+    private suspend fun fetchMockWeather1(): String = withContext(Dispatchers.IO){
+        Log.i(TAG, "fetchMockWeather1 start in thread ${Thread.currentThread().name}")
+        Thread.sleep(3000)
+        Log.i(TAG, "fetchMockWeather1 end")
+        return@withContext "HOT"
+    }
+    private suspend fun fetchMockWeather2(): String = withContext(Dispatchers.IO){
+        Log.i(TAG, "fetchMockWeather2 start in thread ${Thread.currentThread().name}")
+        Thread.sleep(5000)
+        Log.i(TAG, "fetchMockWeather2 end")
+        return@withContext " AND HUMID"
     }
 
     companion object {
