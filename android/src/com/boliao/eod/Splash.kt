@@ -25,8 +25,7 @@ import kotlinx.coroutines.*
 class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var startAndroidLauncher: Intent
 
-    // TODO NDK 0: install required dependencies (from Android Studio SDK Tools)
-    // - NDK: Android toolset to communicate with native code
+    // TODO NDK 0: install required dependencies (from Android Studio SDK Tools) // - NDK: Android toolset to communicate with native code
     // - CMake: native build tool
     // - LLDB: native code debugger
 
@@ -96,18 +95,18 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         // val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         // val splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
         val splashViewModel: SplashViewModel by viewModels()
-        splashViewModel.weatherData.observe(this, Observer {
+        splashViewModel.weatherData.observe(this) {
             weatherTxtView.text = it
-        })
+        }
 
-        splashViewModel.loginStatus.observe(this, Observer {
+        splashViewModel.loginStatus.observe(this) {
             if (it) {
                 msgTxtView.text = "LOGIN DONE. Starting..."
                 launchGame()
             } else {
                 msgTxtView.text = "Name OREDI exist liao..."
             }
-        })
+        }
 
         // start game on click "PLAY"
         playBtn.setOnClickListener {
@@ -127,7 +126,7 @@ class Splash : AppCompatActivity(), CoroutineScope by MainScope() {
         Toast.makeText(this, getNativeString(), Toast.LENGTH_LONG).show()
     }
 
-    external fun getNativeString(): String
+    private external fun getNativeString(): String
 
     companion object {
         private const val TAG = "Splash"
